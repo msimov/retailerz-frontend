@@ -11,6 +11,7 @@ const SignInPage = () => (
     <div>
         <h1>Sign In</h1>
         <SignInForm/>
+        <SignInGoogle/>
         <PasswordForgetLink/>
         <SignUpLink/>
     </div>
@@ -82,11 +83,50 @@ class SignInFormBase extends Component {
     }
 }
 
+class SignInGooglebase extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = { error: null };
+    }
+
+    onSubmit = event => {
+        this.props.firebase
+            .doSignInWithGoogle()
+            .then(socialAuthUser => {
+                this.setState({ error: null });
+                this.props.history.push(ROUTES.HOME);
+            })
+            .catch((error) => {
+                this.setState({ error });
+            });
+
+        event.preventDefault();
+    }
+
+    render() {
+        const { error } = this.state;
+        
+        return(
+            <form onSubmit={ this.onSubmit }>
+                <button type="submit">Sign In With Google</button>
+                { error && <p>{ error.message }</p> }
+            </form>
+        );
+    }
+}
+
 const SignInForm = compose(
     withRouter,
     withFirebase
 )(SignInFormBase);
 
+const SignInGoogle = compose(
+    withRouter,
+    withFirebase
+)(SignInGooglebase);
+
+
 export default SignInPage;
 
-export { SignInForm }
+export { SignInForm, SignInGoogle };
