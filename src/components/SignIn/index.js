@@ -83,7 +83,7 @@ class SignInFormBase extends Component {
     }
 }
 
-class SignInGooglebase extends Component {
+class SignInGoogleBase extends Component {
     constructor(props) {
         super(props);
 
@@ -124,7 +124,7 @@ const SignInForm = compose(
 const SignInGoogle = compose(
     withRouter,
     withFirebase
-)(SignInGooglebase);
+)(SignInGoogleBase);
 
 
 export default SignInPage;

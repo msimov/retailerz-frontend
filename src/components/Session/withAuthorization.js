@@ -8,7 +8,7 @@ import AuthUserContext from './context';
 const withAuthorization = (condition) => Component => {
     class WithAuthorization extends React.Component {
         componentDidMount() {
-            this.listner = this.props.firebase.auth.onAuthStateChanged(
+            this.listener = this.props.firebase.auth.onAuthStateChanged(
                 authUser => {
                     if (!condition(authUser)) {
                         this.props.history.push(ROUTES.SIGN_IN);
@@ -18,7 +18,7 @@ const withAuthorization = (condition) => Component => {
         }
 
         componentWillUnmount() {
-            this.listner();
+            this.listener();
         }
 
         render() {

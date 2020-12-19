@@ -1,5 +1,5 @@
 import React from "react";
-import PassowrdChangeForm from '../PasswordChange';
+import PasswordChangeForm from '../PasswordChange';
 import { AuthUserContext, withAuthorization } from "../Session";
 
 const AccountPage = () => (
@@ -7,7 +7,7 @@ const AccountPage = () => (
         {authUser => (            
             <div>
                 <h1>Account: { authUser.email }</h1>
-                <PassowrdChangeForm/>
+                <PasswordChangeForm/>
             </div>
         )}
     </AuthUserContext.Consumer>
