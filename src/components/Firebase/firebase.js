@@ -35,6 +35,9 @@ class Firebase {
 
     doPasswordUpdate = (password) => 
         this.auth.currentUser.updatePassword(password)
+
+    getCurrentUserToken = async () =>
+        this.auth.currentUser.getIdToken()
 }
 
 export default Firebase;
