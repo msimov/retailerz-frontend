@@ -1,15 +1,16 @@
-import http from '../commons/http.commons'
+import axios from 'axios';
+import http from '../commons/http.common';
 
 class UserService {
 
-    create = (data, token) =>
-        http.post('/users', data, {headers: {authorization: `Bearer ${token}`}});
+    create = (data) =>
+        http.post('/users', data);
 
     findById = (id) =>
         http.get(`/users/${id}`);
 
-    getAll = (id) =>
-        http.get("/users")
+    getAll = () =>
+        http.get("/users");
     
     updateById = (id, data) =>
         http.put(`/users/${id}`, data);
