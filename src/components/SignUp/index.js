@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
-import { withFirebase } from '../Firebase';
-import { compose } from 'recompose';
+import { FirebaseContext } from '../Firebase';
+import axios from 'axios';
 
 const SignUpPage = () => (
     <div>
@@ -11,95 +11,99 @@ const SignUpPage = () => (
     </div>
 );
 
-const INITIAL_STATE = {
-    username: '',
-    email: '',
-    passwordOne: '',
-    passwordTwo: '',
-    error: null,
-}
+const SignUpForm = () => {
 
-class SignUpFormBase extends Component {
-    constructor(props) {
-        super(props);
+    const firebase = useContext(FirebaseContext);
+    const history = useHistory();
 
-        this.state = { ...INITIAL_STATE };
-    }
+    const [email, setEmail] = useState('')
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [type, setType] = useState(1)
+    const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [error, setError] = useState(null)
 
-    onSubmit = (event) => {
-        const { username, email, passwordOne } = this.state;
-        
-        this.props.firebase
-            .doCreateUserWithEmailAndPassword(email, passwordOne)
-            .then(authUser => {
-                this.setState({ ...INITIAL_STATE });
-                this.props.history.push(ROUTES.HOME);
+    const onSubmit = (event) => {
+        firebase
+            .doCreateUserWithEmailAndPassword(email, password)
+            .then((authUser) => {
+                const currentUser = firebase.getCurrentUser();
+                currentUser.getIdToken().then(idToken => {
+                    axios.post(
+                        'http://localhost:3001/users',
+                        {id: currentUser.uid, email, firstName, lastName, type},
+                        {headers: {Authorization: `Bearer ${idToken}`}}
+                    )
+                    .then((res) => {
+                        history.push(ROUTES.HOME)
+                    }).catch(error => {
+                        setError(error.response.data)
+                    })
+                })
             })
             .catch(error => {
-                this.setState({ error });
+                setError(error)
             });
 
         event.preventDefault();
     }
 
-    onChange = (event) => {
-        this.setState({ [event.target.name]: event.target.value });
-    }
-
-    render() {
-        const {
-            username,
-            email,
-            passwordOne,
-            passwordTwo,
-            error,
-        } = this.state;
-
-        const isInvalid = 
-            passwordOne !== passwordTwo ||
-            passwordOne === '' ||
-            email === '' ||
-            username === '';
+    const isInvalid = 
+        email === '' ||
+        firstName === '' ||
+        lastName === '' ||
+        type < 1 ||
+        type > 2 ||
+        password === '' ||
+        password !== confirmPassword;
 
 
-        return(
-            <form onSubmit={ this.onSubmit }>
-                <input
-                    name="username"
-                    value={ username }
-                    onChange={ this.onChange }
-                    type="text"
-                    placeholder="Full Name"
-                />
-                <input
-                    name="email"
-                    value={ email }
-                    onChange={ this.onChange }
-                    type="text"
-                    placeholder="Email Adress"
-                />
-                <input
-                    name="passwordOne"
-                    value={ passwordOne }
-                    onChange={ this.onChange }
-                    type="password"
-                    placeholder="Password"
-                />
-                <input
-                    name="passwordTwo"
-                    value={ passwordTwo }
-                    onChange={ this.onChange }
-                    type="password"
-                    placeholder="Confirm Password"
-                />
-                <button disabled={ isInvalid } type="submit">
-                    Sign Up
-                </button>
+    return(
+        <form onSubmit={ onSubmit }>
+            <input
+                value={ email }
+                onChange={ e => setEmail(e.target.value) }
+                type="text"
+                placeholder="Email Address"
+            />
+            <input
+                value={ firstName }
+                onChange={ e => setFirstName(e.target.value) }
+                type="text"
+                placeholder="First Name"
+            />
+            <input
+                value={ lastName }
+                onChange={ e => setLastName(e.target.value) }
+                type="text"
+                placeholder="Last Name"
+            />
+            <input
+                value={ type }
+                onChange={ e => setType(e.target.value) }
+                type="number"
+                placeholder="Account Type"
+            />
+            <input
+                value={ password }
+                onChange={ e => setPassword(e.target.value) }
+                type="password"
+                placeholder="Password"
+            />
+            <input
+                value={ confirmPassword }
+                onChange={ e => setConfirmPassword(e.target.value) }
+                type="password"
+                placeholder="Confirm Password"
+            />
+            <button disabled={ isInvalid } type="submit">
+                Sign Up
+            </button>
 
-                {error && <p>{ error.message }</p>}
-            </form>
-        );
-    }
+            {error && <p>{ error.message }</p>}
+        </form>
+    );
 }
 
 const SignUpLink = () => (
@@ -107,11 +111,6 @@ const SignUpLink = () => (
         Don't have an account? <Link to={ ROUTES.SIGN_UP }>Sign Up</Link>
     </p>
 );
-
-const SignUpForm = compose(
-    withRouter,
-    withFirebase
-)(SignUpFormBase);
 
 export default SignUpPage;
 
