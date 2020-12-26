@@ -1,17 +1,17 @@
 import React from 'react';
 import { compose } from 'recompose';
 import { withRouter } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../Firebase';
 import AuthUserContext from './context';
 
-const withAuthorization = (condition) => Component => {
-    class WithAuthorization extends React.Component {
+const withProtectedRoute = (condition, route) => Component => {
+    class WithProtectedRoute extends React.Component {
+
         componentDidMount() {
             this.listener = this.props.firebase.auth.onAuthStateChanged(
                 authUser => {
                     if (!condition(authUser)) {
-                        this.props.history.push(ROUTES.SIGN_IN);
+                        this.props.history.push(route);
                     }
                 }
             );
@@ -24,8 +24,12 @@ const withAuthorization = (condition) => Component => {
         render() {
             return (
                 <AuthUserContext.Consumer>
-                    {authUser => 
-                        condition(authUser) ? <Component { ...this.props } /> : null
+                    {authUser => {
+                        if(authUser === undefined) {
+                            return <div>Loading...</div>
+                        }
+                        return condition(authUser) ? <Component { ...this.props } /> : <div>Loading...</div>
+                    }
                     }
                 </AuthUserContext.Consumer>
             ); 
@@ -34,7 +38,7 @@ const withAuthorization = (condition) => Component => {
     return compose(
         withRouter,
         withFirebase
-    )(WithAuthorization);
+    )(WithProtectedRoute);
 }
 
-export default withAuthorization;
+export default withProtectedRoute;

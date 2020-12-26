@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import { FirebaseContext } from '../Firebase';
 import axios from 'axios';
+import { withProtectedRoute } from '../Session';
 
 const SignUpPage = () => (
     <div>
@@ -112,6 +113,8 @@ const SignUpLink = () => (
     </p>
 );
 
-export default SignUpPage;
+const condition = authUser => authUser == null;
+
+export default withProtectedRoute(condition, ROUTES.HOME)(SignUpPage);
 
 export { SignUpForm, SignUpLink };

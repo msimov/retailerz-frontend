@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import * as ROUTES from '../../constants/routes';
 import { Link } from 'react-router-dom';
 import { withFirebase } from "../Firebase";
+import { withProtectedRoute } from "../Session";
 
 const PasswordForgetPage = () => (
     <div>
@@ -72,6 +73,8 @@ const PasswordForgetLink = () => (
 
 const PasswordForgetForm = withFirebase(PasswordForgetFormBase);
 
-export default PasswordForgetPage;
+const condition = authUser => authUser == null;
+
+export default withProtectedRoute(condition, ROUTES.HOME)(PasswordForgetPage);
 
 export { PasswordForgetForm,  PasswordForgetLink };

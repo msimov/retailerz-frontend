@@ -6,6 +6,7 @@ import { SignUpLink } from '../SignUp';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 import { PasswordForgetLink } from "../PasswordForget";
+import { withProtectedRoute } from "../Session";
 
 const SignInPage = () => (
     <div>
@@ -127,7 +128,8 @@ const SignInGoogle = compose(
 )(SignInGoogleBase);
 
 
+const condition = authUser => authUser == null;
 
-export default SignInPage;
+export default withProtectedRoute(condition, ROUTES.HOME)(SignInPage);
 
 export { SignInForm, SignInGoogle };
