@@ -3,29 +3,46 @@ import { useHistory } from 'react-router-dom';
 import { FirebaseContext } from '../Firebase';
 import AuthUserContext from './context';
 
-const withProtectedRoute = (condition, route) => Component => {
+const withProtectedRoute = (conditions) => Component => {
     const WithProtectedRoute = (props) => {
+
 
         const firebase = useContext(FirebaseContext);
         const history = useHistory();
-        
+    
+
         useEffect(() => {
-            const listener = firebase.auth.onAuthStateChanged(
-                authUser => {
+            const checkConditions = (authUser) => {
+                conditions.some(({condition, redirect}) => {
                     if(!condition(authUser)) {
-                        history.push(route);
+                        history.push(redirect);
+                        return true;
                     }
+                    return false;
+                })
+            }
+
+            const listener = firebase.onAuthUserListener(
+                authUser => {
+                    checkConditions(authUser);
+                }, () => {
+                    checkConditions(null);
                 }
             )
             
             return () => {
                 listener();
             }
-        }, [firebase.auth, history]);
+        }, [firebase, history]);
 
         return (
             <AuthUserContext.Consumer>
-                { authUser => condition(authUser) ? <Component { ...props } /> : <div>Loading...</div> }
+                {
+                    authUser => {
+                        return conditions.every(({condition}) => condition(authUser)) ? <Component { ...props } /> : null
+                    }
+                    
+                }
             </AuthUserContext.Consumer>
         ); 
         

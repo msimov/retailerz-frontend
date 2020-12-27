@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import * as ROUTES from '../../constants/routes';
+import * as CONDITIONS from '../../constants/conditions';
 import { Link } from 'react-router-dom';
 import { FirebaseContext } from "../Firebase";
 import { withProtectedRoute } from "../Session";
@@ -61,8 +62,6 @@ const PasswordForgetLink = () => (
     </p>
 );
 
-const condition = authUser => authUser == null;
-
-export default withProtectedRoute(condition, ROUTES.HOME)(PasswordForgetPage);
+export default withProtectedRoute([CONDITIONS.USER_NULL])(PasswordForgetPage);
 
 export { PasswordForgetForm,  PasswordForgetLink };

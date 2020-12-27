@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { SignUpLink } from '../SignUp';
 import { FirebaseContext } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+import * as CONDITIONS from '../../constants/conditions';
 import { PasswordForgetLink } from "../PasswordForget";
 import { withProtectedRoute } from "../Session";
 
@@ -90,7 +91,7 @@ const SignInGoogle = () => {
             .doSignInWithGoogle()
             .then(socialAuthUser => {
                 resetState();
-                history.push(ROUTES.HOME);
+                history.push(ROUTES.USER_INFO);
             })
             .catch((error) => {
                 setError(error);
@@ -108,8 +109,6 @@ const SignInGoogle = () => {
     
 }
 
-const condition = authUser => authUser == null;
-
-export default withProtectedRoute(condition, ROUTES.HOME)(SignInPage);
+export default withProtectedRoute([CONDITIONS.USER_NULL])(SignInPage);
 
 export { SignInForm, SignInGoogle };

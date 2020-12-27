@@ -1,6 +1,6 @@
 import React from "react";
 import { withProtectedRoute } from "../Session";
-import * as ROUTES from '../../constants/routes';
+import * as CONDITIONS from '../../constants/conditions';
 
 const HomePage = () => (
     <div>
@@ -8,7 +8,4 @@ const HomePage = () => (
     </div>
 );
 
-
-const condition = authUser => !!authUser;
-
-export default withProtectedRoute(condition, ROUTES.SIGN_IN)(HomePage);
+export default withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(HomePage);

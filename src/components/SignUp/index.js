@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
+import * as CONDITIONS from '../../constants/conditions';
 import { FirebaseContext } from '../Firebase';
 import axios from 'axios';
 import { withProtectedRoute } from '../Session';
@@ -25,10 +26,22 @@ const SignUpForm = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [error, setError] = useState(null)
 
+    const resetState = () => {
+        setEmail('');
+        setFirstName('');
+        setLastName('');
+        setType(1);
+        setPassword('');
+        setConfirmPassword('');
+        setError(null);
+    }
+
     const onSubmit = (event) => {
         firebase
             .doCreateUserWithEmailAndPassword(email, password)
             .then((authUser) => {
+                //Instead of getting the User Info here Redirect user to /user-info for better user experience if
+                //backend is down, and firebase is up. (Check google sign in for an example).
                 const currentUser = firebase.getCurrentUser();
                 currentUser.getIdToken().then(idToken => {
                     axios.post(
@@ -37,14 +50,21 @@ const SignUpForm = () => {
                         {headers: {Authorization: `Bearer ${idToken}`}}
                     )
                     .then((res) => {
+                        resetState();
                         history.push(ROUTES.HOME)
                     }).catch(error => {
-                        setError(error.response.data)
+                        if(error.response !== undefined) {
+                            setError(error.response.data);
+                        } else {
+                            setError(error);
+                        }
                     })
+                }).catch(error => {
+                    setError(error);
                 })
             })
             .catch(error => {
-                setError(error)
+                setError(error);
             });
 
         event.preventDefault();
@@ -113,8 +133,6 @@ const SignUpLink = () => (
     </p>
 );
 
-const condition = authUser => authUser == null;
-
-export default withProtectedRoute(condition, ROUTES.HOME)(SignUpPage);
+export default withProtectedRoute([CONDITIONS.USER_NULL])(SignUpPage);
 
 export { SignUpForm, SignUpLink };

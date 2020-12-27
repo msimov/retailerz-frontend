@@ -1,5 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/auth';
+import axios from 'axios';
 
 const config = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -38,6 +39,29 @@ class Firebase {
 
     getCurrentUser = () =>
         this.auth.currentUser;
+
+    onAuthUserListener = (next, fallback) => (
+        this.auth.onAuthStateChanged(authUser => {
+            if(authUser) {
+                authUser.getIdToken().then((idToken) => {
+                    axios.get(
+                        `http://localhost:3001/users/${authUser.uid}`,
+                        {headers: {Authorization: `Bearer ${idToken}`}}
+                    ).then((res) => {
+                        authUser = {
+                            ...authUser,
+                            data: res.data
+                        }
+                        next(authUser);
+                    }).catch(error => {
+                        next(authUser);
+                    });
+                })
+            } else {
+                fallback();
+            }
+        })
+    )
 }
 
 export default Firebase;

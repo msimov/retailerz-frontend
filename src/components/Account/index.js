@@ -1,7 +1,7 @@
 import React from "react";
 import PasswordChangeForm from '../PasswordChange';
 import { AuthUserContext, withProtectedRoute } from "../Session";
-import * as ROUTES from '../../constants/routes';
+import * as CONDITIONS from '../../constants/conditions';
 
 const AccountPage = () => (
     <AuthUserContext.Consumer>
@@ -14,6 +14,5 @@ const AccountPage = () => (
     </AuthUserContext.Consumer>
 );
 
-const condition = authUser => !!authUser;
 
-export default withProtectedRoute(condition, ROUTES.SIGN_IN)(AccountPage);
+export default withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(AccountPage);

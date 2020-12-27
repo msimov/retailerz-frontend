@@ -9,6 +9,7 @@ import SignInPage from "../SignIn";
 import PasswordForgetPage from "../PasswordForget";
 import HomePage from "../Home";
 import AccountPage from "../Account";
+import UserInfoPage from "../UserInfo";
 import { withAuthentication } from '../Session';
 
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage}/>
             <Route path={ROUTES.HOME} component={HomePage}/>
             <Route path={ROUTES.ACCOUNT} component={AccountPage}/>
+            <Route path={ROUTES.USER_INFO} component={UserInfoPage}/>
         </div>
     </Router>
     
