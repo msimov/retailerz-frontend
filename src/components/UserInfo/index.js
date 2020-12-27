@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import * as CONDITIONS from '../../constants/conditions';
 import * as ROUTES from '../../constants/routes';
 import { FirebaseContext } from "../Firebase";
-import { withProtectedRoute } from "../Session";
+import { AuthUserContext, withProtectedRoute } from "../Session";
 
 
 const UserInfoPage = () => (
@@ -17,6 +17,7 @@ const UserInfoPage = () => (
 const UserInfoForm = () => {
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
+    const {authUser, setAuthUser} = useContext(AuthUserContext);
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [type, setType] = useState(1)
@@ -41,11 +42,12 @@ const UserInfoForm = () => {
             )
             .then((res) => {
                 resetState();
+                setAuthUser({...authUser, data: res.data});
                 history.push(ROUTES.HOME);
             })
             .catch((error) => {
                 if(error.response !== undefined) {
-                    setError(error.response.data);
+                    setError(error.response.data);  
                 } else {
                     setError(error);
                 }

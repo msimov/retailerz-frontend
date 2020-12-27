@@ -38,7 +38,7 @@ const withProtectedRoute = (conditions) => Component => {
         return (
             <AuthUserContext.Consumer>
                 {
-                    authUser => {
+                    ({authUser}) => {
                         return conditions.every(({condition}) => condition(authUser)) ? <Component { ...props } /> : null
                     }
                     

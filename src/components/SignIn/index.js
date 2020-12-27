@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
-import { useHistory } from 'react-router-dom';
 import { SignUpLink } from '../SignUp';
 import { FirebaseContext } from '../Firebase';
-import * as ROUTES from '../../constants/routes';
 import * as CONDITIONS from '../../constants/conditions';
 import { PasswordForgetLink } from "../PasswordForget";
 import { withProtectedRoute } from "../Session";
@@ -20,7 +18,6 @@ const SignInPage = () => (
 const SignInForm = () => {
 
     const firebase = useContext(FirebaseContext);
-    const history = useHistory();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -39,7 +36,6 @@ const SignInForm = () => {
             .doSignInWithEmailAndPassword(email, password)
             .then(() => {
                 resetState();
-                history.push(ROUTES.HOME);
             })
             .catch((error) => {
                 setError(error)
@@ -77,7 +73,6 @@ const SignInForm = () => {
 
 const SignInGoogle = () => {
     const firebase = useContext(FirebaseContext);
-    const history = useHistory();
 
     const [error, setError] = useState(null);
 
@@ -91,7 +86,6 @@ const SignInGoogle = () => {
             .doSignInWithGoogle()
             .then(socialAuthUser => {
                 resetState();
-                history.push(ROUTES.USER_INFO);
             })
             .catch((error) => {
                 setError(error);

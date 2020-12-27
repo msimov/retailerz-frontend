@@ -5,7 +5,7 @@ import * as CONDITIONS from '../../constants/conditions';
 
 const AccountPage = () => (
     <AuthUserContext.Consumer>
-        {authUser => (            
+        {({authUser}) => (            
             <div>
                 <h1>Account: { authUser.email }</h1>
                 <PasswordChangeForm/>

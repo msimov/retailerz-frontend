@@ -7,7 +7,7 @@ import SignOutButton from '../SignOut';
 
 const Navigation = () => (
     <AuthUserContext.Consumer>
-        { authUser => 
+        { ({authUser}) => 
             authUser ? <NavigationAuth/> : <NavigationNonAuth/>
         }
     </AuthUserContext.Consumer>

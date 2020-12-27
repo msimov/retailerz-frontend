@@ -51,7 +51,6 @@ const SignUpForm = () => {
                     )
                     .then((res) => {
                         resetState();
-                        history.push(ROUTES.HOME)
                     }).catch(error => {
                         if(error.response !== undefined) {
                             setError(error.response.data);

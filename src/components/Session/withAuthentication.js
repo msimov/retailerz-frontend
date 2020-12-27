@@ -26,7 +26,7 @@ const withAuthentication = Component => {
         }, [firebase])
 
         return (
-            <AuthUserContext.Provider value={ authUser }>
+            <AuthUserContext.Provider value={ {authUser, setAuthUser} }>
                 {authUser === undefined ? <div>Loading...</div> :<Component { ...props }/>}
             </AuthUserContext.Provider>
         );

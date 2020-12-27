@@ -61,7 +61,8 @@ class Firebase {
                 fallback();
             }
         })
-    )
+    );
+
 }
 
 export default Firebase;
