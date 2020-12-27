@@ -5,12 +5,11 @@ import AuthUserContext from './context';
 
 const withProtectedRoute = (conditions) => Component => {
     const WithProtectedRoute = (props) => {
-
-
+        
         const firebase = useContext(FirebaseContext);
+        const {authUser} = useContext(AuthUserContext);
         const history = useHistory();
     
-
         useEffect(() => {
             const checkConditions = (authUser) => {
                 conditions.some(({condition, redirect}) => {
@@ -36,15 +35,11 @@ const withProtectedRoute = (conditions) => Component => {
         }, [firebase, history]);
 
         return (
-            <AuthUserContext.Consumer>
-                {
-                    ({authUser}) => {
-                        return conditions.every(({condition}) => condition(authUser)) ? <Component { ...props } /> : null
-                    }
-                    
-                }
-            </AuthUserContext.Consumer>
-        ); 
+            conditions.every(({condition}) => condition(authUser)) ? <Component { ...props } /> : <div>Loading...</div>    
+        )
+        
+
+         
         
     }
     return WithProtectedRoute;
