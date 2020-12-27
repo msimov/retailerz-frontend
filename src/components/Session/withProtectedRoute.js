@@ -1,44 +1,36 @@
-import React from 'react';
-import { compose } from 'recompose';
-import { withRouter } from 'react-router-dom';
-import { withFirebase } from '../Firebase';
+import React, { useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { FirebaseContext } from '../Firebase';
 import AuthUserContext from './context';
 
 const withProtectedRoute = (condition, route) => Component => {
-    class WithProtectedRoute extends React.Component {
+    const WithProtectedRoute = (props) => {
 
-        componentDidMount() {
-            this.listener = this.props.firebase.auth.onAuthStateChanged(
+        const firebase = useContext(FirebaseContext);
+        const history = useHistory();
+        
+        useEffect(() => {
+            const listener = firebase.auth.onAuthStateChanged(
                 authUser => {
-                    if (!condition(authUser)) {
-                        this.props.history.push(route);
+                    if(!condition(authUser)) {
+                        history.push(route);
                     }
                 }
-            );
-        }
+            )
+            
+            return () => {
+                listener();
+            }
+        }, [firebase.auth, history]);
 
-        componentWillUnmount() {
-            this.listener();
-        }
-
-        render() {
-            return (
-                <AuthUserContext.Consumer>
-                    {authUser => {
-                        if(authUser === undefined) {
-                            return <div>Loading...</div>
-                        }
-                        return condition(authUser) ? <Component { ...this.props } /> : <div>Loading...</div>
-                    }
-                    }
-                </AuthUserContext.Consumer>
-            ); 
-        }
+        return (
+            <AuthUserContext.Consumer>
+                { authUser => condition(authUser) ? <Component { ...props } /> : <div>Loading...</div> }
+            </AuthUserContext.Consumer>
+        ); 
+        
     }
-    return compose(
-        withRouter,
-        withFirebase
-    )(WithProtectedRoute);
+    return WithProtectedRoute;
 }
 
 export default withProtectedRoute;
