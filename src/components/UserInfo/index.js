@@ -1,11 +1,11 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import * as CONDITIONS from '../../constants/conditions';
 import * as ROUTES from '../../constants/routes';
 import { FirebaseContext } from "../Firebase";
 import { AuthUserContext, withProtectedRoute } from "../Session";
-
+import Select from 'react-select';
 
 const UserInfoPage = () => (
     <div>
@@ -17,18 +17,28 @@ const UserInfoPage = () => (
 const UserInfoForm = () => {
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
+
     const {authUser, setAuthUser} = useContext(AuthUserContext);
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
-    const [type, setType] = useState(1)
+    const [selectedType, setSelectedType] = useState(null)
     const [error, setError] = useState(null)
+
+    const [types, setTypes] = useState([]);
+
+
+    useEffect(() => {
+        axios.get("http://localhost:3001/user-types").then((res) => {
+            setTypes(res.data.map(({id, type}) => ({value: id, label: type})))
+        });
+    }, [])
 
     const resetState = () => {
         setFirstName('');
         setLastName('');
-        setType(1);
         setError(null);
     }
+
 
     const onSubmit = (event) => {
         event.preventDefault();
@@ -37,7 +47,7 @@ const UserInfoForm = () => {
         currentUser.getIdToken().then((idToken) => {
             axios.post(
                 'http://localhost:3001/users',
-                {id: currentUser.uid, email: currentUser.email, firstName, lastName, type},
+                {id: currentUser.uid, email: currentUser.email, firstName, lastName, type: selectedType.value},
                 {headers: {Authorization: `Bearer ${idToken}`}}
             )
             .then((res) => {
@@ -60,8 +70,7 @@ const UserInfoForm = () => {
     const isInvalid = 
         firstName === '' ||
         lastName === '' ||
-        type < 1 ||
-        type > 2;
+        selectedType == null;
 
     return(
         <form onSubmit={ onSubmit }>
@@ -77,11 +86,10 @@ const UserInfoForm = () => {
                 type="text"
                 placeholder="Last Name"
             />
-            <input
-                value={ type }
-                onChange={ e => setType(e.target.value) }
-                type="number"
-                placeholder="Account Type"
+            <Select 
+                value={selectedType}
+                onChange={(selectedType)  => setSelectedType(selectedType)}
+                options={types}
             />
             <button disabled={ isInvalid } type="submit">
                 Sign Up
