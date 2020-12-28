@@ -16,3 +16,11 @@ export const USER_DATA_UNDEFINED = {
     condition: authUser => authUser.data === undefined,
     redirect: ROUTES.HOME
 }
+export const USER_TYPE_RETAILER = {
+    condition: authUser => authUser.data.type === 2,
+    redirect: ROUTES.HOME
+}
+export const USER_TYPE_CUSTOMER = {
+    condition: authUser => authUser.data.type === 1,
+    redirect: ROUTES.HOME
+}

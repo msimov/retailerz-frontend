@@ -22,6 +22,9 @@ const NavigationAuth = () => (
                 <Link to={ROUTES.ACCOUNT}>Account</Link>
             </li>
             <li>
+                <Link to={ROUTES.CREATE_WAREHOUSE}>Create Warehouse</Link>
+            </li>
+            <li>
                 <SignOutButton/>
             </li>
         </ul>
@@ -41,5 +44,4 @@ const NavigationNonAuth = () => (
         </li>
     </ul>
 );
-
 export default Navigation;

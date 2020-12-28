@@ -10,6 +10,7 @@ import PasswordForgetPage from "../PasswordForget";
 import HomePage from "../Home";
 import AccountPage from "../Account";
 import UserInfoPage from "../UserInfo";
+import CreateWarehousePage from "../CreateWarehouse";
 import { withAuthentication } from "../Session";
 
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path={ROUTES.HOME} component={HomePage}/>
             <Route path={ROUTES.ACCOUNT} component={AccountPage}/>
             <Route path={ROUTES.USER_INFO} component={UserInfoPage}/>
+            <Route path={ROUTES.CREATE_WAREHOUSE} component={CreateWarehousePage}/>
         </div>
     </Router>
     
