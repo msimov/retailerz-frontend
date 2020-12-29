@@ -1,26 +1,42 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { withProtectedRoute } from "../Session";
 import * as CONDITIONS from '../../constants/conditions';
 import { UserInfoForm } from "../UserInfo";
 import * as ROUTES from "../../constants/routes";
 import { FirebaseContext } from "../Firebase";
+import Select from 'react-select';
 
-const CreateWarehousePage = () => (
+const CreateStorePage = () => (
     <div>
-        <h1>Create Warehouse</h1>
-        <CreateWarehouseForm/>
+        <h1>Create Store</h1>
+        <CreateStoreForm/>
     </div>
 )
 
 
-const CreateWarehouseForm = () => {
+const CreateStoreForm = () => {
+
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
 
     const [location, setLocation] = useState('');
+    const [selectedWarehouse, setSelectedWarehouse] = useState(null);
     const [error, setError] = useState(null);
+
+    const [warehouses, setWarehouses] = useState([])
+
+
+    useEffect(() => {
+        const currentUser = firebase.getCurrentUser();
+
+        currentUser.getIdToken().then(idToken => {
+            axios.get(`http://localhost:3001/users/${currentUser.uid}/warehouses`).then(res => {
+                setWarehouses(res.data.map(({id, location}) => ({value: id, label: location})))
+            })
+        })
+    }, [firebase])
 
     const resetState = () => {
         setLocation('');
@@ -30,10 +46,11 @@ const CreateWarehouseForm = () => {
     const onSubmit = (event) => {
         event.preventDefault();
         const currentUser = firebase.getCurrentUser();
-        currentUser.getIdToken().then((idToken) => {
+
+        currentUser.getIdToken().then(idToken => {
             axios.post(
-                `http://localhost:3001/users/${currentUser.uid}/warehouses`,
-                {location},
+                `http://localhost:3001/users/${currentUser.uid}/stores`, 
+                {location, warehouse: selectedWarehouse.value, user: currentUser.uid},
                 {headers: {Authorization: `Bearer ${idToken}`}}
             ).then(res => {
                 resetState();
@@ -45,13 +62,12 @@ const CreateWarehouseForm = () => {
                     setError(error);
                 }
             })
-        }).catch(error => {
-            setError(error);
         })
     }
 
     const isInvalid = 
-        location === '';
+        location === '' ||
+        selectedWarehouse === null;
 
     return(
         <form onSubmit={ onSubmit }>
@@ -59,10 +75,15 @@ const CreateWarehouseForm = () => {
                 value={ location }
                 onChange={ e => setLocation(e.target.value) }
                 type="text"
-                placeholder="Warehouse Location"
+                placeholder="Store Location"
+            />
+            <Select 
+                value={selectedWarehouse}
+                onChange={(selectedWarehouse)  => setSelectedWarehouse(selectedWarehouse)}
+                options={warehouses}
             />
             <button disabled={ isInvalid } type="submit">
-                Create Warehouse
+                Create Store
             </button>
 
             {error && <p>{ error.message }</p>}
@@ -71,6 +92,6 @@ const CreateWarehouseForm = () => {
     
 }
 
-export default withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(CreateWarehousePage)
+export default withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(CreateStorePage)
 
 export {UserInfoForm};

@@ -17,14 +17,14 @@ const UserInfoPage = () => (
 const UserInfoForm = () => {
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
-
     const {authUser, setAuthUser} = useContext(AuthUserContext);
+    const [types, setTypes] = useState([]);
+
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [selectedType, setSelectedType] = useState(null)
     const [error, setError] = useState(null)
 
-    const [types, setTypes] = useState([]);
 
 
     useEffect(() => {
@@ -36,6 +36,7 @@ const UserInfoForm = () => {
     const resetState = () => {
         setFirstName('');
         setLastName('');
+        setSelectedType(null)
         setError(null);
     }
 
