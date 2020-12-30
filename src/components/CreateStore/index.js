@@ -50,7 +50,7 @@ const CreateStoreForm = () => {
         currentUser.getIdToken().then(idToken => {
             axios.post(
                 `http://localhost:3001/users/${currentUser.uid}/stores`, 
-                {location, warehouse: selectedWarehouse.value, user: currentUser.uid},
+                {location, warehouse: selectedWarehouse.value},
                 {headers: {Authorization: `Bearer ${idToken}`}}
             ).then(res => {
                 resetState();

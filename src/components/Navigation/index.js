@@ -28,6 +28,9 @@ const NavigationAuth = () => (
                 <Link to={ROUTES.CREATE_STORE}>Create Store</Link>
             </li>
             <li>
+                <Link to={ROUTES.CREATE_PRODUCT}>Create Product</Link>
+            </li>
+            <li>
                 <SignOutButton/>
             </li>
         </ul>

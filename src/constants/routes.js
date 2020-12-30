@@ -7,3 +7,4 @@ export const PASSWORD_FORGET = '/pw-forget';
 export const USER_INFO = '/user-info';
 export const CREATE_WAREHOUSE = '/create-warehouse';
 export const CREATE_STORE = '/create-store';
+export const CREATE_PRODUCT = '/create-product';
