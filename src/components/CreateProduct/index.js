@@ -7,8 +7,6 @@ import { UserInfoForm } from "../UserInfo";
 import * as ROUTES from "../../constants/routes";
 import { FirebaseContext } from "../Firebase";
 import Select from 'react-select';
-
-import 'react-calendar/dist/Calendar.css';
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 const CreateProductPage = () => (

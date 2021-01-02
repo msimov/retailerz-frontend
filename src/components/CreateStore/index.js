@@ -1,12 +1,11 @@
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { withProtectedRoute } from "../Session";
 import * as CONDITIONS from '../../constants/conditions';
 import { UserInfoForm } from "../UserInfo";
 import * as ROUTES from "../../constants/routes";
 import { FirebaseContext } from "../Firebase";
-import Select from 'react-select';
 
 const CreateStorePage = () => (
     <div>
@@ -22,21 +21,8 @@ const CreateStoreForm = () => {
     const firebase = useContext(FirebaseContext);
 
     const [location, setLocation] = useState('');
-    const [selectedWarehouse, setSelectedWarehouse] = useState(null);
     const [error, setError] = useState(null);
 
-    const [warehouses, setWarehouses] = useState([])
-
-
-    useEffect(() => {
-        const currentUser = firebase.getCurrentUser();
-
-        currentUser.getIdToken().then(idToken => {
-            axios.get(`http://localhost:3001/users/${currentUser.uid}/warehouses`).then(res => {
-                setWarehouses(res.data.map(({id, location}) => ({value: id, label: location})))
-            })
-        })
-    }, [firebase])
 
     const resetState = () => {
         setLocation('');
@@ -50,7 +36,7 @@ const CreateStoreForm = () => {
         currentUser.getIdToken().then(idToken => {
             axios.post(
                 `http://localhost:3001/users/${currentUser.uid}/stores`, 
-                {location, warehouse: selectedWarehouse.value},
+                {location, user: currentUser.uid},
                 {headers: {Authorization: `Bearer ${idToken}`}}
             ).then(res => {
                 resetState();
@@ -66,8 +52,7 @@ const CreateStoreForm = () => {
     }
 
     const isInvalid = 
-        location === '' ||
-        selectedWarehouse === null;
+        location === '';
 
     return(
         <form onSubmit={ onSubmit }>
@@ -76,11 +61,6 @@ const CreateStoreForm = () => {
                 onChange={ e => setLocation(e.target.value) }
                 type="text"
                 placeholder="Store Location"
-            />
-            <Select 
-                value={selectedWarehouse}
-                onChange={(selectedWarehouse)  => setSelectedWarehouse(selectedWarehouse)}
-                options={warehouses}
             />
             <button disabled={ isInvalid } type="submit">
                 Create Store

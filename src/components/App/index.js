@@ -10,10 +10,10 @@ import PasswordForgetPage from "../PasswordForget";
 import HomePage from "../Home";
 import AccountPage from "../Account";
 import UserInfoPage from "../UserInfo";
-import CreateWarehousePage from "../CreateWarehouse";
 import CreateStorePage from '../CreateStore';
 import CreateProductPage from '../CreateProduct';
 import { withAuthentication } from "../Session";
+import AddOperationPage from "../AddOperation";
 
 
 const App = () => (
@@ -29,9 +29,10 @@ const App = () => (
             <Route path={ROUTES.HOME} component={HomePage}/>
             <Route path={ROUTES.ACCOUNT} component={AccountPage}/>
             <Route path={ROUTES.USER_INFO} component={UserInfoPage}/>
-            <Route path={ROUTES.CREATE_WAREHOUSE} component={CreateWarehousePage}/>
             <Route path={ROUTES.CREATE_STORE} component={CreateStorePage}/>
             <Route path={ROUTES.CREATE_PRODUCT} component={CreateProductPage}/>
+            <Route path={ROUTES.ADD_OPERATION} component={AddOperationPage}/>
+            
         </div>
     </Router>
     
