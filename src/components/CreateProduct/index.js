@@ -7,9 +7,10 @@ import { UserInfoForm } from "../UserInfo";
 import * as ROUTES from "../../constants/routes";
 import { FirebaseContext } from "../Firebase";
 import Select from 'react-select';
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
+import 'react-calendar/dist/Calendar.css';
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const CreateProductPage = () => (
     <div>
         <h1>Create Product</h1>
@@ -25,6 +26,7 @@ const CreateProductForm = () => {
 
     const [name, setName] = useState('');
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const [description, setDescription] = useState('')
     const [code, setCode] = useState(0); //Get the latest value from DB and set it.
     const [barcode, setBarcode] = useState('')
     const [selectedMeasureUnit, setSelectedMeasureUnit] = useState(null);
@@ -63,6 +65,7 @@ const CreateProductForm = () => {
 
     const resetState = () => {
         setName('');
+        setDescription('')
         setSelectedGroup(null);
         setCode(0);
         setBarcode('');
@@ -84,7 +87,7 @@ const CreateProductForm = () => {
                 `http://localhost:3001/users/${currentUser.uid}/products`, 
                 {
                     name, group: selectedGroup.value, code, barcode, measureUnit: selectedMeasureUnit.value,
-                    taxGroup: selectedTaxGroup.value, retailPrice, deliveryPrice, expiryDate, store: selectedProductStore.value
+                    taxGroup: selectedTaxGroup.value, retailPrice, deliveryPrice, expiryDate: expiryDate.toISOString().slice(0,-5)+"Z", store: selectedProductStore.value
                 },
                 {headers: {Authorization: `Bearer ${idToken}`}}
             ).then(res => {
@@ -102,6 +105,7 @@ const CreateProductForm = () => {
 
     const isInvalid = 
         name === '' ||
+        description === '' ||
         selectedGroup === null ||
         code === '' ||
         barcode === '' ||
@@ -119,6 +123,12 @@ const CreateProductForm = () => {
                 onChange={ e => setName(e.target.value) }
                 type="text"
                 placeholder="Product Name"
+            />
+            <input
+                value={ description }
+                onChange={ e => setDescription(e.target.value) }
+                type="text"
+                placeholder="Product Description"
             />
             <Select 
                 value={selectedGroup}
@@ -165,10 +175,11 @@ const CreateProductForm = () => {
                 min="0"
                 step="0.01"
             />
-            <DatePicker
+            <ReactDatePicker
                 selected={expiryDate}
-                onChange={(selectedDate) => {setExpiryDate(selectedDate)}}
-                placeholderText="Expiry Date"
+                onChange={(selectedDate) => {
+                    setExpiryDate(selectedDate)
+                }}
             />
             <Select 
                 value={selectedProductStore}
