@@ -1,11 +1,11 @@
 import request from '../commons/request.common';
 
-const create = (store, userToken) => {
+const create = (userId, store, userToken) => {
     return request({
-        url: `/users/${userId}/stores`,
+        url: `users/${userId}/stores`,
         method: "POST",
         data: store,
-        config: {
+        headers: {
             Authorization: `Bearer ${userToken}`
         }
     })
@@ -13,19 +13,19 @@ const create = (store, userToken) => {
 
 const getAll = (userId, userToken) => {
     return request({
-        url: `/users/${userId}/stores`,
+        url: `users/${userId}/stores`,
         method: "GET",
-        config: {
+        headers: {
             Authorization: `Bearer ${userToken}`
         }
     })
 }
 
-const findById = (storeId, userToken) => {
+const findById = (userId, storeId, userToken) => {
     return request({
-        url: `/users/${userId}/stores/${storeId}`,
+        url: `users/${userId}/stores/${storeId}`,
         method: "GET",
-        config: {
+        headers: {
             Authorization: `Bearer ${userToken}`
         }
     })
@@ -33,10 +33,10 @@ const findById = (storeId, userToken) => {
 
 const updateById = (userId, storeId, store, userToken) => {
     return request({
-        url: `/users/${userId}/stores/${storeId}`,
+        url: `users/${userId}/stores/${storeId}`,
         method: "PUT",
         data: store,
-        config: {
+        headers: {
             Authorization: `Bearer ${userToken}`
         }
     })
@@ -44,16 +44,16 @@ const updateById = (userId, storeId, store, userToken) => {
 
 const deleteById = (userId, storeId, userToken) => {
     return request({
-        url: `/users/${userId}/stores/${storeId}`,
+        url: `users/${userId}/stores/${storeId}`,
         method: "DELETE",
-        config: {
+        headers: {
             Authorization: `Bearer ${userToken}`
         }
     })
 }
 
-const UserService = {
+const StoreService = {
     create, findById, getAll, updateById, deleteById
 }
 
-export default UserService;
+export default StoreService;

@@ -22,13 +22,13 @@ const NavigationAuth = () => (
                 <Link to={ROUTES.ACCOUNT}>Account</Link>
             </li>
             <li>
-                <Link to={ROUTES.CREATE_STORE}>Create Store</Link>
-            </li>
-            <li>
                 <Link to={ROUTES.CREATE_PRODUCT}>Create Product</Link>
             </li>
             <li>
                 <Link to={ROUTES.ADD_OPERATION}>Add Operation</Link>
+            </li>
+            <li>
+                <Link to={ROUTES.STORES}>Stores</Link>
             </li>
             <li>
                 <SignOutButton/>

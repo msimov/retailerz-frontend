@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const client = axios.create({
-    baseURL: "http://locahlost:3001"
+    baseURL: "http://localhost:3001/"
 });
 
 const request = (options) => {
