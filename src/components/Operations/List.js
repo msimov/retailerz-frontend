@@ -1,57 +1,59 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import StoreService from '../../services/store.service';
+import OperationService from '../../services/operation.service';
 import { FirebaseContext } from '../Firebase';
 
 const List = ({match}) => {
     const firebase = useContext(FirebaseContext);
     
     const {path} = match;
-    const [stores, setStores] = useState(null);
+    const [operations, setOperations] = useState(null);
     const currentUser = firebase.getCurrentUser();
 
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.getAll(currentUser.uid, idToken).then(res => {
-                setStores(res);
+            OperationService.getAll(currentUser.uid, idToken).then(res => {
+                setOperations(res);
             })
         })
     }, [currentUser]);
 
-    const deleteStore = (storeId) => {
-        setStores(stores.map(store => {
-            if(store.id === storeId) {
-                store.isDeleting = true;
+    const deleteOperation = (operationId) => {
+        setOperations(operations.map(operation => {
+            if(operation.id === operationId) {
+                operation.isDeleting = true;
             }
-            return store;
+            return operation;
         }));
         currentUser.getIdToken().then(idToken => {
-            StoreService.deleteById(currentUser.uid, storeId, idToken).then(() => {
-                setStores(stores => stores.filter(store => store.id !== storeId));
+            OperationService.deleteById(currentUser.uid, operationId, idToken).then(() => {
+                setOperations(operations => operations.filter(operation => operation.id !== operationId));
             });
         })
     }
 
     return(
         <div>
-            <h1>Stores</h1>
-            <Link to={`${path}/add`}>Add Store</Link>
+            <h1>Operations</h1>
+            <Link to={`${path}/add`}>Add Operation</Link>
             <table>
                 <thead>
                     <tr>
-                        <th>Location</th>
+                        <th>Type</th>
+                        <th>Product</th>
+                        <th>Count</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {stores && stores.map(store =>
-                        <tr key={store.id}>
-                            <td>{store.location}</td>
+                    {operations && operations.map(operation =>
+                        <tr key={operation.id}>
+                            <td>{operation.location}</td>
                             <td>
-                                <Link to={`${path}/edit/${store.id}`}>Edit</Link>
-                                <button onClick={() => deleteStore(store.id)} disabled={store.isDeleting}>
-                                    {store.isDeleting 
+                                <Link to={`${path}/edit/${operation.id}`}>Edit</Link>
+                                <button onClick={() => deleteOperation(operation.id)} disabled={operation.isDeleting}>
+                                    {operation.isDeleting 
                                         ? <span>Loading...</span>
                                         : <span>Delete</span>
                                     }
@@ -59,17 +61,17 @@ const List = ({match}) => {
                             </td>
                         </tr>
                     )}
-                    {!stores &&
+                    {!operations &&
                         <tr>
                             <td>
                                 <div>Loading...</div>
                             </td>
                         </tr>
                     }
-                    {stores && !stores.length &&
+                    {operations && !operations.length &&
                         <tr>
                             <td>
-                                <div>No Stores To Display</div>
+                                <div>No Operations To Display</div>
                             </td>
                         </tr>
                     }

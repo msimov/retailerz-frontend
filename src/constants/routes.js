@@ -6,5 +6,5 @@ export const ACCOUNT = '/account';
 export const PASSWORD_FORGET = '/pw-forget';
 export const USER_INFO = '/user-info';
 export const CREATE_PRODUCT = '/create-product';
-export const ADD_OPERATION = '/add-operation';
 export const STORES = '/stores';
+export const OPERATIONS = '/operations';

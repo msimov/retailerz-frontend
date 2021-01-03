@@ -39,9 +39,9 @@ const AddEdit = ({match}) => {
         })
     }
 
-    const updateStore = (id, data) => {
+    const updateStore = (storeId, data) => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.updateById(currentUser.uid, id, data).then(res => {
+            StoreService.updateById(currentUser.uid, storeId, data, idToken).then(res => {
                 history.push('..');
             })
         })

@@ -25,10 +25,10 @@ const NavigationAuth = () => (
                 <Link to={ROUTES.CREATE_PRODUCT}>Create Product</Link>
             </li>
             <li>
-                <Link to={ROUTES.ADD_OPERATION}>Add Operation</Link>
+                <Link to={ROUTES.STORES}>Stores</Link>
             </li>
             <li>
-                <Link to={ROUTES.STORES}>Stores</Link>
+                <Link to={ROUTES.OPERATIONS}>Operations</Link>
             </li>
             <li>
                 <SignOutButton/>
