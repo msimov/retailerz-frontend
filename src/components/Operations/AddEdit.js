@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { FirebaseContext } from '../Firebase';
 import OperationService from '../../services/operation.service';
 import ProductService from '../../services/product.service';
-import OperationTypeService from '../../services/operation-type';
+import OperationTypeService from '../../services/operation-type.service';
 import ReactSelect from 'react-select';
 
 
@@ -23,6 +23,7 @@ const AddEdit = ({match}) => {
 
     const [products, setProducts] = useState([]);
     const [operationTypes, setOperationTypes] = useState([]);
+
 
     const validationSchema = Yup.object().shape({
         operationType: Yup.object()
@@ -42,13 +43,16 @@ const AddEdit = ({match}) => {
     });
 
     const onSubmit = (data) => {
+        const fields = ['product', 'operationType'];
+        fields.forEach(field => {
+            data[field] = data[field].value;
+        });
         return isAddMode
             ? createOperation(data)
             : updateOperation(id, data);
     }
 
     const createOperation = (data) => {
-        console.log(data);
         currentUser.getIdToken().then(idToken => {
              OperationService.create(currentUser.uid, data, idToken).then(res => {
                  history.push('.');
@@ -77,7 +81,7 @@ const AddEdit = ({match}) => {
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
                 OperationService.findById(currentUser.uid, id, idToken).then(res => {
-                    const fields = ['product', 'operationType', 'count'];
+                    const fields = ['count'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })

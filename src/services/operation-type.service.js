@@ -9,7 +9,7 @@ const getAll = () => {
 
 const findById = (operationTypeId) => {
     return request({
-        url: `operation-types`,
+        url: `operation-types/${operationTypeId}`,
         method: "GET",
     })
 }

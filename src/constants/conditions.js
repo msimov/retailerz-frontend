@@ -10,7 +10,7 @@ export const USER_NULL = {
 }
 export const USER_HAS_DATA = {
     condition: authUser => authUser.data !== undefined,
-    redirect: ROUTES.USER_INFO
+    redirect: `${ROUTES.USERS}/add`
 };
 export const USER_DATA_UNDEFINED = {
     condition: authUser => authUser.data === undefined,

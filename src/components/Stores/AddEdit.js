@@ -10,7 +10,6 @@ const AddEdit = ({match}) => {
     
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
-    
     const {id} = match.params;
     const isAddMode = !id;
     const currentUser = firebase.getCurrentUser();

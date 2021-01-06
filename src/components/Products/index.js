@@ -1,12 +1,11 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-
 import {List} from './List';
 import {AddEdit} from './AddEdit';
-import * as CONDITIONS from '../../constants/conditions';
 import { withProtectedRoute } from '../Session';
+import * as CONDITIONS from '../../constants/conditions';
 
-const Operations = ({match}) => {
+const Products = ({match}) => {
     const {path} = match;
 
     return(
@@ -24,4 +23,4 @@ const Operations = ({match}) => {
     )
 }
 
-export default Operations;
+export default Products;

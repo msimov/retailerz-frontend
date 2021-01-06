@@ -49,7 +49,9 @@ const List = ({match}) => {
                 <tbody>
                     {operations && operations.map(operation =>
                         <tr key={operation.id}>
-                            <td>{operation.location}</td>
+                            <td>{operation.operation}</td>
+                            <td>{operation.product}</td>
+                            <td>{operation.count}</td>
                             <td>
                                 <Link to={`${path}/edit/${operation.id}`}>Edit</Link>
                                 <button onClick={() => deleteOperation(operation.id)} disabled={operation.isDeleting}>

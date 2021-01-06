@@ -1,6 +1,6 @@
 import app from 'firebase/app';
 import 'firebase/auth';
-import axios from 'axios';
+import UserService from '../../services/user.service';
 
 const config = {
     apiKey: process.env.REACT_APP_API_KEY,
@@ -44,15 +44,12 @@ class Firebase {
         this.auth.onAuthStateChanged(authUser => {
             if(authUser) {
                 authUser.getIdToken().then((idToken) => {
-                    axios.get(
-                        `http://localhost:3001/users/${authUser.uid}`,
-                        {headers: {Authorization: `Bearer ${idToken}`}}
-                    ).then((res) => {
+                    UserService.findById(authUser.uid, idToken).then(res => {
                         authUser = {
                             ...authUser,
-                            data: res.data
+                            data: res
                         }
-                        next(authUser);
+                        next(authUser)
                     }).catch(error => {
                         next(authUser);
                     });

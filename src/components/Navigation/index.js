@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
+import { FirebaseContext } from "../Firebase";
 import { AuthUserContext } from "../Session";
 import SignOutButton from '../SignOut';
 
@@ -12,30 +13,35 @@ const Navigation = () => {
 
 };
 
-const NavigationAuth = () => (
-    <div>
-        <ul>
-            <li>
-                <Link to={ROUTES.HOME}>Home</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.ACCOUNT}>Account</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.CREATE_PRODUCT}>Create Product</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.STORES}>Stores</Link>
-            </li>
-            <li>
-                <Link to={ROUTES.OPERATIONS}>Operations</Link>
-            </li>
-            <li>
-                <SignOutButton/>
-            </li>
-        </ul>
-    </div>
-);
+const NavigationAuth = () => {
+    const firebase = useContext(FirebaseContext);
+    const currentUser = firebase.getCurrentUser();
+
+    return(
+        <div>
+            <ul>
+                <li>
+                    <Link to={ROUTES.HOME}>Home</Link>
+                </li>
+                <li>
+                    <Link to={ROUTES.STORES}>Stores</Link>
+                </li>
+                <li>
+                    <Link to={ROUTES.OPERATIONS}>Operations</Link>
+                </li>
+                <li>
+                    <Link to={ROUTES.PRODUCTS}>Products</Link>
+                </li>
+                <li>
+                    <Link to={`${ROUTES.USERS}/${currentUser.uid}`}>User</Link>
+                </li>
+                <li>
+                    <SignOutButton/>
+                </li>
+            </ul>
+        </div>
+    )
+};
 
 const NavigationNonAuth = () => (
     <ul>
