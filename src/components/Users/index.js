@@ -21,6 +21,7 @@ const Users = ({match}) => {
 
             <Route path={`${path}/:userId/${ROUTES.STORES}`} component={Stores}/>
 
++
             <Route path={`${path}/:userId`} component={
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(Info)
             }/>
