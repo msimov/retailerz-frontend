@@ -7,17 +7,17 @@ import * as CONDITIONS from '../../constants/conditions';
 
 const Stores = ({match}) => {
     const {path} = match;
-
+    console.log(path)
     return(
         <Switch>
-            <Route exact path={path} component={
-                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(List)
+            <Route exact path={`${path}/add`} component={
+                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(AddEdit)
                 }/>
-            <Route path={`${path}/add`} component={
+            <Route path={`${path}/:storeId/edit`} component={
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(AddEdit)
             }/>
-            <Route path={`${path}/edit/:id`} component={
-                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(AddEdit)
+            <Route path={`${path}/`} component={
+                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(List)
             } />
         </Switch>
     )

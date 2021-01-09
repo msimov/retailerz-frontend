@@ -24,16 +24,16 @@ const NavigationAuth = () => {
                     <Link to={ROUTES.HOME}>Home</Link>
                 </li>
                 <li>
-                    <Link to={ROUTES.STORES}>Stores</Link>
-                </li>
-                <li>
                     <Link to={ROUTES.OPERATIONS}>Operations</Link>
                 </li>
                 <li>
                     <Link to={ROUTES.PRODUCTS}>Products</Link>
                 </li>
                 <li>
-                    <Link to={`${ROUTES.USERS}/${currentUser.uid}`}>User</Link>
+                    <Link to={`/${ROUTES.USERS}/${currentUser.uid}`}>User</Link>
+                <li>
+                    <Link to={`/${ROUTES.USERS}/${currentUser.uid}/${ROUTES.STORES}`}>Stores</Link>
+                </li>
                 </li>
                 <li>
                     <SignOutButton/>

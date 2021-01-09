@@ -58,7 +58,7 @@ const AddEdit = ({match}) => {
         currentUser.getIdToken().then(idToken => {
             UserService.updateById(userId, data, idToken).then(res => {
                 setAuthUser({...authUser, data: res});
-                history.push(`./${currentUser.uid}`);
+                history.push(`../${currentUser.uid}`);
             })
         })
     }

@@ -13,7 +13,6 @@ import { withAuthentication } from "../Session";
 
 import Products from '../Products';
 import Operations from "../Operations";
-import Stores from "../Stores";
 import Users from "../Users";
 
 const App = () => {
@@ -31,10 +30,11 @@ const App = () => {
                 <Route path={ROUTES.HOME} component={HomePage}/>
                 <Route path={ROUTES.ACCOUNT} component={AccountPage}/>
 
-                <Route path={ROUTES.STORES} component={Stores}/>
                 <Route path={ROUTES.OPERATIONS} component={Operations}/>
                 <Route path={ROUTES.PRODUCTS} component={Products}/>
-                <Route path={ROUTES.USERS} component={Users}/>
+                <Route path={`/${ROUTES.USERS}`} component={Users}>
+
+                </Route>
             </div>
         </Router>
     )

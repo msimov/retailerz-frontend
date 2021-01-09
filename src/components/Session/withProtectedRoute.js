@@ -37,10 +37,6 @@ const withProtectedRoute = (conditions) => Component => {
         return (
             conditions.every(({condition}) => condition(authUser)) ? <Component { ...props } /> : <div>Loading...</div>    
         )
-        
-
-         
-        
     }
     return WithProtectedRoute;
 }

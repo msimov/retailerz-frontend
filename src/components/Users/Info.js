@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import UserService from '../../services/user.service';
 import { FirebaseContext } from '../Firebase';
 
-const List = ({match}) => {
+const Info = ({match}) => {
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.getCurrentUser();
     const {url} = match;
@@ -62,4 +62,4 @@ const List = ({match}) => {
     
 }
 
-export {List};
+export {Info};
