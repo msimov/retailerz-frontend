@@ -1,23 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { formatURL } from '../../commons/url.common';
 import StoreService from '../../services/store.service';
 import { FirebaseContext } from '../Firebase';
 
 const List = ({match}) => {
     const firebase = useContext(FirebaseContext);
+    const url = formatURL(match.url);
     
-    const {path} = match;
+    const {userId} = match.params;
     const [stores, setStores] = useState(null);
     const currentUser = firebase.getCurrentUser();
 
-
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.getAll(currentUser.uid, idToken).then(res => {
+            StoreService.getAll(userId, idToken).then(res => {
                 setStores(res);
             })
         })
-    }, [currentUser]);
+    }, [currentUser, userId]);
 
     const deleteStore = (storeId) => {
         setStores(stores.map(store => {
@@ -27,7 +28,7 @@ const List = ({match}) => {
             return store;
         }));
         currentUser.getIdToken().then(idToken => {
-            StoreService.deleteById(currentUser.uid, storeId, idToken).then(() => {
+            StoreService.deleteById(userId, storeId, idToken).then(() => {
                 setStores(stores => stores.filter(store => store.id !== storeId));
             });
         })
@@ -36,45 +37,22 @@ const List = ({match}) => {
     return(
         <div>
             <h1>Stores</h1>
-            <Link to={`${path}/add`}>Add Store</Link>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Location</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {stores && stores.map(store =>
-                        <tr key={store.id}>
-                            <td>{store.location}</td>
-                            <td>
-                                <Link to={`${path}/edit/${store.id}`}>Edit</Link>
-                                <button onClick={() => deleteStore(store.id)} disabled={store.isDeleting}>
-                                    {store.isDeleting 
-                                        ? <span>Loading...</span>
-                                        : <span>Delete</span>
-                                    }
-                                </button>
-                            </td>
-                        </tr>
-                    )}
-                    {!stores &&
-                        <tr>
-                            <td>
-                                <div>Loading...</div>
-                            </td>
-                        </tr>
-                    }
-                    {stores && !stores.length &&
-                        <tr>
-                            <td>
-                                <div>No Stores To Display</div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <Link to={`${url}/add`}>Add Store</Link>
+          
+            {stores && stores.map(store =>
+                <div key={store.id}>
+                    <Link to={`${url}/${store.id}`}>{store.location}</Link>
+                    <Link to={`${url}/${store.id}/edit`}>Edit</Link>
+                    <button onClick={() => deleteStore(store.id)} disabled={store.isDeleting}>Delete</button>
+                </div>
+            )}
+            {!stores &&
+                <div>Loading...</div>
+            }
+            {stores && !stores.length &&
+                <div>No Stores To Display</div>
+            }
+
         </div>
     );
 }

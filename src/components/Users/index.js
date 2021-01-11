@@ -1,32 +1,21 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import {Info} from './Info.js';
+import Operations from '../Operations';
+import Products from '../Products';
+import Stores from '../Stores';
 import {AddEdit} from './AddEdit';
-import { withProtectedRoute } from '../Session';
-import * as CONDITIONS from '../../constants/conditions';
-import * as ROUTES from '../../constants/routes';
-import Stores from '../Stores/index.js';
+import { Info } from './Info';
 
 const Users = ({match}) => {
-    const {url, path} = match;
-    console.log(url)
+    const {path} = match;
     return(
         <Switch>
-            <Route exact path={`${path}/add`} component={
-                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_DATA_UNDEFINED])(AddEdit)
-            }/>
-            <Route path={`${path}/:userId/edit`} component={
-                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(AddEdit)
-            } />
-
-            <Route path={`${path}/:userId/${ROUTES.STORES}`} component={Stores}/>
-
-+
-            <Route path={`${path}/:userId`} component={
-                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA, CONDITIONS.USER_TYPE_RETAILER])(Info)
-            }/>
-
-
+            <Route exact path={`${path}/add`} component={AddEdit}/>
+            <Route path={`${path}/:userId/edit`} component={AddEdit} />
+            <Route path={`${path}/:userId/stores`} component={Stores} />
+            <Route path={`${path}/:userId/products`} component={Products} />
+            <Route path={`${path}/:userId/operations`} component={Operations} />
+            <Route path={`${path}/:userId`} component={Info}/>
         </Switch>
     )
 }

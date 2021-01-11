@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { formatURL } from '../../commons/url.common';
 import OperationService from '../../services/operation.service';
 import { FirebaseContext } from '../Firebase';
 
 const List = ({match}) => {
     const firebase = useContext(FirebaseContext);
     
-    const {path} = match;
+    const url = formatURL(match.url);
+    const {userId} = match.params; 
     const [operations, setOperations] = useState(null);
     const currentUser = firebase.getCurrentUser();
 
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            OperationService.getAll(currentUser.uid, idToken).then(res => {
+            OperationService.getAll(userId, idToken).then(res => {
                 setOperations(res);
             })
         })
@@ -27,7 +29,7 @@ const List = ({match}) => {
             return operation;
         }));
         currentUser.getIdToken().then(idToken => {
-            OperationService.deleteById(currentUser.uid, operationId, idToken).then(() => {
+            OperationService.deleteById(userId, operationId, idToken).then(() => {
                 setOperations(operations => operations.filter(operation => operation.id !== operationId));
             });
         })
@@ -36,49 +38,24 @@ const List = ({match}) => {
     return(
         <div>
             <h1>Operations</h1>
-            <Link to={`${path}/add`}>Add Operation</Link>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Type</th>
-                        <th>Product</th>
-                        <th>Count</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {operations && operations.map(operation =>
-                        <tr key={operation.id}>
-                            <td>{operation.operation}</td>
-                            <td>{operation.product}</td>
-                            <td>{operation.count}</td>
-                            <td>
-                                <Link to={`${path}/edit/${operation.id}`}>Edit</Link>
-                                <button onClick={() => deleteOperation(operation.id)} disabled={operation.isDeleting}>
-                                    {operation.isDeleting 
-                                        ? <span>Loading...</span>
-                                        : <span>Delete</span>
-                                    }
-                                </button>
-                            </td>
-                        </tr>
-                    )}
-                    {!operations &&
-                        <tr>
-                            <td>
-                                <div>Loading...</div>
-                            </td>
-                        </tr>
-                    }
-                    {operations && !operations.length &&
-                        <tr>
-                            <td>
-                                <div>No Operations To Display</div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <Link to={`${url}/add`}>Add Operation</Link>
+            {operations && operations.map(operation =>
+                <div key={operation.id}>
+                    <Link to={`${url}/${operation.id}`}>{operation.operation}</Link>
+                    {operation.product}
+                    {operation.count}
+                    <Link to={`${url}/${operation.id}/edit`}>Edit</Link>
+                    <button onClick={() => deleteOperation(operation.id)} disabled={operation.isDeleting}>Delete</button>
+                </div>
+            )}
+            {!operations &&
+                <div>Loading...</div>
+
+            }
+            {operations && !operations.length &&
+                <div>No Operations To Display</div>
+            }
+
         </div>
     );
 }

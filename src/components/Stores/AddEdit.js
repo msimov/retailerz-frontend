@@ -1,8 +1,6 @@
 import React, { useContext, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
 import StoreService from '../../services/store.service';
 import { FirebaseContext } from '../Firebase';
 
@@ -10,37 +8,30 @@ const AddEdit = ({match}) => {
     
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
-    const {id} = match.params;
-    const isAddMode = !id;
+    const {userId, storeId} = match.params;
+    const isAddMode = !storeId;
     const currentUser = firebase.getCurrentUser();
 
-    const validationSchema = Yup.object().shape({
-        location: Yup.string()
-            .required('Location is required')
-    });
-
-    const { register, handleSubmit, reset, setValue, errors, formState} = useForm({
-        resolver: yupResolver(validationSchema)
-    });
+    const { register, handleSubmit, reset, setValue, errors, formState} = useForm();
 
     const onSubmit = (data) => {
         return isAddMode
             ? createStore(data)
-            : updateStore(id, data);
+            : updateStore(data);
     }
 
     const createStore = (data) => {
 
         currentUser.getIdToken().then(idToken => {
-             StoreService.create(currentUser.uid, data, idToken).then(res => {
+             StoreService.create(userId, data, idToken).then(res => {
                  history.push('.');
-             });
+             });    
         })
     }
 
-    const updateStore = (storeId, data) => {
+    const updateStore = (data) => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.updateById(currentUser.uid, storeId, data, idToken).then(res => {
+            StoreService.updateById(userId, storeId, data, idToken).then(res => {
                 history.push('..');
             })
         })
@@ -49,13 +40,13 @@ const AddEdit = ({match}) => {
     useEffect(() => {
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
-                StoreService.findById(currentUser.uid, id, idToken).then(res => {
+                StoreService.findById(userId, storeId, idToken).then(res => {
                     const fields = ['location'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
         }
-    }, [currentUser, id, setValue, isAddMode]);
+    }, [currentUser, userId, storeId, setValue, isAddMode]);
 
     return(
         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
@@ -69,10 +60,8 @@ const AddEdit = ({match}) => {
             </div>
             <div>
                 <button type="submit" disabled={formState.isSubmitting}>
-                    {formState.isSubmitting && <span>Loading...</span>}
                     Save
                 </button>
-                <Link to={isAddMode ? '.' : '..'}>Cancel</Link>
             </div>
         </form>
     )

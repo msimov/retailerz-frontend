@@ -8,11 +8,7 @@ import SignUpPage from "../SignUp";
 import SignInPage from "../SignIn";
 import PasswordForgetPage from "../PasswordForget";
 import HomePage from "../Home";
-import AccountPage from "../Account";
 import { withAuthentication } from "../Session";
-
-import Products from '../Products';
-import Operations from "../Operations";
 import Users from "../Users";
 
 const App = () => {
@@ -27,14 +23,9 @@ const App = () => {
                 <Route path={ROUTES.SIGN_UP} component={SignUpPage}/>
                 <Route path={ROUTES.SIGN_IN} component={SignInPage}/>
                 <Route path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage}/>
-                <Route path={ROUTES.HOME} component={HomePage}/>
-                <Route path={ROUTES.ACCOUNT} component={AccountPage}/>
 
-                <Route path={ROUTES.OPERATIONS} component={Operations}/>
-                <Route path={ROUTES.PRODUCTS} component={Products}/>
-                <Route path={`/${ROUTES.USERS}`} component={Users}>
-
-                </Route>
+                <Route path={`/home`} component={HomePage}/>
+                <Route path={`/users`} component={Users}/>
             </div>
         </Router>
     )

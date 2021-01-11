@@ -5,6 +5,6 @@ export const HOME = '/home';
 export const ACCOUNT = '/account';
 export const PASSWORD_FORGET = '/pw-forget';
 export const OPERATIONS = '/operations';
-export const PRODUCTS = '/products';
+export const PRODUCTS = 'products';
 export const USERS = 'users';
 export const STORES = 'stores';

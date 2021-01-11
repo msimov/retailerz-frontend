@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
 import StoreService from '../../services/store.service';
 import { FirebaseContext } from '../Firebase';
 import ProductService from '../../services/product.service';
@@ -17,46 +15,16 @@ const AddEdit = ({match}) => {
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
 
-    const {id} = match.params;
-    const isAddMode = !id;
+    const {userId, productId} = match.params;
+    const isAddMode = !productId;
     const currentUser = firebase.getCurrentUser();
 
     const [groups, setGroups] = useState([]); 
     const [stores, setStores] = useState([]);
     const [measureUnits, setMeasureUnits] = useState([]);
     const [taxGroups, setTaxGroups] = useState([]);
-    
-    const validationSchema = Yup.object().shape({
-        name: Yup.string()
-            .required('Name is required'),
-        group: Yup.object()
-            .nullable()
-            .required('Group is required'),
-        code: Yup.string()
-            .matches(/^(?<=\s|^)\d+(?=\s|$)/, "Only numbers are allowed")
-            .required("Code is required"),
-        barcode: Yup.string()
-            .matches(/^\d+$/, 'Only digits are allowed'),
-        measureUnit: Yup.object()
-            .nullable()
-            .required("Measure Unit is required"),
-        taxGroup: Yup.object()
-            .nullable()
-            .required("Tax Group is required"),
-        retailPrice: Yup.number()
-            .typeError("Retail Price should be a number")
-            .required("Retail Price is required"),
-        deliveryPrice: Yup.string()
-            .typeError("Delivery Price should be a number")
-            .required("Delivery Price is required"),
-        store: Yup.object()
-            .nullable()
-            .required("Product Store is required"),
-    });
 
-    const { register, handleSubmit, reset, setValue, errors, formState, control} = useForm({
-        resolver: yupResolver(validationSchema)
-    });
+    const { register, handleSubmit, reset, setValue, errors, formState, control} = useForm();
 
     const onSubmit = (data) => {
         const fields = ['group', 'measureUnit', 'taxGroup', 'store'];
@@ -65,20 +33,20 @@ const AddEdit = ({match}) => {
         });
         return isAddMode
             ? createProduct(data)
-            : updateProduct(id, data);
+            : updateProduct(data);
     }
 
     const createProduct = (data) => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.create(currentUser.uid, data, idToken).then(res => {
+            ProductService.create(userId, data, idToken).then(res => {
                 history.push('.');
             })
         })
     }
 
-    const updateProduct = (productId, data) => {
+    const updateProduct = (data) => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.updateById(currentUser.uid, productId, data).then(res => {
+            ProductService.updateById(userId, productId, data).then(res => {
                 history.push('..');
             })
         })
@@ -86,20 +54,20 @@ const AddEdit = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            GroupService.getAll(currentUser.uid, idToken).then(res => {
+            GroupService.getAll(userId, idToken).then(res => {
                 setGroups(res.map(({id, name}) => ({value: id, label: name})));
             });
 
-            StoreService.getAll(currentUser.uid, idToken).then(res => {
+            StoreService.getAll(userId, idToken).then(res => {
                 setStores(res.map(({id, location}) => ({value: id, label: location})));
             });
             
-            MeasureUnitService.getAll(currentUser.uid, idToken).then(res => {
+            MeasureUnitService.getAll(userId, idToken).then(res => {
                 setMeasureUnits(res.map(({id, unit}) => ({value: id, label: unit})));
             });
 
             if(!isAddMode) {
-                ProductService.findById(currentUser.uid, id, idToken).then(res => {
+                ProductService.findById(userId, productId, idToken).then(res => {
                     const fields = ['name', 'description', 'group', 'code', 'barcode', 'measureUnit', 'taxGroup', 'retailPrice', 'deliveryPrice', 'expiryDate', 'store']
                     fields.forEach(field => setValue(field, res[field]));
                 })
@@ -109,7 +77,7 @@ const AddEdit = ({match}) => {
             setTaxGroups(res.map(({id, percentage}) => ({value: id, label: percentage + "%"})));
         });
 
-    }, [currentUser, id, isAddMode, setValue])
+    }, [currentUser, userId, productId, isAddMode, setValue])
 
     return(
         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
@@ -207,10 +175,8 @@ const AddEdit = ({match}) => {
             </div>
             <div>
                 <button type="submit" disabled={formState.isSubmitting}>
-                    {formState.isSubmitting && <span>Loading...</span>}
                     Save
                 </button>
-                <Link to={isAddMode ? '.' : '..'}>Cancel</Link>
             </div>
         </form>
     );

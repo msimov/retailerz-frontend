@@ -9,7 +9,7 @@ const withProtectedRoute = (conditions) => Component => {
         const firebase = useContext(FirebaseContext);
         const {authUser} = useContext(AuthUserContext);
         const history = useHistory();
-    
+
         useEffect(() => {
             const checkConditions = (authUser) => {
                 conditions.some(({condition, redirect}) => {
@@ -19,6 +19,7 @@ const withProtectedRoute = (conditions) => Component => {
                     }
                     return false;
                 })
+
             }
 
             const listener = firebase.onAuthUserListener(
@@ -34,9 +35,7 @@ const withProtectedRoute = (conditions) => Component => {
             }
         }, [firebase, history]);
 
-        return (
-            conditions.every(({condition}) => condition(authUser)) ? <Component { ...props } /> : <div>Loading...</div>    
-        )
+        return conditions.every(({condition}) => condition(authUser)) ? <Component { ...props } /> : <div>Loading...</div>    
     }
     return WithProtectedRoute;
 }

@@ -1,11 +1,26 @@
-import React from "react";
-import { withProtectedRoute } from "../Session";
-import * as CONDITIONS from '../../constants/conditions';
+import React, { useContext } from "react";
+import { FirebaseContext } from "../Firebase";
+import { Link } from "react-router-dom";
 
 const HomePage = () => (
-    <div>
-        <h1>Home Page</h1>
-    </div>
+    <RetailerHomePage/>
 );
 
-export default withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(HomePage);
+const RetailerHomePage = () => {
+    const firebase = useContext(FirebaseContext);
+    const currentUser = firebase.getCurrentUser();
+    
+    return(
+        <div>
+            <Link to={`/users/${currentUser.uid}`}>My Profile</Link>
+            <Link to={`/users/${currentUser.uid}/stores`}>My Stores</Link>
+            <Link to={`/users/${currentUser.uid}/products`}>My Products</Link>
+            <Link to={`/users/${currentUser.uid}/operations`}>My Operations</Link>
+            <Link to={`/users/${currentUser.uid}/measure-units`}>My Measure Units</Link>
+        </div>
+    );
+}
+
+export {RetailerHomePage};
+
+export default HomePage;

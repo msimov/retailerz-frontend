@@ -17,30 +17,14 @@ const AddEdit = ({match}) => {
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
 
-    const {id} = match.params;
-    const isAddMode = !id;
+    const {userId, operationId} = match.params;
+    const isAddMode = !operationId;
     const currentUser = firebase.getCurrentUser();
 
     const [products, setProducts] = useState([]);
     const [operationTypes, setOperationTypes] = useState([]);
 
-
-    const validationSchema = Yup.object().shape({
-        operationType: Yup.object()
-            .nullable()
-            .required("Operation Type is required"),
-        product: Yup.object()
-            .nullable()
-            .required("Product is required"),
-        count: Yup.number()
-            .typeError("Count must be a number")
-            .positive("Count must be greater than 0")
-            .required("Count is required")
-    });
-
-    const { register, handleSubmit, reset, setValue, errors, formState, control} = useForm({
-        resolver: yupResolver(validationSchema)
-    });
+    const { register, handleSubmit, reset, setValue, errors, formState, control} = useForm();
 
     const onSubmit = (data) => {
         const fields = ['product', 'operationType'];
@@ -49,20 +33,20 @@ const AddEdit = ({match}) => {
         });
         return isAddMode
             ? createOperation(data)
-            : updateOperation(id, data);
+            : updateOperation(data);
     }
 
     const createOperation = (data) => {
         currentUser.getIdToken().then(idToken => {
-             OperationService.create(currentUser.uid, data, idToken).then(res => {
+             OperationService.create(userId, data, idToken).then(res => {
                  history.push('.');
              });
         })
     }
 
-    const updateOperation = (operationId, data) => {
+    const updateOperation = (data) => {
         currentUser.getIdToken().then(idToken => {
-            OperationService.updateById(currentUser.uid, operationId, data, idToken).then(res => {
+            OperationService.updateById(userId, operationId, data, idToken).then(res => {
                 history.push('..');
             })
         })
@@ -70,7 +54,7 @@ const AddEdit = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.getAll(currentUser.uid, idToken).then(res => {
+            ProductService.getAll(userId, idToken).then(res => {
                 setProducts(res.map(({id, name}) => ({value: id, label: name})));
             })
         })
@@ -80,13 +64,13 @@ const AddEdit = ({match}) => {
 
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
-                OperationService.findById(currentUser.uid, id, idToken).then(res => {
+                OperationService.findById(userId, operationId, idToken).then(res => {
                     const fields = ['count'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
         }
-    }, [currentUser, id, isAddMode, setValue]);
+    }, [currentUser, userId, operationId, isAddMode, setValue]);
 
     return(
         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
@@ -122,10 +106,8 @@ const AddEdit = ({match}) => {
             </div>
             <div>
                 <button type="submit" disabled={formState.isSubmitting}>
-                    {formState.isSubmitting && <span>Loading...</span>}
                     Save
                 </button>
-                <Link to={isAddMode ? '.' : '..'}>Cancel</Link>
             </div>
         </form>
     )

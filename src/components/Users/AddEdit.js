@@ -1,9 +1,7 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { FirebaseContext } from "../Firebase";
-import * as Yup from 'yup';
 import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
 import ReactSelect from 'react-select';
 import UserService from "../../services/user.service";
 import UserTypeService from "../../services/user-type.service";
@@ -13,33 +11,23 @@ const AddEdit = ({match}) => {
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
     const {authUser, setAuthUser} = useContext(AuthUserContext);
-
+    
     const {userId} = match.params;
     const currentUser = firebase.getCurrentUser();
     const isAddMode = !userId;
 
     const [userTypes, setUserTypes] = useState([]); 
-    
-    const validationSchema = Yup.object().shape({
-        firstName: Yup.string()
-            .required('First Name is required'),
-        lastName: Yup.string()
-            .required('Last Name is required'),
-        email: Yup.string()
-            .required('Email is required'),
-        type: Yup.object()
-            .required('Type is required')
-    });
 
-    const { register, handleSubmit, reset, setValue, errors, formState, control} = useForm({
-        resolver: yupResolver(validationSchema)
-    });
+
+    const { register, handleSubmit, reset, setValue, errors, formState, control} = useForm();
 
     const onSubmit = (data) => {
-        const fields = ['type'];
-        fields.forEach(field => {
-            data[field] = data[field].value;
-        });
+        if(isAddMode) {
+            const fields = ['type'];
+            fields.forEach(field => {
+                data[field] = data[field].value;
+            });
+        }
         return isAddMode
             ? createUser(data)
             : updateUser(userId, data);
@@ -49,7 +37,7 @@ const AddEdit = ({match}) => {
         currentUser.getIdToken().then(idToken => {
             UserService.create(currentUser.uid, data, idToken).then(res => {
                 setAuthUser({...authUser, data: res});
-                history.push(`./${currentUser.uid}`);
+                history.push(`/home`);
             });
         })
     }
@@ -58,7 +46,7 @@ const AddEdit = ({match}) => {
         currentUser.getIdToken().then(idToken => {
             UserService.updateById(userId, data, idToken).then(res => {
                 setAuthUser({...authUser, data: res});
-                history.push(`../${currentUser.uid}`);
+                history.push('.');
             })
         })
     }
@@ -98,24 +86,26 @@ const AddEdit = ({match}) => {
                     <input name="email" type="text" ref={register}/>
                     <div>{errors.email?.message}</div>
                 </div>
-                <div>
-                    <label>Type</label>
-                    <Controller
-                        as={ReactSelect}
-                        defaultValue=""
-                        options={userTypes}
-                        name="type"
-                        control={control}
-                    />
-                    <div>{errors.type?.message}</div>
-                </div>
+
+                { isAddMode ?
+                    <div>
+                        <label>Type</label>
+                        <Controller
+                            as={ReactSelect}
+                            defaultValue=""
+                            options={userTypes}
+                            name="type"
+                            control={control}
+                        />
+                        <div>{errors.type?.message}</div>
+                    </div>
+                    : null
+                }
             </div>
             <div>
                 <button type="submit" disabled={formState.isSubmitting}>
-                    {formState.isSubmitting && <span>Loading...</span>}
                     Save
                 </button>
-                {isAddMode ? null : <Link to={`./${currentUser.uid}`}>Cancel</Link>}
             </div>
         </form>
     )
