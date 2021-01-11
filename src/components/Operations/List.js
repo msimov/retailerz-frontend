@@ -19,7 +19,7 @@ const List = ({match}) => {
                 setOperations(res);
             })
         })
-    }, [currentUser]);
+    }, [currentUser, userId]);
 
     const deleteOperation = (operationId) => {
         setOperations(operations.map(operation => {

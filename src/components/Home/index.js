@@ -17,6 +17,7 @@ const RetailerHomePage = () => {
             <Link to={`/users/${currentUser.uid}/products`}>My Products</Link>
             <Link to={`/users/${currentUser.uid}/operations`}>My Operations</Link>
             <Link to={`/users/${currentUser.uid}/measure-units`}>My Measure Units</Link>
+            <Link to={`/users/${currentUser.uid}/groups`}>My Groups</Link>
         </div>
     );
 }

@@ -149,15 +149,10 @@ const AddEdit = ({match}) => {
                 <div>
                     <label>Expiry Date</label>
                     <Controller
+                        as={ReactDatePicker}
                         name="expiryDate"
                         control={control}
                         defaultValue=""
-                        render={({onChange, value}) => (
-                            <ReactDatePicker 
-                                selected={value}
-                                onChange={onChange}
-                            />
-                        )}
                     />
                     <div>{errors.expiryDate?.message}</div>
                 </div>

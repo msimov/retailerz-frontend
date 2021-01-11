@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
 import { FirebaseContext } from '../Firebase';
 import OperationService from '../../services/operation.service';
 import ProductService from '../../services/product.service';

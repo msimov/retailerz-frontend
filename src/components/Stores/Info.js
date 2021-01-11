@@ -25,7 +25,6 @@ const Info = ({match}) => {
         <div>
             {store.id}
             {store.location}
-            {store.location}
             <Link to={`${url}/edit`}>Edit Store</Link>
         </div>
     )

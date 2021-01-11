@@ -2,36 +2,36 @@ import React, { useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { FirebaseContext } from '../Firebase';
-import MeasureUnitService from '../../services/measure-unit.service';
+import GroupService from '../../services/group.service';
 
 const AddEdit = ({match}) => {
     
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
-    const {userId, measureUnitId} = match.params;
-    const isAddMode = !measureUnitId;
+    const {userId, groupId} = match.params;
+    const isAddMode = !groupId;
     const currentUser = firebase.getCurrentUser();
 
     const { register, handleSubmit, reset, setValue, errors, formState} = useForm();
 
     const onSubmit = (data) => {
         return isAddMode
-            ? createMeasureUnit(data)
-            : updateMeasureUnit(data);
+            ? createGroup(data)
+            : updateGroup(data);
     }
 
-    const createMeasureUnit = (data) => {
+    const createGroup = (data) => {
 
         currentUser.getIdToken().then(idToken => {
-             MeasureUnitService.create(userId, data, idToken).then(res => {
+             GroupService.create(userId, data, idToken).then(res => {
                  history.push('.');
              });    
         })
     }
 
-    const updateMeasureUnit = (data) => {
+    const updateGroup = (data) => {
         currentUser.getIdToken().then(idToken => {
-            MeasureUnitService.updateById(userId, measureUnitId, data, idToken).then(res => {
+            GroupService.updateById(userId, groupId, data, idToken).then(res => {
                 history.push('..');
             })
         })
@@ -40,22 +40,22 @@ const AddEdit = ({match}) => {
     useEffect(() => {
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
-                MeasureUnitService.findById(userId, measureUnitId, idToken).then(res => {
-                    const fields = ['unit'];
+                GroupService.findById(userId, groupId, idToken).then(res => {
+                    const fields = ['name'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
         }
-    }, [currentUser, userId, measureUnitId, setValue, isAddMode]);
+    }, [currentUser, userId, groupId, setValue, isAddMode]);
 
     return(
         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <h1>{isAddMode ? 'Add Measure Unit' : 'Edit Measure Unit'}</h1>
+            <h1>{isAddMode ? 'Add Group' : 'Edit Group'}</h1>
             <div>
                 <div>
-                    <label>Unit</label>
-                    <input name="unit" type="text" ref={register}/>
-                    <div>{errors.unit?.message}</div>
+                    <label>Name</label>
+                    <input name="name" type="text" ref={register}/>
+                    <div>{errors.name?.message}</div>
                 </div>
             </div>
             <div>

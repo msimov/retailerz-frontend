@@ -31,11 +31,11 @@ const findById = (userId, productId, userToken) => {
     })
 }
 
-const updateById = (userId, productId, product, userToken) => {
+const updateById = (userId, productId, newProduct, userToken) => {
     return request({
         url: `users/${userId}/products/${productId}`,
         method: "PUT",
-        data: product,
+        data: newProduct,
         headers: {
             Authorization: `Bearer ${userToken}`
         }
