@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FirebaseContext } from '../Firebase';
 import OperationService from '../../services/operation.service';
 import ProductService from '../../services/product.service';
 import OperationTypeService from '../../services/operation-type.service';
-import ReactSelect from 'react-select';
+import FormSelect from '../FormSelect';
+import FormTextField from '../FormTextField';
+import FormButton from '../FormButton';
 
 
 
@@ -22,13 +24,9 @@ const AddEdit = ({match}) => {
     const [products, setProducts] = useState([]);
     const [operationTypes, setOperationTypes] = useState([]);
 
-    const { register, handleSubmit, reset, setValue, errors, formState, control} = useForm();
+    const { handleSubmit, reset, setValue, errors, formState, control} = useForm();
 
     const onSubmit = (data) => {
-        const fields = ['product', 'operationType'];
-        fields.forEach(field => {
-            data[field] = data[field].value;
-        });
         return isAddMode
             ? createOperation(data)
             : updateOperation(data);
@@ -53,17 +51,17 @@ const AddEdit = ({match}) => {
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
             ProductService.getAll(userId, idToken).then(res => {
-                setProducts(res.map(({id, name}) => ({value: id, label: name})));
+                setProducts(res.map(({id, name}) => ({key: id, label: name})));
             })
         })
         OperationTypeService.getAll().then(res => {
-            setOperationTypes(res.map(({id, type}) => ({value: id, label: type})));
+            setOperationTypes(res.map(({id, type}) => ({key: id, label: type})));
         })
 
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
                 OperationService.findById(userId, operationId, idToken).then(res => {
-                    const fields = ['count'];
+                    const fields = ['operationType', 'product', 'count'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
@@ -75,42 +73,41 @@ const AddEdit = ({match}) => {
             <h1>{isAddMode ? 'Add Operation' : 'Edit Operation'}</h1>
             <div>
                 <div>
-                    <label>Operation Type</label>
-                    <Controller
-                        as={ReactSelect}
-                        defaultValue=""
-                        options={operationTypes}
+                    <FormSelect 
                         name="operationType"
+                        label="Operation Type"
+                        options={operationTypes}
                         control={control}
                     />
                     <div>{errors.operationType?.message}</div>
                 </div>
                 <div>
-                    <label>Product</label>
-                    <Controller
-                        as={ReactSelect}
-                        defaultValue=""
+                    <FormSelect
+                        name="product" 
+                        label="Product"
                         options={products}
-                        name="product"
                         control={control}
                     />
                     <div>{errors.product?.message}</div>
                 </div>
                 <div>
-                    <label>Count</label>
-                    <input name="count" type="text" ref={register}/>
+                    <FormTextField 
+                        name="count"
+                        label="Count"
+                        control={control}
+                    />
                     <div>{errors.count?.message}</div>
                 </div>
             </div>
             <div>
-                <button type="submit" disabled={formState.isSubmitting}>
-                    Save
-                </button>
+                <FormButton    
+                    label="Save"
+                    type="submit"
+                    disabled={formState.isSubmitting}
+                />
             </div>
         </form>
     )
 }
 
-
-//Todo: Add Conditions
 export {AddEdit}

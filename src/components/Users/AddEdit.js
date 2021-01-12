@@ -1,11 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext } from "../Firebase";
-import { Controller, useForm } from "react-hook-form";
-import ReactSelect from 'react-select';
+import { useForm } from "react-hook-form";
 import UserService from "../../services/user.service";
 import UserTypeService from "../../services/user-type.service";
 import { AuthUserContext } from "../Session";
+import FormTextField from "../FormTextField";
+import FormSelect from "../FormSelect";
+import FormButton from "../FormButton";
 
 const AddEdit = ({match}) => {
     const firebase = useContext(FirebaseContext);
@@ -19,15 +21,9 @@ const AddEdit = ({match}) => {
     const [userTypes, setUserTypes] = useState([]); 
 
 
-    const { register, handleSubmit, reset, setValue, errors, formState, control} = useForm();
+    const { handleSubmit, reset, setValue, errors, formState, control} = useForm();
 
     const onSubmit = (data) => {
-        if(isAddMode) {
-            const fields = ['type'];
-            fields.forEach(field => {
-                data[field] = data[field].value;
-            });
-        }
         return isAddMode
             ? createUser(data)
             : updateUser(userId, data);
@@ -72,29 +68,36 @@ const AddEdit = ({match}) => {
             <h1>{isAddMode ? 'Add User' : 'Edit User'}</h1>
             <div>
                 <div>
-                    <label>First Name</label>
-                    <input name="firstName" type="text" ref={register}/>
+                    <FormTextField 
+                        name="firstName"
+                        label="First Name"
+                        control={control}
+                    />
                     <div>{errors.firstName?.message}</div>
                 </div>
                 <div>
-                    <label>Last Name</label>
-                    <input name="lastName" type="text" ref={register}/>
+                    <FormTextField 
+                        name="lastName"
+                        label="First Name"
+                        control={control}
+                    />
                     <div>{errors.lastName?.message}</div>
                 </div>
                 <div>
-                    <label>Email</label>
-                    <input name="email" type="text" ref={register}/>
+                    <FormTextField 
+                        name="email"
+                        label="Email"
+                        control={control}
+                    />
                     <div>{errors.email?.message}</div>
                 </div>
 
                 { isAddMode ?
                     <div>
-                        <label>Type</label>
-                        <Controller
-                            as={ReactSelect}
-                            defaultValue=""
-                            options={userTypes}
+                        <FormSelect 
                             name="type"
+                            label="Type"
+                            options={userTypes}
                             control={control}
                         />
                         <div>{errors.type?.message}</div>
@@ -103,9 +106,11 @@ const AddEdit = ({match}) => {
                 }
             </div>
             <div>
-                <button type="submit" disabled={formState.isSubmitting}>
-                    Save
-                </button>
+                <FormButton 
+                    label="Save"
+                    type="submit"
+                    disabled={formState.isSubmitting}
+                />
             </div>
         </form>
     )

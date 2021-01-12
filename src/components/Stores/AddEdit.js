@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import StoreService from '../../services/store.service';
 import { FirebaseContext } from '../Firebase';
+import FormTextField from '../FormTextField';
+import FormButton from '../FormButton';
 
 const AddEdit = ({match}) => {
     
@@ -12,7 +14,7 @@ const AddEdit = ({match}) => {
     const isAddMode = !storeId;
     const currentUser = firebase.getCurrentUser();
 
-    const { register, handleSubmit, reset, setValue, errors, formState} = useForm();
+    const { control, handleSubmit, reset, setValue, errors, formState} = useForm();
 
     const onSubmit = (data) => {
         return isAddMode
@@ -53,15 +55,20 @@ const AddEdit = ({match}) => {
             <h1>{isAddMode ? 'Add Store' : 'Edit Store'}</h1>
             <div>
                 <div>
-                    <label>Location</label>
-                    <input name="location" type="text" ref={register}/>
+                    <FormTextField 
+                        name="location"
+                        label="Location"
+                        control={control}
+                    />
                     <div>{errors.location?.message}</div>
                 </div>
             </div>
             <div>
-                <button type="submit" disabled={formState.isSubmitting}>
-                    Save
-                </button>
+                <FormButton 
+                    label="Save"
+                    type="submit"
+                    disabled={formState.isSubmitting}
+                />
             </div>
         </form>
     )
