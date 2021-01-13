@@ -26,6 +26,7 @@ const StoreInfo = ({match}) => {
             {store.id}
             {store.location}
             <Link to={`${url}/edit`}>Edit Store</Link>
+            <Link to={`${url}/store-products`}>Products</Link>
         </div>
     )
     : (

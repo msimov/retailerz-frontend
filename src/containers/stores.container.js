@@ -5,6 +5,7 @@ import { StoreInfo } from '../components/storeInfo.component';
 import { StoresList } from '../components/storesList.component';
 import withProtectedRoute from '../hoc/withProtectedRoute.hoc';
 import * as CONDITIONS from '../constants/conditions.constants';
+import StoreProducts from './storeProducts.container';
 
 const Stores = ({match}) => {
     const {path} = match;
@@ -14,8 +15,13 @@ const Stores = ({match}) => {
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(StoreAddEditForm)
             }/>
             
+
             <Route path={`${path}/:storeId/edit`} component={
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(StoreAddEditForm)
+            } />
+
+            <Route path={`${path}/:storeId/store-products`} component={
+                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(StoreProducts)
             } />
 
             <Route path={`${path}/:storeId`} component={
@@ -25,6 +31,7 @@ const Stores = ({match}) => {
             <Route path={`${path}`} component={
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(StoresList)
             }/>
+
         </Switch>
     )
 }
