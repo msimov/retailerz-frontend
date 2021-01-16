@@ -42,6 +42,7 @@ const OperationsList = ({match}) => {
             {operations && operations.map(operation =>
                 <div key={operation.id}>
                     <Link to={`${url}/${operation.id}`}>{operation.operation}</Link>
+                    {operation.store}
                     {operation.product}
                     {operation.count}
                     <Link to={`${url}/${operation.id}/edit`}>Edit</Link>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { formatURL } from '../commons/url.common';
 import ProductService from '../services/product.service';
 import { FirebaseContext } from "../context/firebase.context";
+import { AddToCartForm } from './addToCartForm.component';
 
 const ProductInfo = ({match}) => {
     const firebase = useContext(FirebaseContext);
@@ -11,6 +12,7 @@ const ProductInfo = ({match}) => {
     const {userId} = match.params;
     const {productId} = match.params;
     const [product, setProduct] = useState(null);
+    
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
@@ -37,6 +39,7 @@ const ProductInfo = ({match}) => {
             {product.name}
             {product.description}
             <Link to={`${url}/edit`}>Edit</Link>
+            <AddToCartForm product={product} userId={userId}/>
         </div>
     )
     : (

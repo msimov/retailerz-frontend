@@ -8,6 +8,7 @@ import OperationTypeService from '../services/operationType.service';
 import { FormSelect } from './formSelect.component';
 import { FormTextField } from './formTextField.component';
 import { FormButton } from './formButton.component';
+import StoreService from '../services/store.service';
 
 const OperationAddEditForm = ({match}) => {
 
@@ -19,6 +20,7 @@ const OperationAddEditForm = ({match}) => {
     const currentUser = firebase.getCurrentUser();
 
     const [products, setProducts] = useState([]);
+    const [stores, setStores] = useState([])
     const [operationTypes, setOperationTypes] = useState([]);
 
     const { handleSubmit, reset, setValue, errors, formState, control} = useForm();
@@ -50,6 +52,9 @@ const OperationAddEditForm = ({match}) => {
             ProductService.getAll(userId, idToken).then(res => {
                 setProducts(res.map(({id, name}) => ({key: id, label: name})));
             })
+            StoreService.getAll(userId, idToken).then(res => {
+                setStores(res.map(({id, location}) => ({key: id, label: location})));
+            })
         })
         OperationTypeService.getAll().then(res => {
             setOperationTypes(res.map(({id, type}) => ({key: id, label: type})));
@@ -77,6 +82,15 @@ const OperationAddEditForm = ({match}) => {
                         control={control}
                     />
                     <div>{errors.operationType?.message}</div>
+                </div>
+                <div>
+                    <FormSelect 
+                        name="store"
+                        label="Store"
+                        options={stores}
+                        control={control}
+                    />
+                    <div>{errors.store?.message}</div>
                 </div>
                 <div>
                     <FormSelect
