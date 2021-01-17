@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import { FirebaseContext } from "../context/firebase.context";
 import OperationService from "../services/operation.service";
 import OperationTypeService from "../services/operationType.service";
@@ -13,19 +14,20 @@ import { FormTextField } from "./formTextField.component";
 const AddToCartForm = (props) => {
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.getCurrentUser();
+    const history = useHistory();
     const {product} = props;
     const {userId} = props;
     const [stores, setStores] = useState([]);
-    const [addToCardOperation, setAddToCartOperation] = useState([]);
+    const [addToCartOperation, setAddToCartOperation] = useState([]);
 
 
     const { control, handleSubmit, reset, errors, formState} = useForm();
 
     const onSubmit = (data) => {
-        console.log(product)
-        console.log(data);
         currentUser.getIdToken().then(idToken => {
-            OperationService.create(product.user, {product: product.id, count: data.count, operationType: addToCardOperation.id, store: data.store}, idToken)
+            OperationService.create(currentUser.uid, {product: product.id, count: data.count, operationType: addToCartOperation.id, store: data.store}, idToken).then(res => {
+                history.push(`/users/${currentUser.uid}/cart`)
+            })
         })
     }
 
@@ -36,7 +38,7 @@ const AddToCartForm = (props) => {
             })
         })
         
-            OperationTypeService.getAll().then(res => {
+        OperationTypeService.getAll().then(res => {
             setAddToCartOperation(res.find(({type}) => type === "ADD_TO_CART"))
         })
        

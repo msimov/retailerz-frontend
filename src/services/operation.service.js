@@ -21,6 +21,17 @@ const getAll = (userId, userToken) => {
     })
 }
 
+const getAllByOperationType = (userId, operationType, userToken) => {
+    return request({
+        url: `users/${userId}/operations`,
+        method: "GET",
+        data: operationType,
+        headers: {
+            Authorization: `Bearer ${userToken}`
+        }
+    })
+}
+
 const findById = (userId, operationId, userToken) => {
     return request({
         url: `users/${userId}/operations/${operationId}`,
@@ -53,7 +64,7 @@ const deleteById = (userId, operationId, userToken) => {
 }
 
 const OperationService = {
-    create, findById, getAll, updateById, deleteById
+    create, findById, getAll, getAllByOperationType, updateById, deleteById
 }
 
 export default OperationService;

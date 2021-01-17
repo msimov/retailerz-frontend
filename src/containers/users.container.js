@@ -10,6 +10,7 @@ import Groups from './groups.container';
 import { UserInfo } from '../components/userInfo.component';
 import withProtectedRoute from '../hoc/withProtectedRoute.hoc';
 import * as CONDITIONS from '../constants/conditions.constants';
+import Cart from './cart.container';
 
 const Users = ({match}) => {
     const {path} = match;
@@ -38,6 +39,9 @@ const Users = ({match}) => {
             } />
             <Route path={`${path}/:userId/groups`} component={
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Groups)
+            } />
+            <Route path={`${path}/:userId/cart`} component={
+                withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Cart)
             } />
             <Route path={`${path}/:userId`} component={
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(UserInfo)

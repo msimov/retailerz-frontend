@@ -1,5 +1,17 @@
 import request from '../commons/request.common';
 
+
+const findByKeyword = (keyword, userToken) => {
+    return request({
+        url: `products`,
+        method: "GET",
+        params: {keyword},
+        headers: {
+            Authorization: `Bearer ${userToken}`
+        }
+    })
+}
+
 const create = (userId, product, userToken) => {
     return request({
         url: `users/${userId}/products`,
@@ -53,7 +65,7 @@ const deleteById = (userId, productId, userToken) => {
 }
 
 const ProductService = {
-    create, findById, getAll, updateById, deleteById
+    findByKeyword, create, findById, getAll, updateById, deleteById
 }
 
 export default ProductService;

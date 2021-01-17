@@ -10,6 +10,7 @@ import SignIn from "./signIn.container";
 import SignUp from "./signUp.container";
 import Users from "./users.container";
 import * as CONDITIONS from "../constants/conditions.constants";
+import Search from "./search.container";
 
 const App = () => {
 
@@ -32,6 +33,9 @@ const App = () => {
                 }/>
                 <Route path={`/home`} component={
                     withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Home)
+                }/>
+                <Route path={'/search'} component={
+                    withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Search)
                 }/>
                 <Route path={`/users`} component={
                     withProtectedRoute([CONDITIONS.USER_NOT_NULL])(Users)
