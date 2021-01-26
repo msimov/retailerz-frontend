@@ -1,8 +1,8 @@
 import request from '../commons/request.common';
 
-const create = (userId, storeId, storeProduct, userToken) => {
+const create = (storeId, storeProduct, userToken) => {
     return request({
-        url: `users/${userId}/stores/${storeId}/products`,
+        url: `stores/${storeId}/products`,
         method: "POST",
         data: storeProduct,
         headers: {
@@ -11,9 +11,9 @@ const create = (userId, storeId, storeProduct, userToken) => {
     })
 }
 
-const getAllByStoreId = (userId, storeId, userToken) => {
+const getAllByStoreId = (storeId, userToken) => {
     return request({
-        url: `users/${userId}/stores/${storeId}/products`,
+        url: `stores/${storeId}/products`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -22,9 +22,9 @@ const getAllByStoreId = (userId, storeId, userToken) => {
 }
 
 
-const deleteByStoreIdAndProductId = (userId, storeId, productId, userToken) => {
+const deleteByStoreIdAndProductId = (storeId, productId, userToken) => {
     return request({
-        url: `users/${userId}/stores/${storeId}/products/${productId}`,
+        url: `stores/${storeId}/products/${productId}`,
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${userToken}`

@@ -7,7 +7,7 @@ const getAll = () => {
     })
 }
 
-const findById = (taxGroupId) => {
+const findByTaxGroupId = (taxGroupId) => {
     return request({
         url: `tax-groups/${taxGroupId}`,
         method: "GET",
@@ -15,7 +15,7 @@ const findById = (taxGroupId) => {
 }
 
 const TaxGroupService = {
-    findById, getAll
+    findByTaxGroupId, getAll
 }
 
 export default TaxGroupService;

@@ -14,7 +14,7 @@ const MeasureUnitsList = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            MeasureUnitService.getAll(userId, idToken).then(res => {
+            MeasureUnitService.getAllByUserId(userId, idToken).then(res => {
                 setMeasureUnits(res);
             })
         })
@@ -22,14 +22,14 @@ const MeasureUnitsList = ({match}) => {
 
     const deleteMeasureUnit = (measureUnitId) => {
         setMeasureUnits(measureUnits.map(measureUnit => {
-            if(measureUnit.id === measureUnitId) {
+            if(measureUnit.measureUnitId === measureUnitId) {
                 measureUnit.isDeleting = true;
             }
             return measureUnit;
         }));
         currentUser.getIdToken().then(idToken => {
-            MeasureUnitService.deleteById(userId, measureUnitId, idToken).then(() => {
-                setMeasureUnits(measureUnits => measureUnits.filter(measureUnit => measureUnit.id !== measureUnitId));
+            MeasureUnitService.deleteByMeasureUnitId(measureUnitId, idToken).then(() => {
+                setMeasureUnits(measureUnits => measureUnits.filter(measureUnit => measureUnit.measureUnitId !== measureUnitId));
             });
         })
     }
@@ -40,10 +40,10 @@ const MeasureUnitsList = ({match}) => {
             <Link to={`${url}/add`}>Add Measure Unit</Link>
           
             {measureUnits && measureUnits.map(measureUnit =>
-                <div key={measureUnit.id}>
-                    {measureUnit.unit}
-                    <Link to={`${url}/${measureUnit.id}/edit`}>Edit</Link>
-                    <button onClick={() => deleteMeasureUnit(measureUnit.id)} disabled={measureUnit.isDeleting}>Delete</button>
+                <div key={measureUnit.measureUnitId}>
+                    {measureUnit.measureUnitName}
+                    <Link to={`${url}/${measureUnit.measureUnitId}/edit`}>Edit</Link>
+                    <button onClick={() => deleteMeasureUnit(measureUnit.measureUnitId)} disabled={measureUnit.isDeleting}>Delete</button>
                 </div>
             )}
             {!measureUnits &&

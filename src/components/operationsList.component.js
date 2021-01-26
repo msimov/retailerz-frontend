@@ -15,7 +15,7 @@ const OperationsList = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            OperationService.getAll(userId, idToken).then(res => {
+            OperationService.getAllByUserId(userId, idToken).then(res => {
                 setOperations(res);
             })
         })
@@ -23,14 +23,14 @@ const OperationsList = ({match}) => {
 
     const deleteOperation = (operationId) => {
         setOperations(operations.map(operation => {
-            if(operation.id === operationId) {
+            if(operation.operationId === operationId) {
                 operation.isDeleting = true;
             }
             return operation;
         }));
         currentUser.getIdToken().then(idToken => {
-            OperationService.deleteById(userId, operationId, idToken).then(() => {
-                setOperations(operations => operations.filter(operation => operation.id !== operationId));
+            OperationService.deleteByOperationId(operationId, idToken).then(() => {
+                setOperations(operations => operations.filter(operation => operation.operationId !== operationId));
             });
         })
     }
@@ -40,13 +40,13 @@ const OperationsList = ({match}) => {
             <h1>Operations</h1>
             <Link to={`${url}/add`}>Add Operation</Link>
             {operations && operations.map(operation =>
-                <div key={operation.id}>
-                    <Link to={`${url}/${operation.id}`}>{operation.operation}</Link>
-                    {operation.store}
-                    {operation.product}
-                    {operation.count}
-                    <Link to={`${url}/${operation.id}/edit`}>Edit</Link>
-                    <button onClick={() => deleteOperation(operation.id)} disabled={operation.isDeleting}>Delete</button>
+                <div key={operation.operationId}>
+                    <Link to={`${url}/${operation.operationId}`}>{operation.operationId}</Link>
+                    {operation.operationStoreId}
+                    {operation.operationProductId}
+                    {operation.operationCount}
+                    <Link to={`${url}/${operation.operationId}/edit`}>Edit</Link>
+                    <button onClick={() => deleteOperation(operation.operationId)} disabled={operation.isDeleting}>Delete</button>
                 </div>
             )}
             {!operations &&

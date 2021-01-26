@@ -1,8 +1,8 @@
 import request from '../commons/request.common';
 
-const create = (userId, measureUnit, userToken) => {
+const create = (measureUnitUserId, measureUnit, userToken) => {
     return request({
-        url: `users/${userId}/measure-units`,
+        url: `users/${measureUnitUserId}/measure-units`,
         method: "POST",
         data: measureUnit,
         headers: {
@@ -11,9 +11,9 @@ const create = (userId, measureUnit, userToken) => {
     })
 }
 
-const getAll = (userId, userToken) => {
+const findByMeasureUnitId = (measureUnitId, userToken) => {
     return request({
-        url: `users/${userId}/measure-units`,
+        url: `measure-units/${measureUnitId}`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -21,9 +21,9 @@ const getAll = (userId, userToken) => {
     })
 }
 
-const findById = (userId, measureUnitId, userToken) => {
+const getAllByUserId = (measureUnitUserId, userToken) => {
     return request({
-        url: `users/${userId}/measure-units/${measureUnitId}`,
+        url: `users/${measureUnitUserId}/measure-units`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -31,9 +31,10 @@ const findById = (userId, measureUnitId, userToken) => {
     })
 }
 
-const updateById = (userId, measureUnitId, measureUnit, userToken) => {
+
+const updateByMeasureUnitId = (measureUnitId, measureUnit, userToken) => {
     return request({
-        url: `users/${userId}/measure-units/${measureUnitId}`,
+        url: `measure-units/${measureUnitId}`,
         method: "PUT",
         data: measureUnit,
         headers: {
@@ -42,9 +43,9 @@ const updateById = (userId, measureUnitId, measureUnit, userToken) => {
     })
 }
 
-const deleteById = (userId, measureUnitId, userToken) => {
+const deleteByMeasureUnitId = (measureUnitId, userToken) => {
     return request({
-        url: `users/${userId}/measure-units/${measureUnitId}`,
+        url: `measure-units/${measureUnitId}`,
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -53,7 +54,7 @@ const deleteById = (userId, measureUnitId, userToken) => {
 }
 
 const MeasureUnitService = {
-    create, findById, getAll, updateById, deleteById
+    create, findByMeasureUnitId, getAllByUserId, updateByMeasureUnitId, deleteByMeasureUnitId
 }
 
 export default MeasureUnitService;

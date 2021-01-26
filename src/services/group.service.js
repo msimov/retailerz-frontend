@@ -1,8 +1,8 @@
 import request from '../commons/request.common';
 
-const create = (userId, group, userToken) => {
+const create = (groupUserId, group, userToken) => {
     return request({
-        url: `users/${userId}/groups`,
+        url: `users/${groupUserId}/groups`,
         method: "POST",
         data: group,
         headers: {
@@ -11,9 +11,9 @@ const create = (userId, group, userToken) => {
     })
 }
 
-const getAll = (userId, userToken) => {
+const findByGroupId = (groupId, userToken) => {
     return request({
-        url: `users/${userId}/groups`,
+        url: `groups/${groupId}`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -21,9 +21,9 @@ const getAll = (userId, userToken) => {
     })
 }
 
-const findById = (userId, groupId, userToken) => {
+const getAllByUserId = (groupUserId, userToken) => {
     return request({
-        url: `users/${userId}/groups/${groupId}`,
+        url: `users/${groupUserId}/groups`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -31,9 +31,9 @@ const findById = (userId, groupId, userToken) => {
     })
 }
 
-const updateById = (userId, groupId, group, userToken) => {
+const updateByGroupId = (groupId, group, userToken) => {
     return request({
-        url: `users/${userId}/groups/${groupId}`,
+        url: `groups/${groupId}`,
         method: "PUT",
         data: group,
         headers: {
@@ -42,9 +42,9 @@ const updateById = (userId, groupId, group, userToken) => {
     })
 }
 
-const deleteById = (userId, groupId, userToken) => {
+const deleteByGroupId = (groupId, userToken) => {
     return request({
-        url: `users/${userId}/groups/${groupId}`,
+        url: `groups/${groupId}`,
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -53,7 +53,7 @@ const deleteById = (userId, groupId, userToken) => {
 }
 
 const GroupService = {
-    create, findById, getAll, updateById, deleteById
+    create, findByGroupId, getAllByUserId, updateByGroupId, deleteByGroupId
 }
 
 export default GroupService;

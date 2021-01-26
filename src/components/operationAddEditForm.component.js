@@ -41,7 +41,7 @@ const OperationAddEditForm = ({match}) => {
 
     const updateOperation = (data) => {
         currentUser.getIdToken().then(idToken => {
-            OperationService.updateById(userId, operationId, data, idToken).then(res => {
+            OperationService.updateByOperationId(operationId, data, idToken).then(res => {
                 history.push('..');
             })
         })
@@ -49,21 +49,21 @@ const OperationAddEditForm = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.getAll(userId, idToken).then(res => {
-                setProducts(res.map(({id, name}) => ({key: id, label: name})));
+            ProductService.getAllByUserId(userId, idToken).then(res => {
+                setProducts(res.map(({productId, productName}) => ({key: productId, label: productName})));
             })
-            StoreService.getAll(userId, idToken).then(res => {
-                setStores(res.map(({id, location}) => ({key: id, label: location})));
+            StoreService.getAllByUserId(userId, idToken).then(res => {
+                setStores(res.map(({storeId, storeLocation}) => ({key: storeId, label: storeLocation})));
             })
         })
         OperationTypeService.getAll().then(res => {
-            setOperationTypes(res.map(({id, type}) => ({key: id, label: type})));
+            setOperationTypes(res.map(({operationTypeId, operationTypeName}) => ({key: operationTypeId, label: operationTypeName})));
         })
 
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
-                OperationService.findById(userId, operationId, idToken).then(res => {
-                    const fields = ['operationType', 'product', 'count'];
+                OperationService.findByOperationId(operationId, idToken).then(res => {
+                    const fields = ['operationOperationTypeId', 'operationStoreId', 'operationProductId', 'operationCount'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
@@ -76,7 +76,7 @@ const OperationAddEditForm = ({match}) => {
             <div>
                 <div>
                     <FormSelect 
-                        name="operationType"
+                        name="operationOperationTypeId"
                         label="Operation Type"
                         options={operationTypes}
                         control={control}
@@ -85,7 +85,7 @@ const OperationAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormSelect 
-                        name="store"
+                        name="operationStoreId"
                         label="Store"
                         options={stores}
                         control={control}
@@ -94,7 +94,7 @@ const OperationAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormSelect
-                        name="product" 
+                        name="operationProductId" 
                         label="Product"
                         options={products}
                         control={control}
@@ -103,7 +103,7 @@ const OperationAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormTextField 
-                        name="count"
+                        name="operationCount"
                         label="Count"
                         control={control}
                     />

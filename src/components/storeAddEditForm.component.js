@@ -33,7 +33,7 @@ const StoreAddEditForm = ({match}) => {
 
     const updateStore = (data) => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.updateById(userId, storeId, data, idToken).then(res => {
+            StoreService.updateByStoreId(storeId, data, idToken).then(res => {
                 history.push('..');
             })
         })
@@ -42,8 +42,8 @@ const StoreAddEditForm = ({match}) => {
     useEffect(() => {
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
-                StoreService.findById(userId, storeId, idToken).then(res => {
-                    const fields = ['location'];
+                StoreService.findByStoreId(storeId, idToken).then(res => {
+                    const fields = ['storeLocation'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
@@ -56,7 +56,7 @@ const StoreAddEditForm = ({match}) => {
             <div>
                 <div>
                     <FormTextField 
-                        name="location"
+                        name="storeLocation"
                         label="Location"
                         control={control}
                     />

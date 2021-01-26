@@ -10,18 +10,17 @@ const SearchList = (props) => {
         <div>
             <h1>Search Result</h1>
             {products && products.map(product =>
-                <div key={product.id}>
-                    <Link to={`users/${product.user}/products/${product.id}`}>{product.name}</Link>
-                    {product.description}
-                    {product.measureUnit}
-                    {product.deliveryPrice}
-                    {product.retailPrice}
-                    {product.group}
-                    {product.code}
-                    {product.barcode}
-                    {product.taxGroup}
-                    {product.expiryDate}
-                    {product.store}
+                <div key={product.productId}>
+                    <Link to={`users/${product.productUserId}/products/${product.productId}`}>{product.productName}</Link>
+                    {product.productDescription}
+                    {product.productMeasureUnitId}
+                    {product.productDeliveryPrice}
+                    {product.productRetailPrice}
+                    {product.productGroupId}
+                    {product.productCode}
+                    {product.productBarcode}
+                    {product.productTaxGroupId}
+                    {product.productStoreId}
                 </div>
             )}
             {!products &&

@@ -15,10 +15,10 @@ const Home = () => {
     useEffect(() => {
         UserTypeService.getAll().then(res => {
             res.forEach(userType => {
-                if(userType.type === "CUSTOMER") {
-                    setCustomerType(userType.id);
-                } else if(userType.type === "RETAILER") {
-                    setRetailerType(userType.id)
+                if(userType.userTypeName === "CUSTOMER") {
+                    setCustomerType(userType.userTypeId);
+                } else if(userType.userTypeName === "RETAILER") {
+                    setRetailerType(userType.userTypeId)
                 }
             });
         })
@@ -28,8 +28,8 @@ const Home = () => {
         <div>
             <h1>Home Page</h1>
             {
-                authUser.data.type === retailerType ? <RetailerLinks /> : 
-                authUser.data.type === customerType ? <CustomerLinks /> : 
+                authUser.data.userTypeId === retailerType ? <RetailerLinks /> : 
+                authUser.data.userTypeId === customerType ? <CustomerLinks /> : 
                 null
             }
         </div>

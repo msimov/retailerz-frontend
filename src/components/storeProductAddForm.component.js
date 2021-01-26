@@ -21,8 +21,9 @@ const StoreProductAddForm = ({match}) => {
     const { handleSubmit, reset, errors, formState, control} = useForm();
 
     const onSubmit = (data) => {
+
         currentUser.getIdToken().then(idToken => {
-            StoreProductService.create(userId, storeId, data, idToken).then(res => {
+            StoreProductService.create(storeId, data, idToken).then(res => {
                 history.push('.');
             })
         })
@@ -30,8 +31,8 @@ const StoreProductAddForm = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.getAll(userId, idToken).then(res => {
-                setProducts(res.map(({id, name}) => ({key: id, label: name})));
+            ProductService.getAllByUserId(userId, idToken).then(res => {
+                setProducts(res.map(({productId, productName}) => ({key: productId, label: productName})));
             })
         })
     }, [currentUser, userId]);
@@ -42,7 +43,7 @@ const StoreProductAddForm = ({match}) => {
             <div>
                 <div>
                     <FormSelect 
-                        name="productId"
+                        name="storeProductProductId"
                         label="Product"
                         options={products}
                         control={control}

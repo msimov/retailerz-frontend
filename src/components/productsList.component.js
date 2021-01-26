@@ -13,7 +13,7 @@ const ProductsList = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.getAll(userId, idToken).then(res => {
+            ProductService.getAllByUserId(userId, idToken).then(res => {
                 setProducts(res);
             })
         })
@@ -21,14 +21,14 @@ const ProductsList = ({match}) => {
 
     const deleteProduct = (productId) => {
         setProducts(products.map(product => {
-            if(product.id === productId) {
+            if(product.productId === productId) {
                 product.isDeleting = true;
             }
             return product;
         }));
         currentUser.getIdToken().then(idToken => {
-            ProductService.deleteById(userId, productId, idToken).then(() => {
-                setProducts(products => products.filter(product => product.id !== productId));
+            ProductService.deleteByProductId(productId, idToken).then(() => {
+                setProducts(products => products.filter(product => product.productId !== productId));
             });
         })
     }
@@ -38,20 +38,18 @@ const ProductsList = ({match}) => {
             <h1>Products</h1>
             <Link to={`${url}/add`}>Add Product</Link>
             {products && products.map(product =>
-                <div key={product.id}>
-                    <Link to={`${url}/${product.id}`}>{product.name}</Link>
-                    {product.description}
-                    {product.measureUnit}
-                    {product.deliveryPrice}
-                    {product.retailPrice}
-                    {product.group}
-                    {product.code}
-                    {product.barcode}
-                    {product.taxGroup}
-                    {product.expiryDate}
-                    {product.store}
-                    <Link to={`${url}/${product.id}/edit`}>Edit</Link>
-                    <button onClick={() => deleteProduct(product.id)} disabled={product.isDeleting}>Delete</button>
+                <div key={product.productId}>
+                    <Link to={`${url}/${product.productId}`}>{product.productName}</Link>
+                    {product.productDescription}
+                    {product.productMeasureUnitId}
+                    {product.productDeliveryPrice}
+                    {product.productRetailPrice}
+                    {product.productGroupId}
+                    {product.productCode}
+                    {product.productBarcode}
+                    {product.productTaxGroupId}
+                    <Link to={`${url}/${product.productId}/edit`}>Edit</Link>
+                    <button onClick={() => deleteProduct(product.productId)} disabled={product.isDeleting}>Delete</button>
                 </div>
             )}
             {!products &&

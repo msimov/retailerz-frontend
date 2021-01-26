@@ -13,7 +13,7 @@ const UserInfo = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            UserService.findById(userId, idToken).then(res => {
+            UserService.findByUserId(userId, idToken).then(res => {
                 setUser(res);
             })
         })
@@ -22,10 +22,10 @@ const UserInfo = ({match}) => {
 
     return user ? ( 
         <div>        
-            {user.id}
-            {user.firstName}
-            {user.lastName}
-            {user.email}
+            {user.userId}
+            {user.userFirstName}
+            {user.userLastName}
+            {user.userEmail}
             <Link to={`${url}/edit`}>Edit Profile</Link>
             <Link to={`${url}/change-password`}>Change Password</Link>
         </div>

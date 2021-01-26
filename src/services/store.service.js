@@ -1,8 +1,8 @@
 import request from '../commons/request.common';
 
-const create = (userId, store, userToken) => {
+const create = (storeUserId, store, userToken) => {
     return request({
-        url: `users/${userId}/stores`,
+        url: `users/${storeUserId}/stores`,
         method: "POST",
         data: store,
         headers: {
@@ -11,9 +11,9 @@ const create = (userId, store, userToken) => {
     })
 }
 
-const getAll = (userId, userToken) => {
+const getAllByUserId = (storeUserId, userToken) => {
     return request({
-        url: `users/${userId}/stores`,
+        url: `users/${storeUserId}/stores`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -21,9 +21,9 @@ const getAll = (userId, userToken) => {
     })
 }
 
-const findById = (userId, storeId, userToken) => {
+const findByStoreId = (storeId, userToken) => {
     return request({
-        url: `users/${userId}/stores/${storeId}`,
+        url: `stores/${storeId}`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -31,9 +31,9 @@ const findById = (userId, storeId, userToken) => {
     })
 }
 
-const updateById = (userId, storeId, store, userToken) => {
+const updateByStoreId = (storeId, store, userToken) => {
     return request({
-        url: `users/${userId}/stores/${storeId}`,
+        url: `stores/${storeId}`,
         method: "PUT",
         data: store,
         headers: {
@@ -42,9 +42,9 @@ const updateById = (userId, storeId, store, userToken) => {
     })
 }
 
-const deleteById = (userId, storeId, userToken) => {
+const deleteByStoreId = (storeId, userToken) => {
     return request({
-        url: `users/${userId}/stores/${storeId}`,
+        url: `stores/${storeId}`,
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -53,7 +53,7 @@ const deleteById = (userId, storeId, userToken) => {
 }
 
 const StoreService = {
-    create, findById, getAll, updateById, deleteById
+    create, findByStoreId, getAllByUserId, updateByStoreId, deleteByStoreId
 }
 
 export default StoreService;

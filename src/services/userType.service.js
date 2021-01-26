@@ -7,7 +7,7 @@ const getAll = () => {
     })
 }
 
-const findById = (userTypeId) => {
+const findByUserTypeId = (userTypeId) => {
     return request({
         url: `user-types/${userTypeId}`,
         method: "GET",
@@ -15,7 +15,7 @@ const findById = (userTypeId) => {
 }
 
 const UserTypeService = {
-    findById, getAll
+    findByUserTypeId, getAll
 }
 
 export default UserTypeService;

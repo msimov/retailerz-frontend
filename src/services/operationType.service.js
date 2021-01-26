@@ -1,5 +1,12 @@
 import request from '../commons/request.common';
 
+const findByOperationTypeId = (operationTypeId) => {
+    return request({
+        url: `operation-types/${operationTypeId}`,
+        method: "GET",
+    })
+}
+
 const getAll = () => {
     return request({
         url: `operation-types`,
@@ -7,15 +14,9 @@ const getAll = () => {
     })
 }
 
-const findById = (operationTypeId) => {
-    return request({
-        url: `operation-types/${operationTypeId}`,
-        method: "GET",
-    })
-}
 
 const OperationTypeService = {
-    findById, getAll
+    findByOperationTypeId, getAll
 }
 
 export default OperationTypeService;

@@ -14,7 +14,7 @@ const StoreInfo = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.findById(userId, storeId, idToken).then(res => {
+            StoreService.findByStoreId(storeId, idToken).then(res => {
                 setStore(res);
             })
         })
@@ -23,8 +23,8 @@ const StoreInfo = ({match}) => {
 
     return store ? ( 
         <div>
-            {store.id}
-            {store.location}
+            {store.storeId}
+            {store.storeLocation}
             <Link to={`${url}/edit`}>Edit Store</Link>
             <Link to={`${url}/store-products`}>Products</Link>
         </div>

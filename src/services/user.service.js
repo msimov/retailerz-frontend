@@ -21,7 +21,7 @@ const getAll = (userToken) => {
     })
 }
 
-const findById = (userId, userToken) => {
+const findByUserId = (userId, userToken) => {
     return request({
         url: `users/${userId}`,
         method: "GET",
@@ -31,7 +31,7 @@ const findById = (userId, userToken) => {
     })
 }
 
-const updateById = (userId, user, userToken) => {
+const updateByUserId = (userId, user, userToken) => {
     return request({
         url: `users/${userId}`,
         method: "PUT",
@@ -42,7 +42,7 @@ const updateById = (userId, user, userToken) => {
     })
 }
 
-const deleteById = (userId, userToken) => {
+const deleteByUserId = (userId, userToken) => {
     return request({
         url: `users/${userId}`,
         method: "DELETE",
@@ -53,7 +53,7 @@ const deleteById = (userId, userToken) => {
 }
 
 const UserService = {
-    create, findById, getAll, updateById, deleteById
+    create, findByUserId, getAll, updateByUserId, deleteByUserId
 }
 
 export default UserService;

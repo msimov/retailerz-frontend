@@ -33,7 +33,7 @@ const GroupAddEditForm = ({match}) => {
 
     const updateGroup = (data) => {
         currentUser.getIdToken().then(idToken => {
-            GroupService.updateById(userId, groupId, data, idToken).then(res => {
+            GroupService.updateByGroupId(groupId, data, idToken).then(res => {
                 history.push('..');
             })
         })
@@ -42,13 +42,13 @@ const GroupAddEditForm = ({match}) => {
     useEffect(() => {
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
-                GroupService.findById(userId, groupId, idToken).then(res => {
-                    const fields = ['name'];
+                GroupService.findByGroupId(groupId, idToken).then(res => {
+                    const fields = ['groupName'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
         }
-    }, [currentUser, userId, groupId, setValue, isAddMode]);
+    }, [currentUser, groupId, setValue, isAddMode]);
 
     return(
         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
@@ -56,8 +56,8 @@ const GroupAddEditForm = ({match}) => {
             <div>
                 <div>
                     <FormTextField 
-                        name="name"
-                        label="Name"
+                        name="groupName"
+                        label="Group Name"
                         control={control}
                     />
                     <div>{errors.name?.message}</div>

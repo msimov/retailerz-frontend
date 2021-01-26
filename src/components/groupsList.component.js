@@ -14,7 +14,7 @@ const GroupsList = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            GroupService.getAll(userId, idToken).then(res => {
+            GroupService.getAllByUserId(userId, idToken).then(res => {
                 setGroups(res);
             })
         })
@@ -22,14 +22,14 @@ const GroupsList = ({match}) => {
 
     const deleteGroup = (groupId) => {
         setGroups(groups.map(group => {
-            if(group.id === groupId) {
+            if(group.groupId === groupId) {
                 group.isDeleting = true;
             }
             return group;
         }));
         currentUser.getIdToken().then(idToken => {
-            GroupService.deleteById(userId, groupId, idToken).then(() => {
-                setGroups(groups => groups.filter(group => group.id !== groupId));
+            GroupService.deleteByGroupId(groupId, idToken).then(() => {
+                setGroups(groups => groups.filter(group => group.groupId !== groupId));
             });
         })
     }
@@ -40,10 +40,10 @@ const GroupsList = ({match}) => {
             <Link to={`${url}/add`}>Add Groups</Link>
           
             {groups && groups.map(group =>
-                <div key={group.id}>
-                    {group.name}
-                    <Link to={`${url}/${group.id}/edit`}>Edit</Link>
-                    <button onClick={() => deleteGroup(group.id)} disabled={group.isDeleting}>Delete</button>
+                <div key={group.groupId}>
+                    {group.groupName}
+                    <Link to={`${url}/${group.groupId}/edit`}>Edit</Link>
+                    <button onClick={() => deleteGroup(group.groupId)} disabled={group.isDeleting}>Delete</button>
                 </div>
             )}
             {!groups &&

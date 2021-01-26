@@ -16,9 +16,8 @@ const CartList = ({match}) => {
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
             OperationTypeService.getAll().then(res => {
-                const addToCartOperation = res.find(({type}) => type === "ADD_TO_CART")
-                console.log(addToCartOperation.id)
-                OperationService.getAllByOperationType(userId, addToCartOperation.id, idToken).then(res => {
+                const addToCartOperation = res.find(({operationTypeName}) => operationTypeName === "ADD_TO_CART")
+                OperationService.getAllByUserIdAndOperationTypeId(userId, addToCartOperation.operationTypeId, idToken).then(res => {
                     setOperations(res);
                 })
             })
@@ -27,14 +26,14 @@ const CartList = ({match}) => {
 
     const removeFromCart = (operationId) => {
         setOperations(operations.map(operation => {
-            if(operation.id === operationId) {
+            if(operation.operationId === operationId) {
                 operation.isDeleting = true;
             }
             return operation;
         }));
         currentUser.getIdToken().then(idToken => {
-            OperationService.deleteById(userId, operationId, idToken).then(() => {
-                setOperations(operations => operations.filter(operation => operation.id !== operationId));
+            OperationService.deleteByOperationId(operationId, idToken).then(() => {
+                setOperations(operations => operations.filter(operation => operation.operationId !== operationId));
             });
         })
     }
@@ -43,13 +42,13 @@ const CartList = ({match}) => {
         <div>
             <h1>Cart</h1>
             {operations && operations.map(operation =>
-                <div key={operation.id}>
-                    {operation.id}
-                    {operation.product}
-                    {operation.count}
-                    {operation.operationType}
-                    {operation.store}
-                    <button onClick={() => removeFromCart(operation.id)} disabled={operation.isDeleting}>Remove From Cart</button>
+                <div key={operation.operationId}>
+                    {operation.operationId}
+                    {operation.operationProductId}
+                    {operation.operationCount}
+                    {operation.operationOperationTypeId}
+                    {operation.operationStoreId}
+                    <button onClick={() => removeFromCart(operation.operationId)} disabled={operation.isDeleting}>Remove From Cart</button>
                 </div>
             )}
             {!operations &&

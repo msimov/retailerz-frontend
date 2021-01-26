@@ -1,8 +1,8 @@
 import request from '../commons/request.common';
 
-const create = (userId, operation, userToken) => {
+const create = (operationUserId, operation, userToken) => {
     return request({
-        url: `users/${userId}/operations`,
+        url: `users/${operationUserId}/operations`,
         method: "POST",
         data: operation,
         headers: {
@@ -11,9 +11,18 @@ const create = (userId, operation, userToken) => {
     })
 }
 
-const getAll = (userId, userToken) => {
+const findByOperationId = (operationId, userToken) => {
     return request({
-        url: `users/${userId}/operations`,
+        url: `operations/${operationId}`,
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${userToken}`
+        }
+    })
+}
+const getAllByUserId = (operationUserId, userToken) => {
+    return request({
+        url: `users/${operationUserId}/operations`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -21,30 +30,21 @@ const getAll = (userId, userToken) => {
     })
 }
 
-const getAllByOperationType = (userId, operationType, userToken) => {
+const getAllByUserIdAndOperationTypeId = (operationUserId, operationTypeId, userToken) => {
     return request({
-        url: `users/${userId}/operations`,
+        url: `users/${operationUserId}/operations`,
         method: "GET",
-        data: operationType,
+        data: operationTypeId,
         headers: {
             Authorization: `Bearer ${userToken}`
         }
     })
 }
 
-const findById = (userId, operationId, userToken) => {
-    return request({
-        url: `users/${userId}/operations/${operationId}`,
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${userToken}`
-        }
-    })
-}
 
-const updateById = (userId, operationId, operation, userToken) => {
+const updateByOperationId = (operationId, operation, userToken) => {
     return request({
-        url: `users/${userId}/operations/${operationId}`,
+        url: `operations/${operationId}`,
         method: "PUT",
         data: operation,
         headers: {
@@ -53,9 +53,9 @@ const updateById = (userId, operationId, operation, userToken) => {
     })
 }
 
-const deleteById = (userId, operationId, userToken) => {
+const deleteByOperationId = (operationId, userToken) => {
     return request({
-        url: `users/${userId}/operations/${operationId}`,
+        url: `operations/${operationId}`,
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -64,7 +64,7 @@ const deleteById = (userId, operationId, userToken) => {
 }
 
 const OperationService = {
-    create, findById, getAll, getAllByOperationType, updateById, deleteById
+    create, findByOperationId, getAllByUserId, getAllByUserIdAndOperationTypeId, updateByOperationId, deleteByOperationId
 }
 
 export default OperationService;

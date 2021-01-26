@@ -12,9 +12,9 @@ const findByKeyword = (keyword, userToken) => {
     })
 }
 
-const create = (userId, product, userToken) => {
+const create = (productUserId, product, userToken) => {
     return request({
-        url: `users/${userId}/products`,
+        url: `users/${productUserId}/products`,
         method: "POST",
         data: product,
         headers: {
@@ -23,9 +23,9 @@ const create = (userId, product, userToken) => {
     })
 }
 
-const getAll = (userId, userToken) => {
+const getAllByUserId = (productUserId, userToken) => {
     return request({
-        url: `users/${userId}/products`,
+        url: `users/${productUserId}/products`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -33,9 +33,9 @@ const getAll = (userId, userToken) => {
     })
 }
 
-const findById = (userId, productId, userToken) => {
+const findByProductId = (productId, userToken) => {
     return request({
-        url: `users/${userId}/products/${productId}`,
+        url: `products/${productId}`,
         method: "GET",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -43,9 +43,9 @@ const findById = (userId, productId, userToken) => {
     })
 }
 
-const updateById = (userId, productId, newProduct, userToken) => {
+const updateByProductId = (productId, newProduct, userToken) => {
     return request({
-        url: `users/${userId}/products/${productId}`,
+        url: `products/${productId}`,
         method: "PUT",
         data: newProduct,
         headers: {
@@ -54,9 +54,9 @@ const updateById = (userId, productId, newProduct, userToken) => {
     })
 }
 
-const deleteById = (userId, productId, userToken) => {
+const deleteByProductId = (productId, userToken) => {
     return request({
-        url: `users/${userId}/products/${productId}`,
+        url: `products/${productId}`,
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${userToken}`
@@ -65,7 +65,7 @@ const deleteById = (userId, productId, userToken) => {
 }
 
 const ProductService = {
-    findByKeyword, create, findById, getAll, updateById, deleteById
+    findByKeyword, create, findByProductId, getAllByUserId, updateByProductId, deleteByProductId
 }
 
 export default ProductService;

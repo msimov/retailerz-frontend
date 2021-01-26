@@ -41,7 +41,7 @@ const ProductAddEditForm = ({match}) => {
 
     const updateProduct = (data) => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.updateById(userId, productId, data).then(res => {
+            ProductService.updateByProductId(productId, data).then(res => {
                 history.push('..');
             })
         })
@@ -49,23 +49,23 @@ const ProductAddEditForm = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            GroupService.getAll(userId, idToken).then(res => {
-                setGroups(res.map(({id, name}) => ({key: id, label: name})));
+            GroupService.getAllByUserId(userId, idToken).then(res => {
+                setGroups(res.map(({groupId, groupName}) => ({key: groupId, label: groupName})));
             });
             
-            MeasureUnitService.getAll(userId, idToken).then(res => {
-                setMeasureUnits(res.map(({id, unit}) => ({key: id, label: unit})));
+            MeasureUnitService.getAllByUserId(userId, idToken).then(res => {
+                setMeasureUnits(res.map(({measureUnitId, measureUnitName}) => ({key: measureUnitId, label: measureUnitName})));
             });
 
             if(!isAddMode) {
-                ProductService.findById(userId, productId, idToken).then(res => {
-                    const fields = ['name', 'description', 'group', 'code', 'barcode', 'measureUnit', 'taxGroup', 'retailPrice', 'deliveryPrice']
+                ProductService.findByProductId(productId, idToken).then(res => {
+                    const fields = ['productName', 'productDescription', 'productGroupId', 'productCode', 'productBarcode', 'productMeasureUnitId', 'productTaxGroupId', 'productRetailPrice', 'productDeliveryPrice']
                     fields.forEach(field => setValue(field, res[field]));
                 })
             }
         })
         TaxGroupService.getAll().then(res => {
-            setTaxGroups(res.map(({id, percentage}) => ({key: id, label: percentage + "%"})));
+            setTaxGroups(res.map(({taxGroupId, taxGroupPercentage}) => ({key: taxGroupId, label: taxGroupPercentage + "%"})));
         });
 
     }, [currentUser, userId, productId, isAddMode, setValue])
@@ -76,7 +76,7 @@ const ProductAddEditForm = ({match}) => {
             <div>
                 <div>
                     <FormTextField 
-                        name="name"
+                        name="productName"
                         label="Name"
                         control={control}
                     />
@@ -84,7 +84,7 @@ const ProductAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormTextField 
-                        name="description"
+                        name="productDescription"
                         label="Description"
                         control={control}
                     />
@@ -92,7 +92,7 @@ const ProductAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormSelect
-                        name="group"
+                        name="productGroupId"
                         label="Group"
                         options={groups}
                         control={control}
@@ -101,7 +101,7 @@ const ProductAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormTextField 
-                        name="code"
+                        name="productCode"
                         label="Code"
                         control={control}
                     />
@@ -109,7 +109,7 @@ const ProductAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormTextField 
-                        name="barcode"
+                        name="productBarcode"
                         label="Barcode"
                         control={control}
                     />
@@ -117,7 +117,7 @@ const ProductAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormSelect 
-                        name="measureUnit"
+                        name="productMeasureUnitId"
                         label="Measure Unit"
                         options={measureUnits}
                         control={control}
@@ -126,7 +126,7 @@ const ProductAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormSelect 
-                        name="taxGroup"
+                        name="productTaxGroupId"
                         label="Tax Group"
                         options={taxGroups}
                         control={control}
@@ -135,7 +135,7 @@ const ProductAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormTextField 
-                        name="retailPrice"
+                        name="productRetailPrice"
                         label="Retail Price"
                         type="number"
                         step="0.01"
@@ -145,7 +145,7 @@ const ProductAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormTextField 
-                        name="deliveryPrice"
+                        name="productDeliveryPrice"
                         label="Delivery Price"
                         type="number"
                         step="0.01"

@@ -25,7 +25,7 @@ const AddToCartForm = (props) => {
 
     const onSubmit = (data) => {
         currentUser.getIdToken().then(idToken => {
-            OperationService.create(currentUser.uid, {product: product.id, count: data.count, operationType: addToCartOperation.id, store: data.store}, idToken).then(res => {
+            OperationService.create(userId, {operationProductId: product.productId, operationCount: data.operationCount, operationOperationTypeId: addToCartOperation.operationTypeId, operationStoreId: data.operationStoreId}, idToken).then(res => {
                 history.push(`/users/${currentUser.uid}/cart`)
             })
         })
@@ -33,13 +33,13 @@ const AddToCartForm = (props) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.getAll(userId, idToken).then(res => {
-                setStores(res.map(({id, location}) => ({key: id, label: location})));
+            StoreService.getAllByUserId(userId, idToken).then(res => {
+                setStores(res.map(({storeId, storeLocation}) => ({key: storeId, label: storeLocation})));
             })
         })
         
         OperationTypeService.getAll().then(res => {
-            setAddToCartOperation(res.find(({type}) => type === "ADD_TO_CART"))
+            setAddToCartOperation(res.find(({operationTypeName}) => operationTypeName === "ADD_TO_CART"))
         })
        
     }, [currentUser, userId])
@@ -49,7 +49,7 @@ const AddToCartForm = (props) => {
             <div>
                 <div>
                     <FormTextField 
-                        name="count"
+                        name="operationCount"
                         label="Count"
                         control={control}
                     />
@@ -58,7 +58,7 @@ const AddToCartForm = (props) => {
             </div>
             <div>
                 <FormSelect 
-                    name="store"
+                    name="operationStoreId"
                     label="Store"
                     options={stores}
                     control={control}

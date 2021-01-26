@@ -33,7 +33,7 @@ const MeasureUnitAddEditForm = ({match}) => {
 
     const updateMeasureUnit = (data) => {
         currentUser.getIdToken().then(idToken => {
-            MeasureUnitService.updateById(userId, measureUnitId, data, idToken).then(res => {
+            MeasureUnitService.updateByMeasureUnitId(measureUnitId, data, idToken).then(res => {
                 history.push('..');
             })
         })
@@ -42,8 +42,8 @@ const MeasureUnitAddEditForm = ({match}) => {
     useEffect(() => {
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
-                MeasureUnitService.findById(userId, measureUnitId, idToken).then(res => {
-                    const fields = ['unit'];
+                MeasureUnitService.findByMeasureUnitId(measureUnitId, idToken).then(res => {
+                    const fields = ['measureUnitName'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
@@ -56,8 +56,8 @@ const MeasureUnitAddEditForm = ({match}) => {
             <div>
                 <div>
                     <FormTextField 
-                        name="unit"
-                        label="Unit"
+                        name="measureUnitName"
+                        label="Measure Unit Name"
                         control={control}
                     />
                     <div>{errors.unit?.message}</div>

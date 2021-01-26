@@ -40,8 +40,13 @@ const UserAddEditForm = ({match}) => {
 
     const updateUser = (userId, data) => {
         currentUser.getIdToken().then(idToken => {
-            UserService.updateById(userId, data, idToken).then(res => {
-                setAuthUser({...authUser, data: res});
+            UserService.updateByUserId(userId, data, idToken).then(res => {
+                setAuthUser({
+                    ...authUser,
+                    userFirstName: res.userFirstName,
+                    userLastName: res.userLastName,
+                    userEmail: res.userEmail
+                });
                 history.push('.');
             })
         })
@@ -50,13 +55,13 @@ const UserAddEditForm = ({match}) => {
     useEffect(() => {
 
         UserTypeService.getAll().then(res => {
-            setUserTypes(res.map(({id, type}) => ({key: id, label: type})));
+            setUserTypes(res.map(({userTypeId, userTypeName}) => ({key: userTypeId, label: userTypeName})));
         });
     
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
-                UserService.findById(userId, idToken).then(res => {
-                    const fields = ['firstName', 'lastName', 'email', 'type'];
+                UserService.findByUserId(userId, idToken).then(res => {
+                    const fields = ['userFirstName', 'userLastName', 'userEmail', 'userUserTypeId'];
                     fields.forEach(field => setValue(field, res[field]));
                 })
             })
@@ -69,7 +74,7 @@ const UserAddEditForm = ({match}) => {
             <div>
                 <div>
                     <FormTextField 
-                        name="firstName"
+                        name="userFirstName"
                         label="First Name"
                         control={control}
                     />
@@ -77,7 +82,7 @@ const UserAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormTextField 
-                        name="lastName"
+                        name="userLastName"
                         label="First Name"
                         control={control}
                     />
@@ -85,7 +90,7 @@ const UserAddEditForm = ({match}) => {
                 </div>
                 <div>
                     <FormTextField 
-                        name="email"
+                        name="userEmail"
                         label="Email"
                         control={control}
                     />
@@ -95,7 +100,7 @@ const UserAddEditForm = ({match}) => {
                 { isAddMode ?
                     <div>
                         <FormSelect 
-                            name="type"
+                            name="userUserTypeId"
                             label="Type"
                             options={userTypes}
                             control={control}

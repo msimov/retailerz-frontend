@@ -16,7 +16,7 @@ const ProductInfo = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.findById(userId, productId, idToken).then(res => {
+            ProductService.findByProductId(productId, idToken).then(res => {
                 setProduct(res);
             })
         })
@@ -25,19 +25,17 @@ const ProductInfo = ({match}) => {
 
     return product ? ( 
         <div>
-            {product.id}
-            {product.location}
-            {product.barcode}
-            {product.code}
-            {product.measureUnit}
-            {product.group}
-            {product.taxGroup}
-            {product.retailPrice}
-            {product.deliveryPrice}
-            {product.expiryDate}
-            {product.store}
-            {product.name}
-            {product.description}
+            {product.productId}
+            {product.productBarcode}
+            {product.productCode}
+            {product.productMeasureUnitId}
+            {product.productGroupId}
+            {product.productTaxGroupId}
+            {product.productRetailPrice}
+            {product.productDeliveryPrice}
+            {product.productExpiryDate}
+            {product.productName}
+            {product.productDescription}
             <Link to={`${url}/edit`}>Edit</Link>
             <AddToCartForm product={product} userId={userId}/>
         </div>

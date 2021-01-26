@@ -44,7 +44,7 @@ class FirebaseService {
         this.auth.onAuthStateChanged(authUser => {
             if(authUser) {
                 authUser.getIdToken().then((idToken) => {
-                    UserService.findById(authUser.uid, idToken).then(res => {
+                    UserService.findByUserId(authUser.uid, idToken).then(res => {
                         authUser = {
                             ...authUser,
                             data: res

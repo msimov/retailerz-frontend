@@ -14,22 +14,22 @@ const StoreProductsList = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            StoreProductService.getAllByStoreId(userId, storeId, idToken).then(res => {
+            StoreProductService.getAllByStoreId(storeId, idToken).then(res => {
                 setStoreProducts(res);
             })
         })
     }, [currentUser, userId, storeId]);
 
-    const deleteStoreProduct = (productId) => {
+    const deleteStoreProduct = (storeProductProductId) => {
         setStoreProducts(storeProducts.map(storeProduct => {
-            if(storeProduct.productId === productId) {
+            if(storeProduct.storeProductProductId === storeProductProductId) {
                 storeProduct.isDeleting = true;
             }
             return storeProduct;
         }));
         currentUser.getIdToken().then(idToken => {
-            StoreProductService.deleteByStoreIdAndProductId(userId, storeId, productId, idToken).then(() => {
-                setStoreProducts(storeProducts => storeProducts.filter(storeProduct => storeProduct.productId !== productId));
+            StoreProductService.deleteByStoreIdAndProductId(storeId, storeProductProductId, idToken).then(() => {
+                setStoreProducts(storeProducts => storeProducts.filter(storeProduct => storeProduct.storeProductProductId !== storeProductProductId));
             });
         })
     }
@@ -40,10 +40,10 @@ const StoreProductsList = ({match}) => {
             <Link to={`${url}/add`}>Add Store Product</Link>
           
             {storeProducts && storeProducts.map(storeProduct =>
-                <div key={storeProduct.id}>
-                    <Link to={`/users/${userId}/stores/${storeProduct.storeId}`}>{storeProduct.storeId}</Link>
-                    <Link to={`/users/${userId}/products/${storeProduct.productId}`}>{storeProduct.productId}</Link>
-                    <button onClick={() => deleteStoreProduct(storeProduct.productId)} disabled={storeProduct.isDeleting}>Delete</button>
+                <div key={storeProduct.storeProductId}>
+                    <Link to={`/users/${userId}/stores/${storeProduct.storeProductStoreId}`}>{storeProduct.storeProductStoreId}</Link>
+                    <Link to={`/users/${userId}/products/${storeProduct.storeProductProductId}`}>{storeProduct.storeProductProductId}</Link>
+                    <button onClick={() => deleteStoreProduct(storeProduct.storeProductProductId)} disabled={storeProduct.isDeleting}>Delete</button>
                 </div>
             )}
             {!storeProducts &&

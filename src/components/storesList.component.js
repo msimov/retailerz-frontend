@@ -14,7 +14,7 @@ const StoresList = ({match}) => {
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.getAll(userId, idToken).then(res => {
+            StoreService.getAllByUserId(userId, idToken).then(res => {
                 setStores(res);
             })
         })
@@ -22,14 +22,14 @@ const StoresList = ({match}) => {
 
     const deleteStore = (storeId) => {
         setStores(stores.map(store => {
-            if(store.id === storeId) {
+            if(store.storeId === storeId) {
                 store.isDeleting = true;
             }
             return store;
         }));
         currentUser.getIdToken().then(idToken => {
-            StoreService.deleteById(userId, storeId, idToken).then(() => {
-                setStores(stores => stores.filter(store => store.id !== storeId));
+            StoreService.deleteByStoreId(storeId, idToken).then(() => {
+                setStores(stores => stores.filter(store => store.storeId !== storeId));
             });
         })
     }
@@ -40,10 +40,10 @@ const StoresList = ({match}) => {
             <Link to={`${url}/add`}>Add Store</Link>
           
             {stores && stores.map(store =>
-                <div key={store.id}>
-                    <Link to={`${url}/${store.id}`}>{store.location}</Link>
-                    <Link to={`${url}/${store.id}/edit`}>Edit</Link>
-                    <button onClick={() => deleteStore(store.id)} disabled={store.isDeleting}>Delete</button>
+                <div key={store.storeId}>
+                    <Link to={`${url}/${store.storeId}`}>{store.storeLocation}</Link>
+                    <Link to={`${url}/${store.storeId}/edit`}>Edit</Link>
+                    <button onClick={() => deleteStore(store.storeId)} disabled={store.isDeleting}>Delete</button>
                 </div>
             )}
             {!stores &&
