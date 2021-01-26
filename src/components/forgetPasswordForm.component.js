@@ -18,7 +18,7 @@ const ForgetPasswordForm = () => {
         firebase
             .doPasswordReset(data.email)
             .then(() => {
-                history.push('.')
+                history.go(0)
             })
             .catch((error) => {
                 setError(error);

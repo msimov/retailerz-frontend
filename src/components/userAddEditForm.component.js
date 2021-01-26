@@ -4,7 +4,6 @@ import { FirebaseContext } from "../context/firebase.context";
 import { useForm } from "react-hook-form";
 import UserService from "../services/user.service";
 import UserTypeService from "../services/userType.service";
-import AuthUserContext from "../context/authUser.context";
 import { FormTextField } from "./formTextField.component";
 import { FormSelect } from "./formSelect.component";
 import { FormButton } from "./formButton.component";
@@ -12,7 +11,6 @@ import { FormButton } from "./formButton.component";
 const UserAddEditForm = ({match}) => {
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
-    const {authUser, setAuthUser} = useContext(AuthUserContext);
     
     const {userId} = match.params;
     const currentUser = firebase.getCurrentUser();
@@ -32,8 +30,7 @@ const UserAddEditForm = ({match}) => {
     const createUser = (data) => {
         currentUser.getIdToken().then(idToken => {
             UserService.create(currentUser.uid, data, idToken).then(res => {
-                setAuthUser({...authUser, data: res});
-                history.push(`/home`);
+                history.go(0)
             });
         })
     }
@@ -41,13 +38,7 @@ const UserAddEditForm = ({match}) => {
     const updateUser = (userId, data) => {
         currentUser.getIdToken().then(idToken => {
             UserService.updateByUserId(userId, data, idToken).then(res => {
-                setAuthUser({
-                    ...authUser,
-                    userFirstName: res.userFirstName,
-                    userLastName: res.userLastName,
-                    userEmail: res.userEmail
-                });
-                history.push('.');
+                history.go(0)
             })
         })
     }

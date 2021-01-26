@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { formatURL } from '../commons/url.common';
 import { FirebaseContext } from "../context/firebase.context";
 import OperationService from '../services/operation.service';
 import OperationTypeService from '../services/operationType.service';
 
 const CartList = ({match}) => {
     const firebase = useContext(FirebaseContext);
-    const url = formatURL(match.url);
     
     const {userId} = match.params;
     const [operations, setOperations] = useState(null);

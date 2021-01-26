@@ -26,7 +26,7 @@ const GroupAddEditForm = ({match}) => {
 
         currentUser.getIdToken().then(idToken => {
              GroupService.create(userId, data, idToken).then(res => {
-                 history.push('.');
+                history.go(0)
              });    
         })
     }
@@ -34,7 +34,7 @@ const GroupAddEditForm = ({match}) => {
     const updateGroup = (data) => {
         currentUser.getIdToken().then(idToken => {
             GroupService.updateByGroupId(groupId, data, idToken).then(res => {
-                history.push('..');
+                history.go(0)
             })
         })
     }

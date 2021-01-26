@@ -26,7 +26,7 @@ const StoreAddEditForm = ({match}) => {
 
         currentUser.getIdToken().then(idToken => {
              StoreService.create(userId, data, idToken).then(res => {
-                 history.push('.');
+                history.go(0)
              });    
         })
     }
@@ -34,7 +34,7 @@ const StoreAddEditForm = ({match}) => {
     const updateStore = (data) => {
         currentUser.getIdToken().then(idToken => {
             StoreService.updateByStoreId(storeId, data, idToken).then(res => {
-                history.push('..');
+                history.go(0)
             })
         })
     }

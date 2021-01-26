@@ -34,7 +34,7 @@ const ProductAddEditForm = ({match}) => {
     const createProduct = (data) => {
         currentUser.getIdToken().then(idToken => {
             ProductService.create(userId, data, idToken).then(res => {
-                history.push('.');
+                history.go(0)
             })
         })
     }
@@ -42,7 +42,7 @@ const ProductAddEditForm = ({match}) => {
     const updateProduct = (data) => {
         currentUser.getIdToken().then(idToken => {
             ProductService.updateByProductId(productId, data).then(res => {
-                history.push('..');
+                history.go(0)
             })
         })
     }

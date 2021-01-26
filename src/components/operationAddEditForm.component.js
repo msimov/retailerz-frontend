@@ -34,7 +34,7 @@ const OperationAddEditForm = ({match}) => {
     const createOperation = (data) => {
         currentUser.getIdToken().then(idToken => {
              OperationService.create(userId, data, idToken).then(res => {
-                 history.push('.');
+                history.go(0)
              });
         })
     }
@@ -42,7 +42,7 @@ const OperationAddEditForm = ({match}) => {
     const updateOperation = (data) => {
         currentUser.getIdToken().then(idToken => {
             OperationService.updateByOperationId(operationId, data, idToken).then(res => {
-                history.push('..');
+                history.go(0)
             })
         })
     }

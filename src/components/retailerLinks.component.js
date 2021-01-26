@@ -14,6 +14,7 @@ const RetailerLinks = () => {
             <Link to={`/users/${currentUser.uid}/operations`}>My Operations</Link>
             <Link to={`/users/${currentUser.uid}/measure-units`}>My Measure Units</Link>
             <Link to={`/users/${currentUser.uid}/groups`}>My Groups</Link>
+            <Link to={`/users/${currentUser.uid}/inventory`}>My Inventory</Link>
             <Link to={`/search`}>Search</Link>
         </div>
     );

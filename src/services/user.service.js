@@ -4,7 +4,7 @@ const create = (userId, user, userToken) => {
     return request({
         url: `users`,
         method: "POST",
-        data: {id: userId, ...user},
+        data: {userId, ...user},
         headers: {
             Authorization: `Bearer ${userToken}`
         }

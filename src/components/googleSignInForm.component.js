@@ -16,7 +16,7 @@ const GoogleSignInForm = () => {
         firebase
             .doSignInWithGoogle()
             .then(socialAuthUser => {
-                history.push('/home')
+                history.go(0)
             })
             .catch((error) => {
                 setError(error);

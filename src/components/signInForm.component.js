@@ -18,7 +18,7 @@ const SignInForm = () => {
         firebase
             .doSignInWithEmailAndPassword(data.email, data.password)
             .then(() => {
-                history.push('/home');
+                history.go(0)
             })
             .catch((error) => {
                 setError(error);

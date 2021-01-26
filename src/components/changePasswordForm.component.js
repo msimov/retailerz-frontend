@@ -18,7 +18,7 @@ const ChangePasswordForm = () => {
         firebase
         .doPasswordUpdate(data.password)
         .then(() => {
-            history.push(".");
+            history.go(0)
         })
         .catch((error) => {
             setError(error);

@@ -26,7 +26,7 @@ const MeasureUnitAddEditForm = ({match}) => {
 
         currentUser.getIdToken().then(idToken => {
              MeasureUnitService.create(userId, data, idToken).then(res => {
-                 history.push('.');
+                history.go(0)
              });    
         })
     }
@@ -34,7 +34,7 @@ const MeasureUnitAddEditForm = ({match}) => {
     const updateMeasureUnit = (data) => {
         currentUser.getIdToken().then(idToken => {
             MeasureUnitService.updateByMeasureUnitId(measureUnitId, data, idToken).then(res => {
-                history.push('..');
+                history.go(0)
             })
         })
     }

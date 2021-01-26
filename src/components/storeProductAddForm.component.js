@@ -24,7 +24,7 @@ const StoreProductAddForm = ({match}) => {
 
         currentUser.getIdToken().then(idToken => {
             StoreProductService.create(storeId, data, idToken).then(res => {
-                history.push('.');
+                history.go(0)
             })
         })
     }

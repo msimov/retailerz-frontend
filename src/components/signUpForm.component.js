@@ -18,7 +18,7 @@ const SignUpForm = () => {
         firebase
             .doCreateUserWithEmailAndPassword(data.email, data.password)
             .then((authUser) => {
-                history.push(`/home`)
+                history.go(0)
             })
             .catch(error => {
                 setError(error);

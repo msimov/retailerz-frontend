@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { FirebaseContext } from "../context/firebase.context";
 import OperationService from "../services/operation.service";
 import OperationTypeService from "../services/operationType.service";
-import StoreService from "../services/store.service";
+import StoreProductService from "../services/storeProduct.service";
 import { FormButton } from "./formButton.component";
 import { FormSelect } from "./formSelect.component";
 import { FormTextField } from "./formTextField.component";
@@ -25,15 +25,15 @@ const AddToCartForm = (props) => {
 
     const onSubmit = (data) => {
         currentUser.getIdToken().then(idToken => {
-            OperationService.create(userId, {operationProductId: product.productId, operationCount: data.operationCount, operationOperationTypeId: addToCartOperation.operationTypeId, operationStoreId: data.operationStoreId}, idToken).then(res => {
-                history.push(`/users/${currentUser.uid}/cart`)
+            OperationService.create(currentUser.uid, {operationProductId: product.productId, operationCount: data.operationCount, operationOperationTypeId: addToCartOperation.operationTypeId, operationStoreId: data.operationStoreId}, idToken).then(res => {
+                history.go(0)
             })
         })
     }
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.getAllByUserId(userId, idToken).then(res => {
+            StoreProductService.getAllByProductId(product.productId, idToken).then(res => {
                 setStores(res.map(({storeId, storeLocation}) => ({key: storeId, label: storeLocation})));
             })
         })
@@ -42,7 +42,7 @@ const AddToCartForm = (props) => {
             setAddToCartOperation(res.find(({operationTypeName}) => operationTypeName === "ADD_TO_CART"))
         })
        
-    }, [currentUser, userId])
+    }, [currentUser, userId, product])
 
     return(
         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>

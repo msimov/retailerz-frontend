@@ -21,6 +21,15 @@ const getAllByStoreId = (storeId, userToken) => {
     })
 }
 
+const getAllByProductId = (productId, userToken) => {
+    return request({
+        url: `products/${productId}/stores`,
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${userToken}`
+        }
+    })
+}
 
 const deleteByStoreIdAndProductId = (storeId, productId, userToken) => {
     return request({
@@ -33,7 +42,7 @@ const deleteByStoreIdAndProductId = (storeId, productId, userToken) => {
 }
 
 const StoreProductService = {
-    create, getAllByStoreId, deleteByStoreIdAndProductId
+    create, getAllByStoreId, getAllByProductId, deleteByStoreIdAndProductId
 }
 
 export default StoreProductService;
