@@ -8,7 +8,6 @@ import { FormTextField } from "./formTextField.component";
 import { FormSelect } from "./formSelect.component";
 import { FormButton } from "./formButton.component";
 
-
 const UserAddEditForm = ({match}) => {
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
