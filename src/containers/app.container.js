@@ -5,12 +5,12 @@ import withProtectedRoute from "../hoc/withProtectedRoute.hoc";
 import ForgetPassword from "./forgetPassword.container";
 import Home from "./home.container";
 import Landing from "./landing.container";
-import Navigation from "./navigation.container";
 import SignIn from "./signIn.container";
 import SignUp from "./signUp.container";
 import Users from "./users.container";
 import * as CONDITIONS from "../constants/conditions.constants";
 import Search from "./search.container";
+import { Navigation } from "../components/navigation.component";
 
 const App = () => {
 

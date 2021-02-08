@@ -16,7 +16,6 @@ const StoreProducts = ({match}) => {
             <Route path={`${path}`} component={
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(StoreProductsList)
             }/>
-
         </Switch>
     )
 }

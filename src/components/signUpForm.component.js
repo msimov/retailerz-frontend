@@ -48,7 +48,7 @@ const SignUpForm = () => {
                 <Segment stacked>
                     <Form.Input 
                         fluid
-                        icon='user'
+                        icon='mail'
                         iconPosition='left'
                         placeholder='E-mail address'
                         name='email'

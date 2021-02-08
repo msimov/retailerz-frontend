@@ -15,7 +15,6 @@ const Stores = ({match}) => {
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(StoreAddEditForm)
             }/>
             
-
             <Route path={`${path}/:storeId/edit`} component={
                 withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(StoreAddEditForm)
             } />

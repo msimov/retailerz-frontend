@@ -37,4 +37,4 @@ const NavigationNonAuth = () => (
     </Menu>
 );
 
-export default Navigation;
+export {Navigation};
