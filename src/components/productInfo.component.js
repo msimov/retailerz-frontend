@@ -4,6 +4,8 @@ import { formatURL } from '../commons/url.common';
 import ProductService from '../services/product.service';
 import { FirebaseContext } from "../context/firebase.context";
 import { AddToCartForm } from './addToCartForm.component';
+import OperationService from '../services/operation.service';
+import OperationTypeService from '../services/operationType.service';
 
 const ProductInfo = ({match}) => {
     const firebase = useContext(FirebaseContext);
@@ -18,6 +20,17 @@ const ProductInfo = ({match}) => {
         currentUser.getIdToken().then(idToken => {
             ProductService.findByProductId(productId, idToken).then(res => {
                 setProduct(res);
+            })
+            OperationTypeService.getAll().then(res => {
+                const visitedProductOperation = res.find(({operationTypeName}) => operationTypeName === "VISITED_PRODUCT")
+                OperationService.create(
+                    currentUser.uid,
+                    {
+                        operationProductId: productId, 
+                        operationOperationTypeId: visitedProductOperation.operationTypeId
+                    },
+                    idToken
+                )
             })
         })
     }, [currentUser, userId, productId]);

@@ -32,9 +32,8 @@ const getAllByUserId = (operationUserId, userToken) => {
 
 const getAllByUserIdAndOperationTypeId = (operationUserId, operationTypeId, userToken) => {
     return request({
-        url: `users/${operationUserId}/operations`,
+        url: `users/${operationUserId}/operations/${operationTypeId}`,
         method: "GET",
-        data: operationTypeId,
         headers: {
             Authorization: `Bearer ${userToken}`
         }

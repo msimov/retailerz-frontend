@@ -21,17 +21,16 @@ const GoogleSignInForm = () => {
             .catch((error) => {
                 setError(error);
             });
-            
     }
     
     return(
         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
             <div>
-                <FormButton 
+{/*                 <FormButton 
                     label="Sign In With Google"
                     type="submit"
                     disabled={formState.isSubmitting}
-                />
+                /> */}
             </div>
             { error && <p>{ error.message }</p> }
         </form>

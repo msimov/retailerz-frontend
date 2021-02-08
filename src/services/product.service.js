@@ -33,6 +33,16 @@ const getAllByUserId = (productUserId, userToken) => {
     })
 }
 
+const getAllRecommendedByUserId = (userId, userToken) => {
+    return request({
+        url: `users/${userId}/products/recommended`,
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${userToken}`
+        }
+    })
+}
+
 const findByProductId = (productId, userToken) => {
     return request({
         url: `products/${productId}`,
@@ -65,7 +75,7 @@ const deleteByProductId = (productId, userToken) => {
 }
 
 const ProductService = {
-    findByKeyword, create, findByProductId, getAllByUserId, updateByProductId, deleteByProductId
+    findByKeyword, create, findByProductId, getAllByUserId, getAllRecommendedByUserId, updateByProductId, deleteByProductId
 }
 
 export default ProductService;

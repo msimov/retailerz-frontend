@@ -2,13 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { FirebaseContext } from "../context/firebase.context";
 import OperationService from '../services/operation.service';
 import OperationTypeService from '../services/operationType.service';
+import { GenerateRouteForm } from './fastestRoute.component';
 
 const CartList = ({match}) => {
     const firebase = useContext(FirebaseContext);
     
     const {userId} = match.params;
     const [operations, setOperations] = useState(null);
+    const [route, setRoute] = useState(null);
     const currentUser = firebase.getCurrentUser();
+    
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
@@ -45,9 +48,21 @@ const CartList = ({match}) => {
                     {operation.operationCount}
                     {operation.operationOperationTypeId}
                     {operation.operationStoreId}
+                    {operation.operationTypeName}
                     <button onClick={() => removeFromCart(operation.operationId)} disabled={operation.isDeleting}>Remove From Cart</button>
                 </div>
             )}
+            {
+                operations && <GenerateRouteForm operations={operations} setRoute={setRoute}/>
+            }
+            {
+                route && route.map((route, index) => {
+                    
+                    return <div key={index}>
+                        {route[index].name}
+                    </div>
+                })
+            }
             {!operations &&
                 <div>Loading...</div>
             }
