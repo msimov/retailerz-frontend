@@ -1,37 +1,57 @@
 import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { FirebaseContext } from "../context/firebase.context";
 import OperationService from "../services/operation.service";
 import OperationTypeService from "../services/operationType.service";
 import StoreProductService from "../services/storeProduct.service";
-
+import { Form, Button } from "semantic-ui-react";
 
 
 const AddToCartForm = (props) => {
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.getCurrentUser();
     const history = useHistory();
+
     const {product} = props;
-    const {userId} = props;
+
+    const [formData, setFormData] = useState({
+        operationCount: '',
+        operationStoreId: null
+    })
     const [stores, setStores] = useState([]);
     const [addToCartOperation, setAddToCartOperation] = useState([]);
 
-
-    const { control, handleSubmit, reset, errors, formState} = useForm();
-
     const onSubmit = (data) => {
         currentUser.getIdToken().then(idToken => {
-            OperationService.create(currentUser.uid, {operationProductId: product.productId, operationCount: data.operationCount, operationOperationTypeId: addToCartOperation.operationTypeId, operationStoreId: data.operationStoreId}, idToken).then(res => {
+            OperationService.create(
+                currentUser.uid,
+                {
+                    ...formData,
+                    operationProductId: product.productId,
+                    operationOperationTypeId: addToCartOperation.operationTypeId
+                }, 
+                idToken
+            ).then(res => {
                 history.go(0)
             })
         })
     }
 
+    const onChange = (event) => {
+        setFormData({
+            ...formData,
+            [event.target.name] : event.target.value
+        });
+    }
+
+    const onSelect = (event, {name, value}) => {
+        setFormData({...formData, [name]: value});
+    }
+
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
             StoreProductService.getAllByProductId(product.productId, idToken).then(res => {
-                setStores(res.map(({storeId, storeLocation}) => ({key: storeId, label: storeLocation})));
+                setStores(res.map(({storeId, storeLocation}) => ({key: storeId, value: storeId, text: storeLocation})));
             })
         })
         
@@ -39,10 +59,26 @@ const AddToCartForm = (props) => {
             setAddToCartOperation(res.find(({operationTypeName}) => operationTypeName === "ADD_TO_CART"))
         })
        
-    }, [currentUser, userId, product])
+    }, [currentUser, product])
 
     return(
-        <div></div>
+        <Form onSubmit={onSubmit}>
+            <Form.Input 
+                icon='user'
+                placeholder='Count'
+                name='operationCount'
+                type='number'
+                onChange={onChange}
+            />
+            <Form.Select 
+                fluid
+                placeholder='Store'
+                name='operationStoreId'
+                options={stores}
+                onChange={onSelect}
+            />
+            <Button positive>Add</Button>
+        </Form>
 /*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
             <div>
                 <div>

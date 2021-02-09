@@ -3,8 +3,8 @@ import axios from "axios";
 const client = axios.create({
     baseURL: "https://api.routexl.com/",
     auth: {
-        username: process.env.ROUTE_XL_USERNAME,
-        password: process.env.ROUTE_XL_PASSWORD
+        username: process.env.REACT_APP_ROUTE_XL_USERNAME,
+        password: process.env.REACT_APP_ROUTE_XL_PASSWORD
     }
 });
 

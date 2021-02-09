@@ -17,7 +17,6 @@ const SearchList = (props) => {
                     {product.productDeliveryPrice}
                     {product.productRetailPrice}
                     {product.productGroupId}
-                    {product.productCode}
                     {product.productBarcode}
                     {product.productTaxGroupId}
                     {product.productStoreId}

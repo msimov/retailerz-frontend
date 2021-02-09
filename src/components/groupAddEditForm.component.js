@@ -1,29 +1,34 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useForm } from "react-hook-form";
 import { FirebaseContext } from "../context/firebase.context";
 import GroupService from '../services/group.service';
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react'
 
 const GroupAddEditForm = ({match}) => {
     
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
-    const {userId, groupId} = match.params;
-    const isAddMode = !groupId;
+
     const currentUser = firebase.getCurrentUser();
+    const {groupId} = match.params;
+    const isAddMode = !groupId;
 
-    const { control, handleSubmit, reset, setValue, errors, formState} = useForm();
+    const [formData, setFormData] = useState({
+        groupName: ''
+    });
 
-    const onSubmit = (data) => {
+    const onSubmit = (event) => {
+        event.preventDefault();
+        
         return isAddMode
-            ? createGroup(data)
-            : updateGroup(data);
+            ? createGroup()
+            : updateGroup();
     }
 
-    const createGroup = (data) => {
+    const createGroup = () => {
 
         currentUser.getIdToken().then(idToken => {
-             GroupService.create(userId, data, idToken).then(res => {
+             GroupService.create(currentUser.uid, formData, idToken).then(res => {
                 history.go(0)
              });    
         })
@@ -31,45 +36,63 @@ const GroupAddEditForm = ({match}) => {
 
     const updateGroup = (data) => {
         currentUser.getIdToken().then(idToken => {
-            GroupService.updateByGroupId(groupId, data, idToken).then(res => {
+            GroupService.updateByGroupId(groupId, formData, idToken).then(res => {
                 history.go(0)
             })
         })
     }
 
+    const onClick = () => {
+        history.goBack();
+    }
+
+    const onChange = (event) => {
+        setFormData({...formData, [event.target.name]: event.target.value})
+    }
+    
     useEffect(() => {
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
                 GroupService.findByGroupId(groupId, idToken).then(res => {
                     const fields = ['groupName'];
-                    fields.forEach(field => setValue(field, res[field]));
+                    let group = null;
+                    fields.forEach(field => {
+                        group = {...group, [field]: res[field]}
+                    });
+                    setFormData(group)
                 })
             })
         }
-    }, [currentUser, groupId, setValue, isAddMode]);
+    }, [currentUser, groupId, isAddMode]);
 
     return(
-        <div></div>
-        /* <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <h1>{isAddMode ? 'Add Group' : 'Edit Group'}</h1>
-            <div>
-                <div>
-                    <FormTextField 
-                        name="groupName"
-                        label="Group Name"
-                        control={control}
+        <Grid.Column style={{ maxWidth: 450 }}>
+            <Header as='h2' color='teal' textAlign='center'>
+                {isAddMode ? "Add group" : "Edit group"}
+            </Header>
+            <Form size='large' onSubmit={onSubmit}>
+                <Segment stacked>
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Name'
+                        name='groupName'
+                        onChange={onChange}
+                        value={formData.groupName}
                     />
-                    <div>{errors.name?.message}</div>
-                </div>
-            </div>
-            <div>
-                <FormButton 
-                    label="Save"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-        </form> */
+                    <Button.Group fluid>
+                        <Button type='button' onClick={onClick}>Cancel</Button>
+                        <Button.Or/>
+                        {
+                            isAddMode
+                            ? <Button positive>Add</Button>
+                            : <Button positive>Save</Button>
+                        }
+                    </Button.Group>
+                </Segment>
+            </Form>
+        </Grid.Column>
     )
     
 }

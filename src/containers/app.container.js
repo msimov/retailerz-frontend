@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { withAuthentication } from "../hoc/withAuthentication.hoc";
 import withProtectedRoute from "../hoc/withProtectedRoute.hoc";
-import ForgetPassword from "./forgetPassword.container";
 import Home from "./home.container";
 import Landing from "./landing.container";
 import SignIn from "./signIn.container";
@@ -11,6 +10,7 @@ import Users from "./users.container";
 import * as CONDITIONS from "../constants/conditions.constants";
 import Search from "./search.container";
 import { Navbar } from "../components/navbar.component";
+import ResetPassword from "./resetPassword.container";
 
 const App = () => {
 
@@ -28,8 +28,8 @@ const App = () => {
                 <Route path={'/sign-in'} component={
                     withProtectedRoute([CONDITIONS.USER_NULL])(SignIn)
                 }/>
-                <Route path={'/forget-password'} component={
-                    withProtectedRoute([CONDITIONS.USER_NULL])(ForgetPassword)
+                <Route path={'/reset-password'} component={
+                    withProtectedRoute([CONDITIONS.USER_NULL])(ResetPassword)
                 }/>
                 <Route path={`/home`} component={
                     withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Home)

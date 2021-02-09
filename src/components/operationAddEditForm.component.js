@@ -1,36 +1,43 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useForm } from "react-hook-form";
 import { FirebaseContext } from "../context/firebase.context";
 import OperationService from '../services/operation.service';
 import ProductService from '../services/product.service';
 import OperationTypeService from '../services/operationType.service';
 import StoreService from '../services/store.service';
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react'
 
 const OperationAddEditForm = ({match}) => {
 
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
 
-    const {userId, operationId} = match.params;
+    const {operationId} = match.params;
     const isAddMode = !operationId;
     const currentUser = firebase.getCurrentUser();
 
+    const [formData, setFormData] = useState({
+        operationOperationTypeId: null,
+        operationStoreId: null,
+        operationProductId: null,
+        operationCount: ''
+    });
     const [products, setProducts] = useState([]);
     const [stores, setStores] = useState([])
     const [operationTypes, setOperationTypes] = useState([]);
 
-    const { handleSubmit, reset, setValue, errors, formState, control} = useForm();
 
-    const onSubmit = (data) => {
+    const onSubmit = (event) => {
+        event.preventDefault();
+        
         return isAddMode
-            ? createOperation(data)
-            : updateOperation(data);
+            ? createOperation()
+            : updateOperation();
     }
 
-    const createOperation = (data) => {
+    const createOperation = () => {
         currentUser.getIdToken().then(idToken => {
-             OperationService.create(userId, data, idToken).then(res => {
+             OperationService.create(currentUser.uid, formData, idToken).then(res => {
                 history.go(0)
              });
         })
@@ -38,86 +45,103 @@ const OperationAddEditForm = ({match}) => {
 
     const updateOperation = (data) => {
         currentUser.getIdToken().then(idToken => {
-            OperationService.updateByOperationId(operationId, data, idToken).then(res => {
+            OperationService.updateByOperationId(operationId, formData, idToken).then(res => {
                 history.go(0)
             })
         })
     }
 
+    const onClick = () => {
+        history.goBack();
+    }
+
+    const onChange = (event) => {
+        setFormData({...formData, [event.target.name]: event.target.value})
+    }
+
+    const onSelect = (event, {name, value}) => {
+        setFormData({...formData, [name]: value});
+    }
+
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.getAllByUserId(userId, idToken).then(res => {
-                setProducts(res.map(({productId, productName}) => ({key: productId, label: productName})));
+            ProductService.getAllByUserId(currentUser.uid, idToken).then(res => {
+                setProducts(res.map(({productId, productName}) => ({key: productId, value: productId, text: productName})));
             })
-            StoreService.getAllByUserId(userId, idToken).then(res => {
-                setStores(res.map(({storeId, storeLocation}) => ({key: storeId, label: storeLocation})));
+            StoreService.getAllByUserId(currentUser.uid, idToken).then(res => {
+                setStores(res.map(({storeId, storeLocation}) => ({key: storeId, value: storeId, text: storeLocation})));
             })
         })
         OperationTypeService.getAll().then(res => {
-            setOperationTypes(res.map(({operationTypeId, operationTypeName}) => ({key: operationTypeId, label: operationTypeName})));
+            setOperationTypes(res.map(({operationTypeId, operationTypeName}) => ({key: operationTypeId, value: operationTypeId, text: operationTypeName})));
         })
 
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
                 OperationService.findByOperationId(operationId, idToken).then(res => {
                     const fields = ['operationOperationTypeId', 'operationStoreId', 'operationProductId', 'operationCount'];
-                    fields.forEach(field => setValue(field, res[field]));
+                    let operation = null;
+                    fields.forEach(field => {
+                        operation = {...operation, [field]: res[field]}
+                    });
+                    setFormData(operation)
                 })
             })
         }
-    }, [currentUser, userId, operationId, isAddMode, setValue]);
+    }, [currentUser, operationId, isAddMode]);
 
     return(
-        <div></div>
-    /*
-        <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-             <h1>{isAddMode ? 'Add Operation' : 'Edit Operation'}</h1>
-            <div>
-                <div>
-                    <FormSelect 
-                        name="operationOperationTypeId"
-                        label="Operation Type"
+        <Grid.Column style={{ maxWidth: 450 }}>
+            <Header as='h2' color='teal' textAlign='center'>
+                {isAddMode ? "Add operation" : "Edit operation"}
+            </Header>
+            <Form size='large' onSubmit={onSubmit}>
+                <Segment stacked>
+                    <Form.Select 
+                        fluid
+                        placeholder='Operation Type'
+                        name='operationOperationTypeId'
                         options={operationTypes}
-                        control={control}
+                        onChange={onSelect}
+                        value={formData.operationOperationTypeId}
                     />
-                    <div>{errors.operationType?.message}</div>
-                </div>
-                <div>
-                    <FormSelect 
-                        name="operationStoreId"
-                        label="Store"
+                    <Form.Select 
+                        fluid
+                        placeholder='Store'
+                        name='operationStoreId'
                         options={stores}
-                        control={control}
+                        onChange={onSelect}
+                        value={formData.operationStoreId}
                     />
-                    <div>{errors.store?.message}</div>
-                </div>
-                <div>
-                    <FormSelect
-                        name="operationProductId" 
-                        label="Product"
+                    <Form.Select 
+                        fluid
+                        placeholder='Product'
+                        name='operationProductId'
                         options={products}
-                        control={control}
+                        onChange={onSelect}
+                        value={formData.operationProductId}
                     />
-                    <div>{errors.product?.message}</div>
-                </div>
-                <div>
-                    <FormTextField 
-                        name="operationCount"
-                        label="Count"
-                        control={control}
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Count'
+                        name='operationCount'
+                        onChange={onChange}
+                        value={formData.operationCount}
                     />
-                    <div>{errors.count?.message}</div>
-                </div>
-            </div>
-            <div>
-                <FormButton    
-                    label="Save"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-        </form>
-        */
+                    <Button.Group fluid>
+                        <Button type='button' onClick={onClick}>Cancel</Button>
+                        <Button.Or/>
+                        {
+                            isAddMode
+                            ? <Button positive>Add</Button>
+                            : <Button positive>Save</Button>
+                        }
+                    </Button.Group>
+                </Segment>
+            </Form>
+        </Grid.Column>
     )
 }
 

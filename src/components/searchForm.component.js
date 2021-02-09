@@ -1,12 +1,11 @@
-import { useContext, useEffect, useState} from "react";
+import { useState} from "react";
 import { useHistory } from "react-router-dom";
-import { Form, Grid, Input } from "semantic-ui-react";
-import { FirebaseContext } from "../context/firebase.context";
+import { Form } from "semantic-ui-react";
 
 
 
 const SearchForm = ({setProducts}) => {
-    const firebase = useContext(FirebaseContext);
+
     const history = useHistory();
     
     const [formData, setFormData] = useState({

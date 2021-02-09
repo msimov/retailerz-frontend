@@ -1,36 +1,46 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useForm } from "react-hook-form";
 import { FirebaseContext } from "../context/firebase.context";
 import ProductService from '../services/product.service';
 import GroupService from '../services/group.service';
 import MeasureUnitService from '../services/measureUnit.service';
 import TaxGroupService from '../services/taxGroup.service';
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react'
 
 const ProductAddEditForm = ({match}) => {
 
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
 
-    const {userId, productId} = match.params;
+    const {productId} = match.params;
     const isAddMode = !productId;
     const currentUser = firebase.getCurrentUser();
 
+    const [formData, setFormData] = useState({
+        productName: '',
+        productDescription: '',
+        productGroupId: null,
+        productBarcode: '',
+        productMeasureUnitId: null,
+        productTaxGroupId: null,
+        productRetailPrice: '',
+        productDeliveryPrice: ''
+    });
     const [groups, setGroups] = useState([]); 
     const [measureUnits, setMeasureUnits] = useState([]);
     const [taxGroups, setTaxGroups] = useState([]);
 
-    const { handleSubmit, reset, setValue, errors, formState, control} = useForm();
-
-    const onSubmit = (data) => {
+    const onSubmit = (event) => {
+        event.preventDefault();
+        
         return isAddMode
-            ? createProduct(data)
-            : updateProduct(data);
+            ? createProduct()
+            : updateProduct();
     }
 
-    const createProduct = (data) => {
+    const createProduct = () => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.create(userId, data, idToken).then(res => {
+            ProductService.create(currentUser.uid, formData, idToken).then(res => {
                 history.go(0)
             })
         })
@@ -38,129 +48,139 @@ const ProductAddEditForm = ({match}) => {
 
     const updateProduct = (data) => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.updateByProductId(productId, data).then(res => {
+            ProductService.updateByProductId(productId, formData).then(res => {
                 history.go(0)
             })
         })
     }
 
+    const onClick = () => {
+        history.goBack();
+    }
+
+    const onChange = (event) => {
+        setFormData({...formData, [event.target.name]: event.target.value})
+    }
+
+    const onSelect = (event, {name, value}) => {
+        setFormData({...formData, [name]: value});
+    }
+
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            GroupService.getAllByUserId(userId, idToken).then(res => {
-                setGroups(res.map(({groupId, groupName}) => ({key: groupId, label: groupName})));
+            GroupService.getAllByUserId(currentUser.uid, idToken).then(res => {
+                setGroups(res.map(({groupId, groupName}) => ({key: groupId, value: groupId, text: groupName})));
             });
             
-            MeasureUnitService.getAllByUserId(userId, idToken).then(res => {
-                setMeasureUnits(res.map(({measureUnitId, measureUnitName}) => ({key: measureUnitId, label: measureUnitName})));
+            MeasureUnitService.getAllByUserId(currentUser.uid, idToken).then(res => {
+                setMeasureUnits(res.map(({measureUnitId, measureUnitName}) => ({key: measureUnitId, value: measureUnitId, text: measureUnitName})));
             });
 
             if(!isAddMode) {
                 ProductService.findByProductId(productId, idToken).then(res => {
-                    const fields = ['productName', 'productDescription', 'productGroupId', 'productCode', 'productBarcode', 'productMeasureUnitId', 'productTaxGroupId', 'productRetailPrice', 'productDeliveryPrice']
-                    fields.forEach(field => setValue(field, res[field]));
+                    const fields = ['productName', 'productDescription', 'productGroupId', 'productBarcode', 'productMeasureUnitId', 'productTaxGroupId', 'productRetailPrice', 'productDeliveryPrice']
+                    let product = null; 
+                    fields.forEach(field => {
+                        product = {...product, [field]: res[field]}
+                    });
+                    setFormData(product)
                 })
             }
         })
         TaxGroupService.getAll().then(res => {
-            setTaxGroups(res.map(({taxGroupId, taxGroupPercentage}) => ({key: taxGroupId, label: taxGroupPercentage + "%"})));
+            setTaxGroups(res.map(({taxGroupId, taxGroupPercentage}) => ({key: taxGroupId, value: taxGroupId, text: taxGroupPercentage + "%"})));
         });
 
-    }, [currentUser, userId, productId, isAddMode, setValue])
+    }, [currentUser, productId, isAddMode])
 
     return(
-        <div></div>
-        /* <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <h1>{isAddMode ? 'Add Product' : 'Edit Product'}</h1>
-            <div>
-                <div>
-                    <FormTextField 
-                        name="productName"
-                        label="Name"
-                        control={control}
+        <Grid.Column style={{ maxWidth: 450 }}>
+            <Header as='h2' color='teal' textAlign='center'>
+                {isAddMode ? "Add product" : "Edit product"}
+            </Header>
+            <Form size='large' onSubmit={onSubmit}>
+                <Segment stacked>
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Name'
+                        name='productName'
+                        onChange={onChange}
+                        value={formData.productName}
                     />
-                    <div>{errors.name?.message}</div>
-                </div>
-                <div>
-                    <FormTextField 
-                        name="productDescription"
-                        label="Description"
-                        control={control}
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Description'
+                        name='productDescription'
+                        onChange={onChange}
+                        value={formData.productDescription}
                     />
-                    <div>{errors.description?.message}</div>
-                </div>
-                <div>
-                    <FormSelect
-                        name="productGroupId"
-                        label="Group"
+                    <Form.Select 
+                        fluid
+                        placeholder='Group'
+                        name='productGroupId'
                         options={groups}
-                        control={control}
+                        onChange={onSelect}
+                        value={formData.productGroupId}
                     />
-                    <div>{errors.group?.message}</div>
-                </div>
-                <div>
-                    <FormTextField 
-                        name="productCode"
-                        label="Code"
-                        control={control}
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Barcode'
+                        name='productBarcode'
+                        onChange={onChange}
+                        value={formData.productBarcode}
                     />
-                    <div>{errors.code?.message}</div>
-                </div>
-                <div>
-                    <FormTextField 
-                        name="productBarcode"
-                        label="Barcode"
-                        control={control}
-                    />
-                    <div>{errors.barcode?.message}</div>
-                </div>
-                <div>
-                    <FormSelect 
-                        name="productMeasureUnitId"
-                        label="Measure Unit"
+                    <Form.Select 
+                        fluid
+                        placeholder='Measure Unit'
+                        name='productMeasureUnitId'
                         options={measureUnits}
-                        control={control}
+                        onChange={onSelect}
+                        value={formData.productMeasureUnitId}
                     />
-                    <div>{errors.measureUnit?.message}</div>
-                </div>
-                <div>
-                    <FormSelect 
-                        name="productTaxGroupId"
-                        label="Tax Group"
+                    <Form.Select 
+                        fluid
+                        placeholder='Tax Group'
+                        name='productTaxGroupId'
                         options={taxGroups}
-                        control={control}
+                        onChange={onSelect}
+                        value={formData.productTaxGroupId}
                     />
-                    <div>{errors.taxGroup?.message}</div>
-                </div>
-                <div>
-                    <FormTextField 
-                        name="productRetailPrice"
-                        label="Retail Price"
-                        type="number"
-                        step="0.01"
-                        control={control}
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Retail Price'
+                        name='productRetailPrice'
+                        onChange={onChange}
+                        value={formData.productRetailPrice}
                     />
-                    <div>{errors.retailPrice?.message}</div>
-                </div>
-                <div>
-                    <FormTextField 
-                        name="productDeliveryPrice"
-                        label="Delivery Price"
-                        type="number"
-                        step="0.01"
-                        control={control}
-
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Delivery Price'
+                        name='productDeliveryPrice'
+                        onChange={onChange}
+                        value={formData.productDeliveryPrice}
                     />
-                    <div>{errors.deliveryPrice?.message}</div>
-                </div>
-            </div>
-            <div>
-                <FormButton 
-                    label="Save"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-        </form> */
+                    <Button.Group fluid>
+                        <Button type='button' onClick={onClick}>Cancel</Button>
+                        <Button.Or/>
+                        {
+                            isAddMode
+                            ? <Button positive>Add</Button>
+                            : <Button positive>Save</Button>
+                        }
+                    </Button.Group>
+                </Segment>
+            </Form>
+        </Grid.Column>
     );
     
 }

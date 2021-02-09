@@ -53,10 +53,10 @@ const StoreProductAddForm = ({match}) => {
                     <Form.Select 
                         fluid
                         placeholder='Product'
-                        name='userUserTypeId'
+                        name='storeProductProductId'
                         options={products}
                         onChange={onSelect}
-                        value={formData.userUserTypeId}
+                        value={formData.storeProductProductId}
                     />
                     <Button.Group fluid>
                         <Button type='button' onClick={onClick}>Cancel</Button>

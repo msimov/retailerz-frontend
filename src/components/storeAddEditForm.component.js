@@ -4,7 +4,6 @@ import StoreService from '../services/store.service';
 import { FirebaseContext } from "../context/firebase.context";
 import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react'
 import Map from './map.component';
-import { LoadScript } from "@react-google-maps/api";
 
 const StoreAddEditForm = ({match}) => {
     
@@ -21,7 +20,9 @@ const StoreAddEditForm = ({match}) => {
         storeLng: 23.319941
     });
 
-    const onSubmit = () => {
+    const onSubmit = (event) => {
+        event.preventDefault();
+        
         return isAddMode
             ? createStore()
             : updateStore();
@@ -101,25 +102,6 @@ const StoreAddEditForm = ({match}) => {
                 </Segment>
             </Form>
         </Grid.Column>
-/*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <h1>{isAddMode ? 'Add Store' : 'Edit Store'}</h1>
-
-            <div>
-                <div>
-                    <LocationPicker
-                        location={location}
-                        setLocation={setLocation}
-                    />
-                </div>
-            </div>
-            <div>
-                <FormButton 
-                    label="Save"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-        </form> */
     )
     
 }

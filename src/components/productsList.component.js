@@ -45,7 +45,6 @@ const ProductsList = ({match}) => {
                     {product.productDeliveryPrice}
                     {product.productRetailPrice}
                     {product.productGroupId}
-                    {product.productCode}
                     {product.productBarcode}
                     {product.productTaxGroupId}
                     <Link to={`${url}/${product.productId}/edit`}>Edit</Link>

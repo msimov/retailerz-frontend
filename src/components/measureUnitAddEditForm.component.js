@@ -1,40 +1,52 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useForm } from "react-hook-form";
 import { FirebaseContext } from "../context/firebase.context";
 import MeasureUnitService from '../services/measureUnit.service';
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react'
 
 const MeasureUnitAddEditForm = ({match}) => {
     
     const firebase = useContext(FirebaseContext);
     const history = useHistory();
-    const {userId, measureUnitId} = match.params;
-    const isAddMode = !measureUnitId;
+
     const currentUser = firebase.getCurrentUser();
+    const {measureUnitId} = match.params;
+    const isAddMode = !measureUnitId;
 
-    const { control, handleSubmit, reset, setValue, errors, formState} = useForm();
+    const [formData, setFormData] = useState({
+        measureUnitName: ''
+    });
 
-    const onSubmit = (data) => {
+    const onSubmit = (event) => {
+        event.preventDefault();
+        
         return isAddMode
-            ? createMeasureUnit(data)
-            : updateMeasureUnit(data);
+            ? createMeasureUnit()
+            : updateMeasureUnit();
     }
 
-    const createMeasureUnit = (data) => {
-
+    const createMeasureUnit = () => {
         currentUser.getIdToken().then(idToken => {
-             MeasureUnitService.create(userId, data, idToken).then(res => {
+             MeasureUnitService.create(currentUser.uid, formData, idToken).then(res => {
                 history.go(0)
              });    
         })
     }
 
-    const updateMeasureUnit = (data) => {
+    const updateMeasureUnit = () => {
         currentUser.getIdToken().then(idToken => {
-            MeasureUnitService.updateByMeasureUnitId(measureUnitId, data, idToken).then(res => {
+            MeasureUnitService.updateByMeasureUnitId(measureUnitId, formData, idToken).then(res => {
                 history.go(0)
             })
         })
+    }
+
+    const onClick = () => {
+        history.goBack();
+    }
+
+    const onChange = (event) => {
+        setFormData({...formData, [event.target.name]: event.target.value})
     }
 
     useEffect(() => {
@@ -42,34 +54,45 @@ const MeasureUnitAddEditForm = ({match}) => {
             currentUser.getIdToken().then(idToken => {
                 MeasureUnitService.findByMeasureUnitId(measureUnitId, idToken).then(res => {
                     const fields = ['measureUnitName'];
-                    fields.forEach(field => setValue(field, res[field]));
+                    let measureUnit = null;
+                    fields.forEach(field => {
+                        measureUnit = {...measureUnit, [field]: res[field]}
+                    });
+                    setFormData(measureUnit)
+                    
                 })
             })
         }
-    }, [currentUser, userId, measureUnitId, setValue, isAddMode]);
+    }, [currentUser, measureUnitId, isAddMode]);
 
     return(
-        <div></div>
-/*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <h1>{isAddMode ? 'Add Measure Unit' : 'Edit Measure Unit'}</h1>
-            <div>
-                <div>
-                    <FormTextField 
-                        name="measureUnitName"
-                        label="Measure Unit Name"
-                        control={control}
+        <Grid.Column style={{ maxWidth: 450 }}>
+            <Header as='h2' color='teal' textAlign='center'>
+                {isAddMode ? "Add measure unit" : "Edit measure unit"}
+            </Header>
+            <Form size='large' onSubmit={onSubmit}>
+                <Segment stacked>
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Name'
+                        name='measureUnitName'
+                        onChange={onChange}
+                        value={formData.measureUnitName}
                     />
-                    <div>{errors.unit?.message}</div>
-                </div>
-            </div>
-            <div>
-                <FormButton 
-                    label="Save"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-        </form> */
+                    <Button.Group fluid>
+                        <Button type='button' onClick={onClick}>Cancel</Button>
+                        <Button.Or/>
+                        {
+                            isAddMode
+                            ? <Button positive>Add</Button>
+                            : <Button positive>Save</Button>
+                        }
+                    </Button.Group>
+                </Segment>
+            </Form>
+        </Grid.Column>
     )
     
 }

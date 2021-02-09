@@ -40,7 +40,6 @@ const ProductInfo = ({match}) => {
         <div>
             {product.productId}
             {product.productBarcode}
-            {product.productCode}
             {product.productMeasureUnitId}
             {product.productGroupId}
             {product.productTaxGroupId}

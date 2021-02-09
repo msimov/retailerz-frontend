@@ -54,7 +54,7 @@ const SignInForm = () => {
                     />
                     <Form.Input
                         label={
-                            <Link to="/">Forgot password?</Link>
+                            <Link to="/reset-password">Forgot password?</Link>
                         }
                         icon='lock'
                         iconPosition='left'
