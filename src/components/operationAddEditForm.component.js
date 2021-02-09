@@ -5,9 +5,6 @@ import { FirebaseContext } from "../context/firebase.context";
 import OperationService from '../services/operation.service';
 import ProductService from '../services/product.service';
 import OperationTypeService from '../services/operationType.service';
-import { FormSelect } from './formSelect.component';
-import { FormTextField } from './formTextField.component';
-import { FormButton } from './formButton.component';
 import StoreService from '../services/store.service';
 
 const OperationAddEditForm = ({match}) => {
@@ -71,8 +68,10 @@ const OperationAddEditForm = ({match}) => {
     }, [currentUser, userId, operationId, isAddMode, setValue]);
 
     return(
+        <div></div>
+    /*
         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <h1>{isAddMode ? 'Add Operation' : 'Edit Operation'}</h1>
+             <h1>{isAddMode ? 'Add Operation' : 'Edit Operation'}</h1>
             <div>
                 <div>
                     <FormSelect 
@@ -118,6 +117,7 @@ const OperationAddEditForm = ({match}) => {
                 />
             </div>
         </form>
+        */
     )
 }
 

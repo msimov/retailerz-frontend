@@ -6,9 +6,6 @@ import ProductService from '../services/product.service';
 import GroupService from '../services/group.service';
 import MeasureUnitService from '../services/measureUnit.service';
 import TaxGroupService from '../services/taxGroup.service';
-import { FormTextField } from './formTextField.component';
-import { FormSelect } from './formSelect.component';
-import { FormButton } from './formButton.component';
 
 const ProductAddEditForm = ({match}) => {
 
@@ -71,7 +68,8 @@ const ProductAddEditForm = ({match}) => {
     }, [currentUser, userId, productId, isAddMode, setValue])
 
     return(
-        <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
+        <div></div>
+        /* <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
             <h1>{isAddMode ? 'Add Product' : 'Edit Product'}</h1>
             <div>
                 <div>
@@ -162,7 +160,7 @@ const ProductAddEditForm = ({match}) => {
                     disabled={formState.isSubmitting}
                 />
             </div>
-        </form>
+        </form> */
     );
     
 }

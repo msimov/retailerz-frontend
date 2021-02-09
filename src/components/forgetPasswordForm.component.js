@@ -3,8 +3,6 @@ import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { FirebaseContext } from "../context/firebase.context";
-import { FormButton } from "./formButton.component";
-import { FormTextField } from "./formTextField.component";
 
 const ForgetPasswordForm = () => {
 
@@ -26,7 +24,8 @@ const ForgetPasswordForm = () => {
     }
 
     return(
-        <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
+        <div></div>
+/*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
             <h1>{'Forget Password'}</h1>
             <div>
                 <div>
@@ -47,7 +46,7 @@ const ForgetPasswordForm = () => {
                 />
             </div>
             { error && <p>{ error.message }</p> }
-        </form>
+        </form> */
     );
 }
 

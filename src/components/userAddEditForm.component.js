@@ -30,19 +30,6 @@ const UserAddEditForm = ({match}) => {
             : updateUser();
     }
 
-    const onClick = () => {
-        history.goBack();
-    }
-
-    const onInputChange = (event) => {
-        setFormData({...formData, [event.target.name]: event.target.value})
-    }
-
-    const onSelectChange = (name, data) => {
-        setFormData({...formData, [name]: data});
-    }
-
-
     const createUser = () => {
         currentUser.getIdToken().then(idToken => {
             UserService.create(currentUser.uid, formData, idToken).then(res => {
@@ -57,6 +44,18 @@ const UserAddEditForm = ({match}) => {
                 history.go(0)
             })
         })
+    }
+
+    const onClick = () => {
+        history.goBack();
+    }
+
+    const onChange = (event) => {
+        setFormData({...formData, [event.target.name]: event.target.value})
+    }
+
+    const onSelect = (event, {name, value}) => {
+        setFormData({...formData, [name]: value});
     }
 
     useEffect(() => {
@@ -81,7 +80,7 @@ const UserAddEditForm = ({match}) => {
     return (
         <Grid.Column style={{ maxWidth: 450 }}>
             <Header as='h2' color='teal' textAlign='center'>
-                {isAddMode ? "Add Information" : "Edit Information"}
+                {isAddMode ? "Add information" : "Edit information"}
             </Header>
             <Form size='large' onSubmit={onSubmit}>
                 <Segment stacked>
@@ -91,7 +90,7 @@ const UserAddEditForm = ({match}) => {
                         iconPosition='left'
                         placeholder='First Name'
                         name='userFirstName'
-                        onChange={onInputChange}
+                        onChange={onChange}
                         value={formData.userFirstName}
                     />
                     <Form.Input
@@ -100,7 +99,7 @@ const UserAddEditForm = ({match}) => {
                         iconPosition='left'
                         placeholder='Last Name'
                         name='userLastName'
-                        onChange={onInputChange}
+                        onChange={onChange}
                         value={formData.userLastName}
                     />
                     {isAddMode ? <Form.Select 
@@ -108,7 +107,7 @@ const UserAddEditForm = ({match}) => {
                         placeholder='Account Type'
                         name='userUserTypeId'
                         options={userTypes}
-                        onChange={(e, data) => {onSelectChange('userUserTypeId', data.value)}}
+                        onChange={onSelect}
                         value={formData.userUserTypeId}
                     />
                     : null}

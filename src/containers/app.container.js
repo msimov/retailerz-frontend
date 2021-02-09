@@ -10,15 +10,15 @@ import SignUp from "./signUp.container";
 import Users from "./users.container";
 import * as CONDITIONS from "../constants/conditions.constants";
 import Search from "./search.container";
-import { Navigation } from "../components/navigation.component";
+import { Navbar } from "../components/navbar.component";
 
 const App = () => {
 
     return(
         <Router>
             <div>
-                <Navigation />
-                <hr/>
+                <Navbar />
+
                 <Route exact path={'/'} component={
                     withProtectedRoute([CONDITIONS.USER_NULL])(Landing)
                 }/>

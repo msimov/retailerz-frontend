@@ -3,8 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { FirebaseContext } from "../context/firebase.context";
 import GroupService from '../services/group.service';
-import { FormTextField } from './formTextField.component';
-import { FormButton } from './formButton.component';
 
 const GroupAddEditForm = ({match}) => {
     
@@ -51,7 +49,8 @@ const GroupAddEditForm = ({match}) => {
     }, [currentUser, groupId, setValue, isAddMode]);
 
     return(
-        <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
+        <div></div>
+        /* <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
             <h1>{isAddMode ? 'Add Group' : 'Edit Group'}</h1>
             <div>
                 <div>
@@ -70,7 +69,7 @@ const GroupAddEditForm = ({match}) => {
                     disabled={formState.isSubmitting}
                 />
             </div>
-        </form>
+        </form> */
     )
     
 }

@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react"
 import RouteXLService from "../services/routeXL.service"
-import { FormButton } from "./formButton.component";
-import { LocationPicker } from "./formLocationPicker.component";
 
 
 const GenerateRouteForm = ({operations, setRoute}) => {
@@ -65,7 +63,8 @@ const GenerateRouteForm = ({operations, setRoute}) => {
     }, [])
 
     return(
-        <form onSubmit={onSubmit}>
+        <div></div>
+        /* <form onSubmit={onSubmit}>
             {location ? 
                 <div>
                     <LocationPicker
@@ -80,7 +79,7 @@ const GenerateRouteForm = ({operations, setRoute}) => {
                 type="submit"
                 disabled={isSubmitting}
             />
-        </form>
+        </form> */
     )
 }
 

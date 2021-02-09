@@ -4,9 +4,6 @@ import { FirebaseContext } from "../context/firebase.context";
 import OperationService from "../services/operation.service";
 import OperationTypeService from "../services/operationType.service";
 import ProductService from "../services/product.service";
-import { FormButton } from "./formButton.component";
-import { FormTextField } from "./formTextField.component";
-
 
 
 const SearchForm = (props) => {
@@ -45,7 +42,8 @@ const SearchForm = (props) => {
     }, [])
 
     return(
-        <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
+        <div></div>
+/*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
             <div>
                 <div>
                     <FormTextField 
@@ -63,7 +61,7 @@ const SearchForm = (props) => {
                     disabled={formState.isSubmitting}
                 />
             </div>
-        </form>
+        </form> */
     )
 }
 

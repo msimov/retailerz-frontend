@@ -4,15 +4,15 @@ import { SignOutButton } from "../components/signOutButton.component";
 import AuthUserContext from "../context/authUser.context";
 import { Menu } from 'semantic-ui-react'
 
-const Navigation = () => {
+const Navbar = () => {
 
     const {authUser} = useContext(AuthUserContext);
 
-    return(authUser ? <NavigationAuth/> : <NavigationNonAuth/>)
+    return(authUser ? <NavbarAuth/> : <NavbarNonAuth/>)
     
 };
 
-const NavigationAuth = () => (
+const NavbarAuth = () => (
     <Menu>
         <Menu.Item header as={Link} to='/home'>Retailerz</Menu.Item>
         <Menu.Item position='right'>
@@ -21,7 +21,7 @@ const NavigationAuth = () => (
     </Menu>
 );
 
-const NavigationNonAuth = () => (
+const NavbarNonAuth = () => (
     <Menu>
         <Menu.Item header as={Link} to='/'>Retailerz</Menu.Item>
         <Menu.Item
@@ -37,4 +37,4 @@ const NavigationNonAuth = () => (
     </Menu>
 );
 
-export {Navigation};
+export {Navbar};

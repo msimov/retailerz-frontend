@@ -3,8 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { FirebaseContext } from "../context/firebase.context";
 import MeasureUnitService from '../services/measureUnit.service';
-import { FormTextField } from './formTextField.component';
-import { FormButton } from './formButton.component';
 
 const MeasureUnitAddEditForm = ({match}) => {
     
@@ -51,7 +49,8 @@ const MeasureUnitAddEditForm = ({match}) => {
     }, [currentUser, userId, measureUnitId, setValue, isAddMode]);
 
     return(
-        <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
+        <div></div>
+/*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
             <h1>{isAddMode ? 'Add Measure Unit' : 'Edit Measure Unit'}</h1>
             <div>
                 <div>
@@ -70,7 +69,7 @@ const MeasureUnitAddEditForm = ({match}) => {
                     disabled={formState.isSubmitting}
                 />
             </div>
-        </form>
+        </form> */
     )
     
 }

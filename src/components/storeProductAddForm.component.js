@@ -1,13 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { FirebaseContext } from "../context/firebase.context";
 import ProductService from "../services/product.service";
 import StoreProductService from "../services/storeProduct.service";
-import { FormButton } from "./formButton.component";
-import { FormSelect } from "./formSelect.component";
-
-
+import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react'
 
 const StoreProductAddForm = ({match}) => {
     const history = useHistory();
@@ -16,49 +12,60 @@ const StoreProductAddForm = ({match}) => {
     const {userId, storeId} = match.params;
     const currentUser = firebase.getCurrentUser();
 
+    const [formData, setFormData] = useState({
+        storeProductProductId: null
+    });
     const [products, setProducts] = useState([]);
 
-    const { handleSubmit, reset, errors, formState, control} = useForm();
-
-    const onSubmit = (data) => {
+    const onSubmit = (event) => {
+        event.preventDefault();
 
         currentUser.getIdToken().then(idToken => {
-            StoreProductService.create(storeId, data, idToken).then(res => {
+            StoreProductService.create(storeId, formData, idToken).then(res => {
                 history.go(0)
             })
         })
     }
 
+    const onClick = () => {
+        history.goBack();
+    }
+
+    const onSelect = (event, {name, value}) => {
+        setFormData({...formData, [name]: value});
+    }
+
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.getAllByUserId(userId, idToken).then(res => {
-                setProducts(res.map(({productId, productName}) => ({key: productId, label: productName})));
+            ProductService.getAllByUserId(currentUser.uid, idToken).then(res => {
+                setProducts(res.map(({productId, productName}) => ({key: productId, value: productId, text: productName})));
             })
         })
     }, [currentUser, userId]);
 
     return(
-        <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <h1>{'Add Product To Store'}</h1>
-            <div>
-                <div>
-                    <FormSelect 
-                        name="storeProductProductId"
-                        label="Product"
+        <Grid.Column style={{ maxWidth: 450 }}>
+            <Header as='h2' color='teal' textAlign='center'>
+                Add product to store
+            </Header>
+            <Form size='large' onSubmit={onSubmit}>
+                <Segment stacked>
+                    <Form.Select 
+                        fluid
+                        placeholder='Product'
+                        name='userUserTypeId'
                         options={products}
-                        control={control}
+                        onChange={onSelect}
+                        value={formData.userUserTypeId}
                     />
-                    <div>{errors.location?.message}</div>
-                </div>
-            </div>
-            <div>
-                <FormButton 
-                    label="Save"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-        </form>
+                    <Button.Group fluid>
+                        <Button type='button' onClick={onClick}>Cancel</Button>
+                        <Button.Or/>
+                        <Button positive>Add</Button>
+                    </Button.Group>
+                </Segment>
+            </Form>
+        </Grid.Column>
     )
 }
 
