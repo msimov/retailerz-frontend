@@ -1,67 +1,39 @@
 import { useContext, useEffect, useState} from "react";
-import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { Form, Grid, Input } from "semantic-ui-react";
 import { FirebaseContext } from "../context/firebase.context";
-import OperationService from "../services/operation.service";
-import OperationTypeService from "../services/operationType.service";
-import ProductService from "../services/product.service";
 
 
-const SearchForm = (props) => {
+
+const SearchForm = ({setProducts}) => {
     const firebase = useContext(FirebaseContext);
-    const currentUser = firebase.getCurrentUser();
-    const {setProducts} = props
-    const [searchedProductOperation, setSearchedProductOperation] = useState(null);
+    const history = useHistory();
+    
+    const [formData, setFormData] = useState({
+        search: ''
+    })
 
-    const { control, handleSubmit, reset, errors, formState} = useForm();
-
-    const onSubmit = (data) => {
-        currentUser.getIdToken().then(idToken => {
-            ProductService.findByKeyword(data.search, idToken).then(res => {
-                const {productId} = res[0];
-                if(productId) {
-                    OperationService.create(
-                        currentUser.uid, 
-                        {
-                            operationProductId: productId,
-                            operationOperationTypeId: searchedProductOperation.operationTypeId
-                        },
-                        idToken
-                    )
-                }
-                
-                setProducts(res)
-            })
-
-        })
+    const onSubmit = (event) => {
+        event.preventDefault();
+        history.push('/search?text=' + formData.search)
     }
 
-    useEffect(() => {
-        OperationTypeService.getAll().then(res => {
-            setSearchedProductOperation(res.find(({operationTypeName}) => operationTypeName === "SEARCHED_PRODUCT"))
-        })
-    }, [])
+    const onChange = (event) => {
+        setFormData({
+            ...formData,
+            [event.target.name] : event.target.value
+        });
+    }
 
     return(
-        <div></div>
-/*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <div>
-                <div>
-                    <FormTextField 
-                        name="search"
-                        label="Search"
-                        control={control}
-                    />
-                    <div>{errors.name?.message}</div>
-                </div>
-            </div>
-            <div>
-                <FormButton 
-                    label="Search"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-        </form> */
+        <Form onSubmit={onSubmit}>
+            <Form.Input 
+                icon='search'
+                placeholder='Search...'
+                name='search'
+                onChange={onChange}
+            />
+        </Form>
     )
 }
 

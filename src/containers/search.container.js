@@ -1,17 +1,17 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { RecommendedProductsList } from "../components/recommendedProductsList.component";
 import { SearchForm } from "../components/searchForm.component";
 import { SearchList } from "../components/searchList.component";
 
-const Search = () => {
+const Search = ({match}) => {
 
     const [products, setProducts] = useState([]);
-
+    let query = new URLSearchParams(useLocation().search)
+    console.log(query.get('text'))
     return(
         <div>
-            <SearchForm setProducts={setProducts} />
             <SearchList products={products} />
-            <RecommendedProductsList />
         </div>
     )
         

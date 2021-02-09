@@ -1,11 +1,11 @@
 import request from '../commons/request.common';
 
 
-const findByKeyword = (keyword, userToken) => {
+const search = (search, userToken) => {
     return request({
         url: `products`,
         method: "GET",
-        params: {keyword},
+        params: {search},
         headers: {
             Authorization: `Bearer ${userToken}`
         }
@@ -75,7 +75,7 @@ const deleteByProductId = (productId, userToken) => {
 }
 
 const ProductService = {
-    findByKeyword, create, findByProductId, getAllByUserId, getAllRecommendedByUserId, updateByProductId, deleteByProductId
+    search, create, findByProductId, getAllByUserId, getAllRecommendedByUserId, updateByProductId, deleteByProductId
 }
 
 export default ProductService;

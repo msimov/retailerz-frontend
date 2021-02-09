@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { SignOutButton } from "../components/signOutButton.component";
 import AuthUserContext from "../context/authUser.context";
 import { Menu } from 'semantic-ui-react'
+import { SearchForm } from "./searchForm.component";
 
 const Navbar = () => {
 
@@ -15,9 +16,14 @@ const Navbar = () => {
 const NavbarAuth = () => (
     <Menu>
         <Menu.Item header as={Link} to='/home'>Retailerz</Menu.Item>
-        <Menu.Item position='right'>
-            <SignOutButton />
-        </Menu.Item>
+        <Menu.Menu position='right'>
+            <Menu.Item>
+                <SearchForm />
+            </Menu.Item>
+            <Menu.Item>
+                <SignOutButton />
+            </Menu.Item>
+        </Menu.Menu>
     </Menu>
 );
 

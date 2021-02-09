@@ -11,7 +11,6 @@ const RecommendedProductsList = () => {
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
             ProductService.getAllRecommendedByUserId(currentUser.uid, idToken).then(res => {
-                console.log(res);
                 setProducts(res);
             })
         })
