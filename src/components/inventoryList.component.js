@@ -14,6 +14,7 @@ const InventoryList = ({match}) => {
         currentUser.getIdToken().then(idToken => {
             OperationTypeService.getAll().then(res => {
                 OperationService.getInventory(userId, idToken).then(res => {
+                    console.log(res);
                     setInventory(res);
                 })
             })
@@ -24,8 +25,8 @@ const InventoryList = ({match}) => {
     return(
         <div>
             <h1>Inventory</h1>
-            {inventory && inventory.map(product =>
-                <div key={product.productId}>
+            {inventory && inventory.map((product, index) =>
+                <div key={index}>
                     {product.productName}
                     {product.storeLocation}
                     {product.productCount}
