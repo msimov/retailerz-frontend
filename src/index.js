@@ -8,11 +8,15 @@ import App from './containers/app.container';
 
 import FirebaseService from './services/firebase.service';
 import {FirebaseContext} from './context/firebase.context';
+import { GeocodeContext } from './context/geocode.context';
+import GeocodeService from './services/geocode.service';
 
 
 ReactDOM.render(
   <FirebaseContext.Provider value={new FirebaseService()}>
-    <App />
+    <GeocodeContext.Provider value={new GeocodeService()}>
+      <App />
+    </GeocodeContext.Provider>
   </FirebaseContext.Provider>,
   document.getElementById('root')
 );

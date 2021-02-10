@@ -4,10 +4,12 @@ import StoreService from '../services/store.service';
 import { FirebaseContext } from "../context/firebase.context";
 import { Button, Form, Grid, Header, Segment } from 'semantic-ui-react'
 import Map from './map.component';
+import { GeocodeContext } from '../context/geocode.context';
 
 const StoreAddEditForm = ({match}) => {
     
     const firebase = useContext(FirebaseContext);
+    const geocode = useContext(GeocodeContext);
     const history = useHistory();
 
     const {storeId} = match.params;
@@ -15,7 +17,8 @@ const StoreAddEditForm = ({match}) => {
     const currentUser = firebase.getCurrentUser();
     
     const [formData, setFormData] = useState({
-        storeLocation: '',
+        storeName: '',
+        storeAddress: '',
         storeLat: 42.698334,
         storeLng: 23.319941
     });
@@ -53,14 +56,16 @@ const StoreAddEditForm = ({match}) => {
     }
 
     const onPositionChange = ({lat, lng}) => {
-        setFormData({...formData, storeLat: lat, storeLng: lng})
+        geocode.fromLatLng(lat, lng).then(res => {
+            setFormData({...formData, storeAddress: res.results[0].formatted_address, storeLat: lat, storeLng: lng});
+        });
     }
 
     useEffect(() => {
         if(!isAddMode) {
             currentUser.getIdToken().then(idToken => {
                 StoreService.findByStoreId(storeId, idToken).then(res => {
-                    const fields = ['storeLocation', 'storeLat', 'storeLng'];
+                    const fields = ['storeName', 'storeAddress', 'storeLat', 'storeLng'];
                     let store = null; 
                     fields.forEach(field => {
                         store = {...store, [field]: res[field]}
@@ -82,13 +87,22 @@ const StoreAddEditForm = ({match}) => {
                         fluid
                         icon='user'
                         iconPosition='left'
-                        placeholder='Location'
-                        name='storeLocation'
+                        placeholder='Name'
+                        name='storeName'
                         onChange={onChange}
-                        value={formData.storeLocation}
+                        value={formData.storeName}
+                    />
+                    <Form.Input 
+                        fluid
+                        icon='user'
+                        iconPosition='left'
+                        placeholder='Address'
+                        name='storeAddress'
+                        onChange={onChange}
+                        value={formData.storeAddress}
                     />
                     <Form.Field>
-                        <Map position={{lat: formData.storeLat, lng: formData.storeLng}} setPosition={onPositionChange} />
+                        <Map position={{lat: formData.storeLat, lng: formData.storeLng}} setPosition={onPositionChange}/>
                     </Form.Field>
                     <Button.Group fluid>
                         <Button type='button' onClick={onClick}>Cancel</Button>

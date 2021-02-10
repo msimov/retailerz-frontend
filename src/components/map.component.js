@@ -1,6 +1,7 @@
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
-const Map = ({position, setPosition}) => {
+const Map = ({position, setPosition, draggable}) => {
+
 
     return(
         <LoadScript
@@ -10,10 +11,11 @@ const Map = ({position, setPosition}) => {
                 mapContainerStyle={{width: '100%', height: '400px'}}
                 zoom={10}
                 center={position}
-                onClick={(e) => setPosition(e.latLng.toJSON())}
+                onClick={(e) => setPosition && setPosition(e.latLng.toJSON())}
                 options={{
                     streetViewControl: false,
-                    mapTypeControl: false
+                    mapTypeControl: false,
+                    draggable: draggable,
                 }}
             >
                 <Marker 

@@ -69,7 +69,7 @@ const OperationAddEditForm = ({match}) => {
                 setProducts(res.map(({productId, productName}) => ({key: productId, value: productId, text: productName})));
             })
             StoreService.getAllByUserId(currentUser.uid, idToken).then(res => {
-                setStores(res.map(({storeId, storeLocation}) => ({key: storeId, value: storeId, text: storeLocation})));
+                setStores(res.map(({storeId, storeName}) => ({key: storeId, value: storeId, text: storeName})));
             })
         })
         OperationTypeService.getAll().then(res => {

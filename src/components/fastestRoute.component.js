@@ -7,7 +7,7 @@ const GenerateRouteForm = ({operations, setRoute}) => {
 
     let locations = operations.map(operation => {
         return {
-            address: operation.storeLocation,
+            address: operation.storeName,
             lat: operation.storeLat,
             lng: operation.storeLng
         }
@@ -56,7 +56,7 @@ const GenerateRouteForm = ({operations, setRoute}) => {
             <Form size='large' onSubmit={onSubmit}>
                 <Segment stacked>
                     <Form.Field>
-                        <Map position={{lat: formData.homeLat, lng: formData.homeLng}} setPosition={onPositionChange} />
+                        <Map position={{lat: formData.homeLat, lng: formData.homeLng}} setPosition={onPositionChange}/>
                     </Form.Field>
                     <Button positive>Generate</Button>
 

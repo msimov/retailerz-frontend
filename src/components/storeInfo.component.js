@@ -24,7 +24,7 @@ const StoreInfo = ({match}) => {
     return store ? ( 
         <div>
             {store.storeId}
-            {store.storeLocation}
+            {store.storeName}
             <Link to={`${url}/edit`}>Edit Store</Link>
             <Link to={`${url}/store-products`}>Products</Link>
         </div>

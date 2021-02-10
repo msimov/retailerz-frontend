@@ -51,7 +51,7 @@ const AddToCartForm = (props) => {
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
             StoreProductService.getAllByProductId(product.productId, idToken).then(res => {
-                setStores(res.map(({storeId, storeLocation}) => ({key: storeId, value: storeId, text: storeLocation})));
+                setStores(res.map(({storeId, storeName}) => ({key: storeId, value: storeId, text: storeName})));
             })
         })
         

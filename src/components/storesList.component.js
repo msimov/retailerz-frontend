@@ -1,24 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { formatURL } from '../commons/url.common';
 import StoreService from '../services/store.service';
 import { FirebaseContext } from "../context/firebase.context";
+import { Button, Card } from 'semantic-ui-react';
+import Map from './map.component';
 
 const StoresList = ({match}) => {
     const firebase = useContext(FirebaseContext);
-    const url = formatURL(match.url);
     
-    const {userId} = match.params;
-    const [stores, setStores] = useState(null);
     const currentUser = firebase.getCurrentUser();
+
+    const [stores, setStores] = useState(null);
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            StoreService.getAllByUserId(userId, idToken).then(res => {
+            StoreService.getAllByUserId(currentUser.uid, idToken).then(res => {
                 setStores(res);
             })
         })
-    }, [currentUser, userId]);
+    }, [currentUser]);
 
     const deleteStore = (storeId) => {
         setStores(stores.map(store => {
@@ -35,25 +35,32 @@ const StoresList = ({match}) => {
     }
 
     return(
-        <div>
-            <h1>Stores</h1>
-            <Link to={`${url}/add`}>Add Store</Link>
-          
-            {stores && stores.map(store =>
-                <div key={store.storeId}>
-                    <Link to={`${url}/${store.storeId}`}>{store.storeLocation}</Link>
-                    <Link to={`${url}/${store.storeId}/edit`}>Edit</Link>
-                    <button onClick={() => deleteStore(store.storeId)} disabled={store.isDeleting}>Delete</button>
-                </div>
-            )}
-            {!stores &&
-                <div>Loading...</div>
-            }
-            {stores && !stores.length &&
-                <div>No Stores To Display</div>
-            }
-
-        </div>
+        <Card.Group>
+            {stores && stores.map(store => (
+                <Card key={store.storeId}>
+                    <Card.Content>
+                        <Card.Header>{store.storeName}</Card.Header>
+                        <Card.Meta>{store.storeAddress}</Card.Meta>
+                        <Card.Description>
+                            <Map position={{lat: store.storeLat, lng: store.storeLng}} draggable={false}/>
+                        </Card.Description>
+                    </Card.Content>
+                    <Card.Content extra>
+                        <Button.Group fluid widths='2'>
+                            <Button basic as={Link} to={`/users/${currentUser.uid}/stores/${store.storeId}/edit`} color='green'>
+                                Edit
+                            </Button>
+                            <Button
+                                onClick={() => deleteStore(store.storeId)} disabled={store.isDeleting}
+                                basic color='red'
+                             >
+                                Delete
+                            </Button>
+                        </Button.Group>
+                    </Card.Content>
+                </Card>
+            ))}
+        </Card.Group>
     );
 }
 

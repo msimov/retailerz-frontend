@@ -28,7 +28,7 @@ const InventoryList = ({match}) => {
             {inventory && inventory.map((product, index) =>
                 <div key={index}>
                     {product.productName}
-                    {product.storeLocation}
+                    {product.storeName}
                     {product.productCount}
                 </div>
             )}

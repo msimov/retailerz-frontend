@@ -19,13 +19,13 @@ const UserInfo = ({match}) => {
     }, [currentUser]);
 
 
-    return user ? ( 
+    return ( 
         <Card>
             <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' wrapped ui={false} />
             <Card.Content>
-                <Card.Header>{user.userFirstName} {user.userLastName}</Card.Header>
+                <Card.Header>{ user && (user.userFirstName + ' ' + user.userLastName)}</Card.Header>
                 <Card.Meta>
-                    <span>{currentUser.email}</span>
+                    <span>{user && currentUser.email}</span>
                 </Card.Meta>
             </Card.Content>
             <Card.Content extra>
@@ -41,18 +41,6 @@ const UserInfo = ({match}) => {
                 </Link>
             </Card.Content>
         </Card>
-
-/*         <div>        
-            {user.userId}
-            {user.userFirstName}
-            {user.userLastName}
-            {user.userEmail}
-            <Link to={`${url}/edit`}>Edit Profile</Link>
-            <Link to={`${url}/change-password`}>Change Password</Link>
-        </div> */
-    )
-    : (
-        <div>Loading...</div>
     )
     
     
