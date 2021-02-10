@@ -1,23 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { formatURL } from '../commons/url.common';
 import ProductService from '../services/product.service';
 import { FirebaseContext } from "../context/firebase.context";
+import { Button, Card, Menu } from 'semantic-ui-react';
 
 const ProductsList = ({match}) => {
     const firebase = useContext(FirebaseContext);
-    const url = formatURL(match.url);
-    const {userId} = match.params;
     const [products, setProducts] = useState(null);
     const currentUser = firebase.getCurrentUser();
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            ProductService.getAllByUserId(userId, idToken).then(res => {
+            ProductService.getAllByUserId(currentUser.uid, idToken).then(res => {
                 setProducts(res);
             })
         })
-    }, [currentUser, userId]);
+    }, [currentUser]);
 
     const deleteProduct = (productId) => {
         setProducts(products.map(product => {
@@ -34,30 +32,35 @@ const ProductsList = ({match}) => {
     }
 
     return(
-        <div>
-            <h1>Products</h1>
-            <Link to={`${url}/add`}>Add Product</Link>
-            {products && products.map(product =>
-                <div key={product.productId}>
-                    <Link to={`${url}/${product.productId}`}>{product.productName}</Link>
-                    {product.productDescription}
-                    {product.productMeasureUnitId}
-                    {product.productDeliveryPrice}
-                    {product.productRetailPrice}
-                    {product.productGroupId}
-                    {product.productBarcode}
-                    {product.productTaxGroupId}
-                    <Link to={`${url}/${product.productId}/edit`}>Edit</Link>
-                    <button onClick={() => deleteProduct(product.productId)} disabled={product.isDeleting}>Delete</button>
-                </div>
-            )}
-            {!products &&
-                <div>Loading...</div>
-            }
-            {products && !products.length &&
-                <div>No Products To Display</div>
-            }
-        </div>
+        <Card.Group centered>
+            {products && products.map(product => (
+                <Card 
+                    key={product.productId}
+                >
+                    <Card.Content
+                        href={`/users/${product.productUserId}/products/${product.productId}`}
+                    >
+                        <Card.Header>{product.productName}</Card.Header>
+                        <Card.Meta>{product.productRetailPrice}$</Card.Meta>
+                        <Card.Description>{product.productDescription}</Card.Description>
+                    </Card.Content>
+                    <Menu className='ui bottom attached' widths='2'>
+                        <Menu.Item
+                            as={Link}
+                            to={`/users/${currentUser.uid}/products/${product.productId}/edit`}
+                        >
+                            Edit
+                        </Menu.Item>
+                        <Menu.Item 
+                            as={Button}
+                            onClick={() => deleteProduct(product.productId)} disabled={product.isDeleting}
+                        >
+                            Delete
+                        </Menu.Item>
+                    </Menu>
+                </Card>
+            ))}
+        </Card.Group>
     );
 }
 

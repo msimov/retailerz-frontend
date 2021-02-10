@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import StoreService from '../services/store.service';
 import { FirebaseContext } from "../context/firebase.context";
-import { Button, Card } from 'semantic-ui-react';
+import { Button, Card, Menu } from 'semantic-ui-react';
 import Map from './map.component';
 
 const StoresList = ({match}) => {
@@ -35,9 +35,11 @@ const StoresList = ({match}) => {
     }
 
     return(
-        <Card.Group>
+        <Card.Group centered>
             {stores && stores.map(store => (
-                <Card key={store.storeId}>
+                <Card 
+                    key={store.storeId}
+                >
                     <Card.Content>
                         <Card.Header>{store.storeName}</Card.Header>
                         <Card.Meta>{store.storeAddress}</Card.Meta>
@@ -45,19 +47,20 @@ const StoresList = ({match}) => {
                             <Map position={{lat: store.storeLat, lng: store.storeLng}} draggable={false}/>
                         </Card.Description>
                     </Card.Content>
-                    <Card.Content extra>
-                        <Button.Group fluid widths='2'>
-                            <Button basic as={Link} to={`/users/${currentUser.uid}/stores/${store.storeId}/edit`} color='green'>
-                                Edit
-                            </Button>
-                            <Button
-                                onClick={() => deleteStore(store.storeId)} disabled={store.isDeleting}
-                                basic color='red'
-                             >
-                                Delete
-                            </Button>
-                        </Button.Group>
-                    </Card.Content>
+                    <Menu className='ui bottom attached' widths='2'>
+                        <Menu.Item
+                            as={Link}
+                            to={`/users/${currentUser.uid}/stores/${store.storeId}/edit`}
+                        >
+                            Edit
+                        </Menu.Item>
+                        <Menu.Item 
+                            as={Button}
+                            onClick={() => deleteStore(store.storeId)} disabled={store.isDeleting}
+                        >
+                            Delete
+                        </Menu.Item>
+                    </Menu>
                 </Card>
             ))}
         </Card.Group>

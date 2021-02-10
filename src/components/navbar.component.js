@@ -14,7 +14,7 @@ const Navbar = () => {
 };
 
 const NavbarAuth = () => (
-    <Menu>
+    <Menu stackable>
         <Menu.Item header as={Link} to='/home'>Retailerz</Menu.Item>
         <Menu.Menu position='right'>
             <Menu.Item>
@@ -28,7 +28,7 @@ const NavbarAuth = () => (
 );
 
 const NavbarNonAuth = () => (
-    <Menu>
+    <Menu stackable>
         <Menu.Item header as={Link} to='/'>Retailerz</Menu.Item>
         <Menu.Item
             as={Link}
