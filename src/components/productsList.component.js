@@ -2,9 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import ProductService from '../services/product.service';
 import { FirebaseContext } from "../context/firebase.context";
-import { Button, Card, Menu } from 'semantic-ui-react';
+import { Button, Card, Container, Grid, Menu } from 'semantic-ui-react';
 
-const ProductsList = ({match}) => {
+const ProductsList = () => {
     const firebase = useContext(FirebaseContext);
     const [products, setProducts] = useState(null);
     const currentUser = firebase.getCurrentUser();
@@ -32,35 +32,50 @@ const ProductsList = ({match}) => {
     }
 
     return(
-        <Card.Group centered>
-            {products && products.map(product => (
-                <Card 
-                    key={product.productId}
-                >
-                    <Card.Content
-                        href={`/users/${product.productUserId}/products/${product.productId}`}
-                    >
-                        <Card.Header>{product.productName}</Card.Header>
-                        <Card.Meta>{product.productRetailPrice}$</Card.Meta>
-                        <Card.Description>{product.productDescription}</Card.Description>
-                    </Card.Content>
-                    <Menu className='ui bottom attached' widths='2'>
-                        <Menu.Item
-                            as={Link}
-                            to={`/users/${currentUser.uid}/products/${product.productId}/edit`}
-                        >
-                            Edit
-                        </Menu.Item>
+        <Container>
+            <Grid divided="vertically">
+                <Grid.Row columns={1}>
+                    <Menu>
+                        <Menu.Item header>Products</Menu.Item>
                         <Menu.Item 
-                            as={Button}
-                            onClick={() => deleteProduct(product.productId)} disabled={product.isDeleting}
+                            as={Link} 
+                            to={`/users/${currentUser.uid}/products/add`}
                         >
-                            Delete
+                            Add New Product
                         </Menu.Item>
                     </Menu>
-                </Card>
-            ))}
-        </Card.Group>
+                </Grid.Row>
+                <Grid.Row columns={1}>
+                    <Card.Group centered>
+                        {products && products.map(product => (
+                            <Card key={product.productId}>
+                                <Card.Content
+                                    href={`/users/${currentUser.uid}/products/${product.productId}`}
+                                >
+                                    <Card.Header>{product.productName}</Card.Header>
+                                    <Card.Meta>{product.productRetailPrice}$</Card.Meta>
+                                    <Card.Description>{product.productDescription}</Card.Description>
+                                </Card.Content>
+                                <Menu className='ui bottom attached' widths='2'>
+                                    <Menu.Item
+                                        as={Link}
+                                        to={`/users/${currentUser.uid}/products/${product.productId}/edit`}
+                                    >
+                                        Edit
+                                    </Menu.Item>
+                                    <Menu.Item 
+                                        as={Button}
+                                        onClick={() => deleteProduct(product.productId)} disabled={product.isDeleting}
+                                    >
+                                        Delete
+                                    </Menu.Item>
+                                </Menu>
+                            </Card>
+                        ))}
+                    </Card.Group>
+                </Grid.Row>
+            </Grid>
+        </Container>
     );
 }
 

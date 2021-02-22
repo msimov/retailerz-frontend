@@ -1,24 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { formatURL } from '../commons/url.common';
 import MeasureUnitService from '../services/measureUnit.service';
 import { FirebaseContext } from "../context/firebase.context";
+import { Button, Card, Container, Grid, Menu } from 'semantic-ui-react';
 
-const MeasureUnitsList = ({match}) => {
+const MeasureUnitsList = () => {
     const firebase = useContext(FirebaseContext);
-    const url = formatURL(match.url);
     
-    const {userId} = match.params;
     const [measureUnits, setMeasureUnits] = useState(null);
     const currentUser = firebase.getCurrentUser();
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
-            MeasureUnitService.getAllByUserId(userId, idToken).then(res => {
+            MeasureUnitService.getAllByUserId(currentUser.uid, idToken).then(res => {
                 setMeasureUnits(res);
             })
         })
-    }, [currentUser, userId]);
+    }, [currentUser]);
 
     const deleteMeasureUnit = (measureUnitId) => {
         setMeasureUnits(measureUnits.map(measureUnit => {
@@ -35,25 +33,46 @@ const MeasureUnitsList = ({match}) => {
     }
 
     return(
-        <div>
-            <h1>Measure Units</h1>
-            <Link to={`${url}/add`}>Add Measure Unit</Link>
-          
-            {measureUnits && measureUnits.map(measureUnit =>
-                <div key={measureUnit.measureUnitId}>
-                    {measureUnit.measureUnitName}
-                    <Link to={`${url}/${measureUnit.measureUnitId}/edit`}>Edit</Link>
-                    <button onClick={() => deleteMeasureUnit(measureUnit.measureUnitId)} disabled={measureUnit.isDeleting}>Delete</button>
-                </div>
-            )}
-            {!measureUnits &&
-                <div>Loading...</div>
-            }
-            {measureUnits && !measureUnits.length &&
-                <div>No Measure Units To Display</div>
-            }
-
-        </div>
+        <Container>
+            <Grid divided="vertically">
+                <Grid.Row columns={1}>
+                    <Menu>
+                        <Menu.Item header>Measure Units</Menu.Item>
+                        <Menu.Item 
+                            as={Link} 
+                            to={`/users/${currentUser.uid}/measure-units/add`}
+                        >
+                            Add New Measure Unit
+                        </Menu.Item>
+                    </Menu>
+                </Grid.Row>
+                <Grid.Row columns={1}>
+                    <Card.Group centered>
+                        {measureUnits && measureUnits.map(measureUnit => (
+                            <Card key={measureUnit.measureUnitId}>
+                                <Card.Content>
+                                    <Card.Header>{measureUnit.measureUnitName}</Card.Header>
+                                </Card.Content>
+                                <Menu className='ui bottom attached' widths='2'>
+                                    <Menu.Item
+                                        as={Link}
+                                        to={`/users/${currentUser.uid}/measure-units/${measureUnit.measureUnitId}/edit`}
+                                    >
+                                        Edit
+                                    </Menu.Item>
+                                    <Menu.Item 
+                                        as={Button}
+                                        onClick={() => deleteMeasureUnit(measureUnit.measureUnitId)} disabled={measureUnit.isDeleting}
+                                    >
+                                        Delete
+                                    </Menu.Item>
+                                </Menu>
+                            </Card>
+                        ))}
+                    </Card.Group>
+                </Grid.Row>
+            </Grid>
+        </Container>
     );
 }
 
