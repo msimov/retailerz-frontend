@@ -69,23 +69,27 @@ const ProductAddEditForm = ({match}) => {
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
             GroupService.getAllByUserId(currentUser.uid, idToken).then(res => {
-                setGroups(res.map(({groupId, groupName}) => ({key: groupId, value: groupId, text: groupName})));
+                setGroups(res.map(({groupId, groupName}) => ({
+                    key: groupId,
+                    value: groupId,
+                    text: groupName
+                })));
             });
             
             MeasureUnitService.getAllByUserId(currentUser.uid, idToken).then(res => {
                 setMeasureUnits(res.map(({measureUnitId, measureUnitName}) => ({key: measureUnitId, value: measureUnitId, text: measureUnitName})));
             });
 
-            if(!isAddMode) {
-                ProductService.findByProductId(productId, idToken).then(res => {
-                    const fields = ['productName', 'productDescription', 'productGroupId', 'productBarcode', 'productMeasureUnitId', 'productTaxGroupId', 'productRetailPrice', 'productDeliveryPrice']
-                    let product = null; 
-                    fields.forEach(field => {
-                        product = {...product, [field]: res[field]}
-                    });
-                    setFormData(product)
-                })
-            }
+if(!isAddMode) {
+    ProductService.findByProductId(productId, idToken).then(res => {
+        const fields = ['productName', 'productDescription', 'productGroupId', 'productBarcode', 'productMeasureUnitId', 'productTaxGroupId', 'productRetailPrice', 'productDeliveryPrice']
+        let product = null; 
+        fields.forEach(field => {
+            product = {...product, [field]: res[field]}
+        });
+        setFormData(product)
+    })
+}
         })
         TaxGroupService.getAll().then(res => {
             setTaxGroups(res.map(({taxGroupId, taxGroupPercentage}) => ({key: taxGroupId, value: taxGroupId, text: taxGroupPercentage + "%"})));

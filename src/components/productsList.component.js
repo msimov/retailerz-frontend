@@ -26,7 +26,7 @@ const ProductsList = ({match}) => {
         }));
         currentUser.getIdToken().then(idToken => {
             ProductService.deleteByProductId(productId, idToken).then(() => {
-                setProducts(products => products.filter(product => product.productId !== productId));
+                setProducts(products => products.filter(product => (product.productId !== productId)));
             });
         })
     }
