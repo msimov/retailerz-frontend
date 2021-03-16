@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { Container, Grid, Image } from "semantic-ui-react";
 import { FirebaseContext } from "../context/firebase.context";
 
 const CustomerLinks = () => {
@@ -7,11 +8,16 @@ const CustomerLinks = () => {
     const currentUser = firebase.getCurrentUser();
     
     return(
-        <div>
-            <Link to={`/users/${currentUser.uid}`}>My Profile</Link>
-            <Link to={`/users/${currentUser.uid}/cart`}>My Cart</Link>
-            <Link to={`/search`}>Search</Link>
-        </div>
+        <Container>
+            <Grid doubling columns={2} centered>
+                <Grid.Column>
+                    <Image src='https://react.semantic-ui.com/images/wireframe/image.png' href='/profile'/>
+                </Grid.Column>
+                <Grid.Column>
+                    <Image src='https://react.semantic-ui.com/images/wireframe/image.png' href='/cart'/>
+                </Grid.Column>
+            </Grid>
+        </Container>
     );
 }
 

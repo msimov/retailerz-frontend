@@ -39,7 +39,7 @@ const GroupsList = () => {
                         <Menu.Item header>Groups</Menu.Item>
                         <Menu.Item
                             as={Link} 
-                            to={`/users/${currentUser.uid}/groups/add`}
+                            to={`/groups/add`}
                         >
                             Add New Group
                         </Menu.Item>
@@ -55,7 +55,7 @@ const GroupsList = () => {
                                 <Menu className='ui bottom attached' widths='2'>
                                     <Menu.Item
                                         as={Link}
-                                        to={`/users/${currentUser.uid}/groups/${group.groupId}/edit`}
+                                        to={`/groups/${group.groupId}/edit`}
                                     >
                                         Edit
                                     </Menu.Item>

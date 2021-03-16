@@ -42,7 +42,7 @@ const StoresList = () => {
                         <Menu.Item header>Stores</Menu.Item>
                         <Menu.Item 
                             as={Link} 
-                            to={`/users/${currentUser.uid}/stores/add`}
+                            to={`/stores/add`}
                         >
                             Add New Store
                         </Menu.Item>
@@ -55,9 +55,7 @@ const StoresList = () => {
                                 key={store.storeId}
                             >
                                 <Card.Content>
-                                    <Card.Header
-                                        href={`/users/${currentUser.uid}/stores/${store.storeId}`}
-                                    >
+                                    <Card.Header>
                                         {store.storeName}
                                     </Card.Header>
                                     <Card.Meta>{store.storeAddress}</Card.Meta>
@@ -65,12 +63,18 @@ const StoresList = () => {
                                         <Map position={{lat: store.storeLat, lng: store.storeLng}} draggable={false}/>
                                     </Card.Description>
                                 </Card.Content>
-                                <Menu className='ui bottom attached' widths='2'>
+                                <Menu className='ui bottom attached' widths='3'>
                                     <Menu.Item
                                         as={Link}
-                                        to={`/users/${currentUser.uid}/stores/${store.storeId}/edit`}
+                                        to={`/stores/${store.storeId}/edit`}
                                     >
                                         Edit
+                                    </Menu.Item>
+                                    <Menu.Item
+                                        as={Link}
+                                        to={`/stores/${store.storeId}/store-products`}
+                                    >
+                                        Products
                                     </Menu.Item>
                                     <Menu.Item 
                                         as={Button}

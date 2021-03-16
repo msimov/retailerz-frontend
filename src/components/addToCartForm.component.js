@@ -79,34 +79,6 @@ const AddToCartForm = (props) => {
             />
             <Button positive>Add</Button>
         </Form>
-/*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <div>
-                <div>
-                    <FormTextField 
-                        name="operationCount"
-                        label="Count"
-                        control={control}
-                    />
-                    <div>{errors.name?.message}</div>
-                </div>
-            </div>
-            <div>
-                <FormSelect 
-                    name="operationStoreId"
-                    label="Store"
-                    options={stores}
-                    control={control}
-                />
-                <div>{errors.store?.message}</div>
-            </div>
-            <div>
-                <FormButton 
-                    label="Add To Cart"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-        </form> */
         
     )
 }

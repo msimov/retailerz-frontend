@@ -11,6 +11,14 @@ import * as CONDITIONS from "../constants/conditions.constants";
 import Search from "./search.container";
 import { Navbar } from "../components/navbar.component";
 import ResetPassword from "./resetPassword.container";
+import Groups from "./groups.container";
+import MeasureUnits from "./measureUnits.container";
+import Operations from "./operations.container";
+import Products from "./products.container";
+import Stores from "./stores.container";
+import Cart from "./cart.container";
+import Inventory from "./inventory.container";
+import { Grid } from "semantic-ui-react";
 
 const App = () => {
 
@@ -40,6 +48,27 @@ const App = () => {
                 <Route path={`/users`} component={
                     withProtectedRoute([CONDITIONS.USER_NOT_NULL])(Users)
                 }/>
+                <Route path={`/groups`} component={
+                    withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Groups)
+                } />
+                <Route path={`/measure-units`} component={
+                    withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(MeasureUnits)
+                } />
+                <Route path={`/operations`} component={
+                    withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Operations)
+                } />
+                <Route path={`/products`} component={
+                    withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Products)
+                } />
+                <Route path={`/stores`} component={
+                    withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Stores)
+                } />
+                <Route path={`/cart`} component={
+                    withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Cart)
+                } />
+                <Route path={`/inventory`} component={
+                    withProtectedRoute([CONDITIONS.USER_NOT_NULL, CONDITIONS.USER_HAS_DATA])(Inventory)
+                } />
             </div>
         </Router>
     )

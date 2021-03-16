@@ -39,7 +39,7 @@ const ProductsList = () => {
                         <Menu.Item header>Products</Menu.Item>
                         <Menu.Item 
                             as={Link} 
-                            to={`/users/${currentUser.uid}/products/add`}
+                            to={`/products/add`}
                         >
                             Add New Product
                         </Menu.Item>
@@ -50,7 +50,7 @@ const ProductsList = () => {
                         {products && products.map(product => (
                             <Card key={product.productId}>
                                 <Card.Content
-                                    href={`/users/${currentUser.uid}/products/${product.productId}`}
+                                    href={`/products/${product.productId}`}
                                 >
                                     <Card.Header>{product.productName}</Card.Header>
                                     <Card.Meta>{product.productRetailPrice}$</Card.Meta>
@@ -59,7 +59,7 @@ const ProductsList = () => {
                                 <Menu className='ui bottom attached' widths='2'>
                                     <Menu.Item
                                         as={Link}
-                                        to={`/users/${currentUser.uid}/products/${product.productId}/edit`}
+                                        to={`/products/${product.productId}/edit`}
                                     >
                                         Edit
                                     </Menu.Item>

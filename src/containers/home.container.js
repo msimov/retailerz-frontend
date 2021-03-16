@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Grid } from "semantic-ui-react";
 import { CustomerLinks } from "../components/customerLinks.component";
 import { RetailerLinks } from "../components/retailerLinks.component";
 import AuthUserContext from "../context/authUser.context";
@@ -25,14 +26,13 @@ const Home = () => {
     }, [])
     
     return(
-        <div>
-            <h1>Home Page</h1>
+        <Grid padded>
             {
                 authUser.data.userTypeId === retailerType ? <RetailerLinks /> : 
                 authUser.data.userTypeId === customerType ? <CustomerLinks /> : 
                 null
             }
-        </div>
+        </Grid>
     )
 };
 

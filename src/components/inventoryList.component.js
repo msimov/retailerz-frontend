@@ -32,7 +32,7 @@ const InventoryList = ({match}) => {
                         <Menu.Item header>Inventory</Menu.Item>
                         <Menu.Item 
                             as={Link}
-                            to={`/users/${currentUser.uid}/operations/add`}
+                            to={`/operations/add`}
                         >
                             Manage Inventory
                         </Menu.Item>
@@ -63,23 +63,6 @@ const InventoryList = ({match}) => {
                 </Grid.Row>
             </Grid>
         </Container>
-       /*  <div>
-            <h1>Inventory</h1>
-            {inventory && inventory.map((product, index) =>
-                <div key={index}>
-                    {product.productName}
-                    {product.storeName}
-                    {product.productCount}
-                </div>
-            )}
-            {!inventory &&
-                <div>Loading...</div>
-            }
-            {inventory && !inventory.length &&
-                <div>No items in inventory.</div>
-            }
-
-        </div> */
     );
 }
 

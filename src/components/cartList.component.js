@@ -6,23 +6,22 @@ import { GenerateRouteForm } from './fastestRoute.component';
 
 const CartList = ({match}) => {
     const firebase = useContext(FirebaseContext);
+    const currentUser = firebase.getCurrentUser();
     
-    const {userId} = match.params;
     const [operations, setOperations] = useState(null);
     const [route, setRoute] = useState(null);
-    const currentUser = firebase.getCurrentUser();
     
 
     useEffect(() => {
         currentUser.getIdToken().then(idToken => {
             OperationTypeService.getAll().then(res => {
                 const addToCartOperation = res.find(({operationTypeName}) => operationTypeName === "ADD_TO_CART")
-                OperationService.getAllByUserIdAndOperationTypeId(userId, addToCartOperation.operationTypeId, idToken).then(res => {
+                OperationService.getAllByUserIdAndOperationTypeId(currentUser.uid, addToCartOperation.operationTypeId, idToken).then(res => {
                     setOperations(res);
                 })
             })
         })
-    }, [currentUser, userId]);
+    }, [currentUser]);
 
     const removeFromCart = (operationId) => {
         setOperations(operations.map(operation => {

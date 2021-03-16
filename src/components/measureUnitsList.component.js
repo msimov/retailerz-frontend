@@ -40,7 +40,7 @@ const MeasureUnitsList = () => {
                         <Menu.Item header>Measure Units</Menu.Item>
                         <Menu.Item 
                             as={Link} 
-                            to={`/users/${currentUser.uid}/measure-units/add`}
+                            to={`/measure-units/add`}
                         >
                             Add New Measure Unit
                         </Menu.Item>
@@ -56,7 +56,7 @@ const MeasureUnitsList = () => {
                                 <Menu className='ui bottom attached' widths='2'>
                                     <Menu.Item
                                         as={Link}
-                                        to={`/users/${currentUser.uid}/measure-units/${measureUnit.measureUnitId}/edit`}
+                                        to={`/measure-units/${measureUnit.measureUnitId}/edit`}
                                     >
                                         Edit
                                     </Menu.Item>

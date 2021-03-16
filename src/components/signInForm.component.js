@@ -50,7 +50,6 @@ const SignInForm = () => {
                         placeholder='E-mail address'
                         name="email"
                         onChange={onChange}
-                    
                     />
                     <Form.Input
                         label={

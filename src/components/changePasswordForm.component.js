@@ -68,37 +68,6 @@ const ChangePasswordForm = () => {
             </Form>
             { error && <Message error>{ error.message }</Message> }
         </Grid.Column>
-/*         <form onSubmit={handleSubmit(onSubmit)} onReset={reset}>
-            <h1>{'Change Password'}</h1>
-            <div>
-                <div>
-                    <FormTextField 
-                        name="password"
-                        label="Password"
-                        type="password"
-                        control={control}
-                    />
-                    <div>{errors.password?.message}</div>
-                </div>
-                <div>
-                    <FormTextField 
-                        name="confirmPassword"
-                        label="Confirm Password"
-                        type="password"
-                        control={control}
-                    />
-                    <div>{errors.confirmPassword?.message}</div>
-                </div>
-            </div>
-            <div>
-                <FormButton 
-                    label="Save"
-                    type="submit"
-                    disabled={formState.isSubmitting}
-                />
-            </div>
-            { error && <p>{ error.message }</p> }
-        </form> */
     );
 
 } 

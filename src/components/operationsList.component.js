@@ -41,7 +41,7 @@ const OperationsList = () => {
                         <Menu.Item header>Operations</Menu.Item>
                         <Menu.Item 
                             as={Link} 
-                            to={`/users/${currentUser.uid}/operations/add`}
+                            to={`/operations/add`}
                         >
                             Add New Operation
                         </Menu.Item>
@@ -74,7 +74,7 @@ const OperationsList = () => {
                                         <Menu className='ui bottom attached' widths='2'>
                                             <Menu.Item
                                                 as={Link}
-                                                to={`/users/${operation.operationUserId}/operations/${operation.operationId}/edit`}
+                                                to={`/operations/${operation.operationId}/edit`}
                                             >
                                                 Edit
                                             </Menu.Item>

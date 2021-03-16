@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { formatURL } from '../commons/url.common';
+import { Button, Card, Container, Grid, Menu } from 'semantic-ui-react';
 import { FirebaseContext } from "../context/firebase.context";
 import StoreProductService from '../services/storeProduct.service';
 
 const StoreProductsList = ({match}) => {
     const firebase = useContext(FirebaseContext);
-    const url = formatURL(match.url);
     
-    const {userId, storeId} = match.params;
+    const {storeId} = match.params;
     const [storeProducts, setStoreProducts] = useState(null);
     const currentUser = firebase.getCurrentUser();
 
@@ -18,7 +17,7 @@ const StoreProductsList = ({match}) => {
                 setStoreProducts(res);
             })
         })
-    }, [currentUser, userId, storeId]);
+    }, [currentUser, storeId]);
 
     const deleteStoreProduct = (storeProductProductId) => {
         setStoreProducts(storeProducts.map(storeProduct => {
@@ -35,25 +34,44 @@ const StoreProductsList = ({match}) => {
     }
 
     return(
-        <div>
-            <h1>Store Products</h1>
-            <Link to={`${url}/add`}>Add Store Product</Link>
-          
-            {storeProducts && storeProducts.map(storeProduct =>
-                <div key={storeProduct.storeProductId}>
-                    <Link to={`/users/${userId}/stores/${storeProduct.storeProductStoreId}`}>{storeProduct.storeProductStoreId}</Link>
-                    <Link to={`/users/${userId}/products/${storeProduct.storeProductProductId}`}>{storeProduct.storeProductProductId}</Link>
-                    <button onClick={() => deleteStoreProduct(storeProduct.storeProductProductId)} disabled={storeProduct.isDeleting}>Delete</button>
-                </div>
-            )}
-            {!storeProducts &&
-                <div>Loading...</div>
-            }
-            {storeProducts && !storeProducts.length &&
-                <div>No Store Products To Display</div>
-            }
-
-        </div>
+        <Container>
+            <Grid divided="vertically">
+                <Grid.Row columns={1}>
+                    <Menu>
+                        <Menu.Item header>Store Products</Menu.Item>
+                        <Menu.Item 
+                            as={Link} 
+                            to={`/stores/${storeId}/store-products/add`}
+                        >
+                            Add Product To Store
+                        </Menu.Item>
+                    </Menu>
+                </Grid.Row>
+                <Grid.Row columns={1}>
+                    <Card.Group centered>
+                        {storeProducts && storeProducts.map(storeProduct => (
+                            <Card key={storeProduct.productId}>
+                                <Card.Content
+                                    href={`/products/${storeProduct.productId}`}
+                                >
+                                    <Card.Header>{storeProduct.productName}</Card.Header>
+                                    <Card.Meta>{storeProduct.productRetailPrice}$</Card.Meta>
+                                    <Card.Description>{storeProduct.productDescription}</Card.Description>
+                                </Card.Content>
+                                <Menu className='ui bottom attached' widths='2'>
+                                    <Menu.Item 
+                                        as={Button}
+                                        onClick={() => deleteStoreProduct(storeProduct.storeProductProductId)} disabled={storeProduct.isDeleting}
+                                    >
+                                        Remove From Store
+                                    </Menu.Item>
+                                </Menu>
+                            </Card>
+                        ))}
+                    </Card.Group>
+                </Grid.Row>
+            </Grid>
+        </Container>
     );
 }
 
