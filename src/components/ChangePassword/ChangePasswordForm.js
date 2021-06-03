@@ -24,7 +24,7 @@ const ChangePasswordForm = () => {
         history.push("/profile");
       })
       .catch((error) => {
-        setError(error);
+        setError(error.message);
       });
   };
 

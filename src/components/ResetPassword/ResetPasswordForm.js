@@ -23,7 +23,7 @@ const ResetPasswordForm = () => {
         history.push("/sign-in");
       })
       .catch((error) => {
-        setError(error);
+        setError(error.message);
       });
   };
 

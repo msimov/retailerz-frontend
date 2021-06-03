@@ -33,7 +33,7 @@ const SignUpForm = () => {
         history.push("/profile/add");
       })
       .catch((error) => {
-        setError(error);
+        setError(error.message);
       });
   };
 
