@@ -13,14 +13,17 @@ const ProfileDropdown = () => {
           My Profile
         </Dropdown.Item>
         {authUser.data.userUserTypeId === 1 ? (
-          <Dropdown.Item as={Link} to="/cart">
-            My Cart
-          </Dropdown.Item>
-        ) : null}
-        {authUser.data.userUserTypeId === 1 ? (
-          <Dropdown.Item as={Link} to="/recommended-products">
-            My Recommended Products
-          </Dropdown.Item>
+          <>
+            <Dropdown.Item as={Link} to="/cart">
+              My Cart
+            </Dropdown.Item>
+            <Dropdown.Item as={Link} to="/recommended-products">
+              My Recommended Products
+            </Dropdown.Item>
+            <Dropdown.Item as={Link} to="/favorite-products">
+              My Favorite Products
+            </Dropdown.Item>
+          </>
         ) : null}
         <Dropdown.Divider />
         <Dropdown.Item as={Link} to="/profile/edit">

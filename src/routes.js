@@ -25,6 +25,7 @@ import { AddEditStore, Stores } from "./pages/Store";
 import { AddStoreProduct, StoreProducts } from "./pages/StoreProduct";
 import { TotalProfit } from "./pages/TotalProfit";
 import { MostSearchedProducts } from "./pages/MostSearchedProducts";
+import { FavoriteProducts } from "./pages/FavoriteProducts";
 
 const routes = [
   {
@@ -46,6 +47,11 @@ const routes = [
   {
     path: "/recommended-products",
     component: RecommendedProducts,
+    conditions: [USER_NOT_NULL, USER_HAS_DATA, USER_TYPE_CUSTOMER],
+  },
+  {
+    path: "/favorite-products",
+    component: FavoriteProducts,
     conditions: [USER_NOT_NULL, USER_HAS_DATA, USER_TYPE_CUSTOMER],
   },
   {
