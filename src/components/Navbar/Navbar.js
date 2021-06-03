@@ -17,26 +17,24 @@ const Navbar = () => {
       {authUser ? (
         authUser.data ? (
           authUser.data.userUserTypeId === 2 ? (
-            <Menu.Menu>
+            <>
               <NavigationDropdown />
               <ReportsDropdown />
               <ProfileDropdown />
-            </Menu.Menu>
+            </>
           ) : (
-            <Menu>
-              <ProfileDropdown />
-            </Menu>
+            <ProfileDropdown />
           )
         ) : null
       ) : (
-        <Menu.Menu>
+        <>
           <Menu.Item as={Link} to="/sign-in">
             Sign In
           </Menu.Item>{" "}
           <Menu.Item as={Link} to="/sign-up">
             Sign Up
           </Menu.Item>
-        </Menu.Menu>
+        </>
       )}
       {authUser && authUser.data && <SearchMenu />}
     </Menu>
