@@ -2,7 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, Menu } from "semantic-ui-react";
 import { AuthUserContext } from "../../context";
-import { ReportService } from "../../services";
+import {
+  ActivityService,
+  ActivityTypeService,
+  ReportService,
+} from "../../services";
 import { ErrorMessage } from "../Error";
 import { ReportContent } from "../Report";
 
@@ -117,6 +121,95 @@ const OwnerProductCard = ({
 
 const NonOwnerProductCard = ({ product }) => {
   const { authUser } = useContext(AuthUserContext);
+  const [error, setError] = useState(null);
+  const [addToFavoritesActivity, setAddToFavoritesActivity] = useState(null);
+  const [favoriteProductActivity, setFavoriteProductActivity] = useState(null);
+
+  useEffect(() => {
+    ActivityTypeService.getAll()
+      .then((res) => {
+        setAddToFavoritesActivity(
+          res.find(
+            ({ activityTypeName }) => activityTypeName === "ADD_TO_FAVORITES"
+          )
+        );
+      })
+      .catch((err) => {
+        if (typeof err.data === "string") {
+          setError(err.data);
+        } else {
+          setError(err.data.message);
+        }
+      });
+    ActivityService.getAllByUserId(authUser.uid, authUser.token)
+      .then((res) => {
+        const foundFavoriteActivity = res.find(
+          (activity) =>
+            (activity.activityTypeName === "ADD_TO_FAVORITES") &
+            (activity.productId === product.productId)
+        );
+
+        if (foundFavoriteActivity === undefined) {
+          setFavoriteProductActivity(null);
+        } else {
+          setFavoriteProductActivity(foundFavoriteActivity);
+        }
+      })
+      .catch((err) => {
+        if (typeof err.data === "string") {
+          setError(err.data);
+        } else {
+          setError(err.data.message);
+        }
+      });
+  }, [authUser, product]);
+
+  const addToFavorites = () => {
+    ActivityService.create(
+      authUser.uid,
+      {
+        activityActivityTypeId: addToFavoritesActivity.activityTypeId,
+        activityProductId: product.productId,
+      },
+      authUser.token
+    )
+      .then((res) => {
+        setFavoriteProductActivity(res);
+      })
+      .catch((err) => {
+        if (typeof err.data === "string") {
+          setError(err.data);
+        } else {
+          setError(err.data.message);
+        }
+      });
+  };
+
+  const removeFromFavorites = () => {
+    ActivityService.deleteByActivityId(
+      favoriteProductActivity.activityId,
+      authUser.token
+    )
+      .then((res) => {
+        setFavoriteProductActivity(null);
+      })
+      .catch((err) => {
+        if (typeof err.data === "string") {
+          setError(err.data);
+        } else {
+          setError(err.data.message);
+        }
+      });
+  };
+
+  const onClick = () => {
+    if (favoriteProductActivity === null) {
+      addToFavorites();
+    } else {
+      removeFromFavorites();
+    }
+  };
+
   return (
     <Card>
       <Card.Content>
@@ -125,15 +218,21 @@ const NonOwnerProductCard = ({ product }) => {
         <Card.Description>{product.productDescription}</Card.Description>
       </Card.Content>
       {authUser && authUser.data.userTypeId === 1 && (
-        <Menu className="ui bottom attached" widths="1">
+        <Menu className="ui bottom attached" widths="2">
           <Menu.Item
             as={Link}
             to={`/products/${product.productId}/add-to-cart`}
           >
             Add To Cart
           </Menu.Item>
+          <Menu.Item as={Button} onClick={onClick}>
+            {favoriteProductActivity
+              ? "Remove From Favorites"
+              : "Add To Favorites"}
+          </Menu.Item>
         </Menu>
       )}
+      {error && <ErrorMessage message={error} />}
     </Card>
   );
 };

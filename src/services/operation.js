@@ -20,6 +20,7 @@ const findByOperationId = (operationId, userToken) => {
     },
   });
 };
+
 const getAllByUserId = (operationUserId, userToken) => {
   return request({
     url: `users/${operationUserId}/operations`,
