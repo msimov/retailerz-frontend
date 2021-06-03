@@ -3,7 +3,7 @@ import { Dropdown } from "semantic-ui-react";
 
 const ReportsDropdown = () => {
   return (
-    <Dropdown item icon="chart line" simple text="Reports">
+    <Dropdown item icon="chart line" simple>
       <Dropdown.Menu>
         <Dropdown.Item as={Link} to="/reports/total-profit">
           Total Profit
