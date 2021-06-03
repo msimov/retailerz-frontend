@@ -3,7 +3,7 @@ import { Dropdown } from "semantic-ui-react";
 
 const NavigationDropdown = () => {
   return (
-    <Dropdown item icon="grid layout" simple>
+    <Dropdown item icon="grid layout" simple text="Menu">
       <Dropdown.Menu>
         <Dropdown.Item as={Link} to="/inventory">
           Inventory

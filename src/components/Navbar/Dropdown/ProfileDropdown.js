@@ -7,7 +7,7 @@ const ProfileDropdown = () => {
   const firebase = useContext(FirebaseContext);
   const { authUser } = useContext(AuthUserContext);
   return (
-    <Dropdown item icon="user" simple>
+    <Dropdown item icon="user" simple text="Profile">
       <Dropdown.Menu>
         <Dropdown.Item as={Link} to="/profile">
           My Profile
