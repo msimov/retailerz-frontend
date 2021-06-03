@@ -9,7 +9,7 @@ import {
   Message,
   Segment,
 } from "semantic-ui-react";
-import { AuthUserContext } from "../../context";
+import { AuthUserContext, GeocodeContext } from "../../context";
 import {
   OperationService,
   OperationTypeService,
@@ -19,12 +19,14 @@ import { ErrorMessage } from "../Error";
 import Map from "../Map/Map";
 
 const FastestRouteForm = () => {
-  const history = useHistory();
   const { authUser } = useContext(AuthUserContext);
+  const history = useHistory();
+  const geocode = useContext(GeocodeContext);
 
   const [route, setRoute] = useState(null);
   const [locations, setLocations] = useState(null);
   const [formData, setFormData] = useState({
+    homeAddress: "Sofia",
     homeLat: 42.698334,
     homeLng: 23.319941,
   });
@@ -44,7 +46,7 @@ const FastestRouteForm = () => {
         .then((res) => {
           let locations = res.map((operation) => {
             return {
-              address: operation.storeName,
+              address: operation.storeAddress,
               lat: operation.storeLat,
               lng: operation.storeLng,
             };
@@ -67,18 +69,17 @@ const FastestRouteForm = () => {
     setIsEnabled(false);
 
     const startEndLocation = {
+      address: formData.homeAddress,
       lat: formData.homeLat,
       lng: formData.homeLng,
     };
 
     let finalLocations = [
       {
-        address: "Start",
         ...startEndLocation,
       },
       ...locations,
       {
-        address: "End",
         ...startEndLocation,
       },
     ];
@@ -104,7 +105,14 @@ const FastestRouteForm = () => {
   };
 
   const onPositionChange = ({ lat, lng }) => {
-    setFormData({ ...formData, homeLat: lat, homeLng: lng });
+    geocode.fromLatLng(lat, lng).then((res) => {
+      setFormData({
+        ...formData,
+        homeAddress: res.results[0].formatted_address,
+        homeLat: lat,
+        homeLng: lng,
+      });
+    });
   };
 
   return (

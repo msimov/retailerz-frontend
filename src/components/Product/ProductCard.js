@@ -117,7 +117,6 @@ const OwnerProductCard = ({
 
 const NonOwnerProductCard = ({ product }) => {
   const { authUser } = useContext(AuthUserContext);
-
   return (
     <Card>
       <Card.Content>

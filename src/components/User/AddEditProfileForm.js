@@ -6,7 +6,7 @@ import { UserService, UserTypeService } from "../../services";
 import { ErrorMessage } from "../Error";
 
 const AddEditProfileForm = () => {
-  const { authUser, setAuthUser } = useContext(AuthUserContext);
+  const { authUser } = useContext(AuthUserContext);
   const history = useHistory();
   const location = useLocation();
 
@@ -28,11 +28,7 @@ const AddEditProfileForm = () => {
   const createUser = () => {
     UserService.create(authUser.uid, formData, authUser.token)
       .then((res) => {
-        setAuthUser({
-          ...authUser,
-          data: res,
-        });
-        history.push("/profile");
+        history.go("/profile");
       })
       .catch((err) => {
         if (typeof err.data === "string") {
@@ -46,7 +42,7 @@ const AddEditProfileForm = () => {
   const updateUser = () => {
     UserService.updateByUserId(authUser.uid, formData, authUser.token)
       .then((res) => {
-        history.push("/profile");
+        history.go("/profile");
       })
       .catch((err) => {
         if (typeof err.data === "string") {
