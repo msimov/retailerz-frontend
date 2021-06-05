@@ -61,13 +61,25 @@ const AddEditOperationForm = ({ operationId }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const onPaste = (event, name) => {
+    products.forEach((product) => {
+      if (product.barcode === event.clipboardData.getData("Text")) {
+        setFormData({
+          ...formData,
+          [name]: product.value,
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     ProductService.getAllByUserId(authUser.uid, authUser.token).then((res) => {
       setProducts(
-        res.map(({ productId, productName }) => ({
+        res.map(({ productId, productName, productBarcode }) => ({
           key: productId,
           value: productId,
           text: productName,
+          barcode: productBarcode,
         }))
       );
     });
@@ -138,6 +150,7 @@ const AddEditOperationForm = ({ operationId }) => {
             name="operationProductId"
             options={products}
             onChange={onSelect}
+            onPaste={(event) => onPaste(event, "operationProductId")}
             value={formData.operationProductId}
           />
           <Form.Input

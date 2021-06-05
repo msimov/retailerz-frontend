@@ -207,6 +207,7 @@ const AddEditProductForm = ({ productId }) => {
             name="productMeasureUnitId"
             options={measureUnits}
             onChange={onSelect}
+            onC
             value={formData.productMeasureUnitId}
           />
           <Form.Select
